@@ -1,0 +1,96 @@
+{
+	"@odata.type": "#PowerDistribution.v0_9_0.PowerDistribution",
+	"Id": "1",
+	"EquipmentType": "RackPDU",
+	"Name": "RackPDU1",
+	"FirmwareVersion": "4.3.0",
+	"HardwareRevision": "1.03b",
+	"DateOfManufacture": "2017-01-11T08:00:00Z",
+	"Manufacturer": "Contoso",
+	"Model": "ZAP4000",
+	"SerialNumber": "29347ZT536",
+	"PartNumber": "AA-23",
+	"UUID": "32354641-4135-4332-4a35-313735303734",
+	"AssetTag": "PDX-92381",
+	"Status": {
+		"State": "Enabled",
+		"Health": "OK"
+	},
+	"Location": {
+		"Longitude": 45.52,
+		"Latitude": 122.67,
+		"PostalAddress": {
+			"Country": "US",
+			"Territory": "OR",
+			"City": "Portland",
+			"Street": "1001 SW 5th Avenue",
+			"Name": "DMTF Headquarters",
+			"PostalCode": "97204",
+			"Building": "3A",
+			"Floor": "2",
+			"Room": "213"
+		},
+		"Placement": {
+			"Row": "North"
+		}
+	},
+
+	"CircuitSummary": {
+		"TotalOutlets": 16,
+		"MonitoredOutlets": 12,
+		"ControlledOutlets": 8,
+		"TotalPhases": 3,
+		"MonitoredPhases": 3,
+		"TotalBranches": 4,
+		"MonitoredBranches": 4
+	},
+
+	"TriggeredAlarms": [{
+		"@odata.type": "#Alarm.v0_8_0.Alarm",
+		"Id": "Overload",
+		"Name": "PDU Unit Overload",
+		"AlarmState": "Triggered",
+		"Acknowledged": false,
+		"Severity": "Critical",
+		"TriggerTime": "2018-08-07T14:44:00Z",
+		"AutomaticReArm": true,
+		"Message": "Rack PDU Overload Condition",
+		"MessageId": "DCIM.0.1.0.Overload",
+		"MessageArgs": [
+			"58703"
+		],
+		"Links": {
+			"RelatedSensor": {
+				"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/ACMainPower"
+			},
+			"Oem": {}
+		},
+		"Oem": {},
+		"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Alarms/Overload"
+	}],
+
+	"Mains": {
+		"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Mains"
+	},
+	"Branches": {
+		"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Branches"
+	},
+	"Outlets": {
+		"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets"
+	},
+	"OutletGroups": {
+		"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/OutletGroups"
+	},
+	"Alarms": {
+		"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Alarms"
+	},
+    "Metrics": {
+        "@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Metrics"
+    },
+	"Sensors": {
+		"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors"
+	},
+
+	"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1",
+	"@Redfish.Copyright": "Copyright 2014-2019 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright."
+}

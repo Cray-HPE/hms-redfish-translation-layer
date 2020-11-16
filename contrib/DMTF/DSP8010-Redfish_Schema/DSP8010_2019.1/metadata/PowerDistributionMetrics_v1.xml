@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!---->
+<!--################################################################################       -->
+<!--# Redfish Schema:  PowerDistributionMetrics  v0.9.0-->
+<!--#                                                                                      -->
+<!--# For a detailed change log, see the README file contained in the DSP8010 bundle,      -->
+<!--# available at http://www.dmtf.org/standards/redfish                                   -->
+<!--# Copyright 2014-2017 Distributed Management Task Force, Inc. (DMTF).                  -->
+<!--# For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright -->
+<!--################################################################################       -->
+<!---->
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/csd01/complete/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="OData"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/csd01/complete/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://redfish.dmtf.org/schemas/v1/RedfishExtensions_v1.xml">
+    <edmx:Include Namespace="RedfishExtensions.v1_0_0" Alias="Redfish"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://redfish.dmtf.org/schemas/v1/Resource_v1.xml">
+    <edmx:Include Namespace="Resource.v1_0_0"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://redfish.dmtf.org/schemas/v1/Sensor_v1.xml">
+    <edmx:Include Namespace="Sensor"/>
+  </edmx:Reference>
+  
+  <edmx:DataServices>
+
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="PowerDistributionMetrics">
+      <Annotation Term="Redfish.OwningEntity" String="DMTF"/>
+
+      <Action Name="ResetStatistics" IsBound="true">
+        <Parameter Name="PowerDistributionMetrics" Type="PowerDistributionMetrics.v0_9_0.Actions"/>
+        <Annotation Term="OData.Description" String="This action is used to reset the summary statistics related to this equipment."/>
+        <Annotation Term="OData.LongDescription" String="This action shall perform a reset of any time intervals or counted values for this equipment."/>
+      </Action>
+	  
+      <EntityType Name="PowerDistributionMetrics" BaseType="Resource.v1_0_0.Resource" Abstract="true">
+        <Annotation Term="OData.Description" String="This is the schema definition for a Rack Power Distribution Unit - PowerDistributionMetrics."/>
+        <Annotation Term="OData.LongDescription" String="This resource shall be used to represent a Power Distribution component or unit for a Redfish implementation."/>
+        <Annotation Term="OData.AdditionalProperties" Bool="false"/>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Property="Updatable" Bool="true"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Redfish.Uris">
+          <Collection>
+            <String>/redfish/v1/PowerEquipment/RackPDUs/{PowerDistributionId}/Metrics</String>
+            <String>/redfish/v1/PowerEquipment/FloorPDUs/{PowerDistributionId}/Metrics</String>
+            <String>/redfish/v1/PowerEquipment/TransferSwitches/{PowerDistributionId}/Metrics</String>
+          </Collection>
+        </Annotation>
+      </EntityType>
+
+    </Schema>
+
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="PowerDistributionMetrics.v0_9_0">
+      <Annotation Term="Redfish.OwningEntity" String="DMTF"/>
+      <Annotation Term="Redfish.Release" String="TBD"/>
+
+      <EntityType Name="PowerDistributionMetrics" BaseType="PowerDistributionMetrics.PowerDistributionMetrics">
+
+        <NavigationProperty Name="PowerSensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The total power reading for this equipment."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the total power, measured in Watts, for this unit, which represents the 'Total' ElectricalContext sensor when multiple power sensors exist."/>
+        </NavigationProperty>
+		
+        <NavigationProperty Name="EnergySensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The energy consumption of this unit."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the total energy, measured in kilowatt-hours (kWh), for this unit, which represents the 'Total' ElectricalContext sensor when multiple energy sensors exist."/>
+        </NavigationProperty>
+		
+        <NavigationProperty Name="TemperatureSensors" Type="Collection(Sensor.Sensor)">
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="Redfish.Filter" String="ReadingType eq 'Temperature'"/>
+          <Annotation Term="OData.Description" String="Contains the array of 1 or more temperature sensors."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall be an array of sensors that measure temperature."/>
+        </NavigationProperty>
+
+        <NavigationProperty Name="HumiditySensors" Type="Collection(Sensor.Sensor)">
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="Redfish.Filter" String="ReadingType eq 'Humidity'"/>
+          <Annotation Term="OData.Description" String="Contains the humidity sensors."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall be an array of sensors that measure humidity."/>
+        </NavigationProperty>
+
+        <Property Name="Actions" Type="PowerDistributionMetrics.v0_9_0.Actions" Nullable="false">
+          <Annotation Term="OData.Description" String="The available actions for this resource."/>
+          <Annotation Term="OData.LongDescription" String="The Actions property shall contain the available actions for this resource."/>
+        </Property>
+      </EntityType>
+	  
+      <ComplexType Name="Actions">
+        <Annotation Term="OData.AdditionalProperties" Bool="false"/>
+        <Annotation Term="OData.Description" String="The available actions for this resource."/>
+        <Annotation Term="OData.LongDescription" String="This type shall contain the available actions for this resource."/>
+        <Property Name="Oem" Type="PowerDistributionMetrics.v0_9_0.OemActions" Nullable="false">
+          <Annotation Term="OData.Description" String="This property contains the available OEM specific actions for this resource."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain any additional OEM actions for this resource."/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OemActions">
+        <Annotation Term="OData.AdditionalProperties" Bool="true"/>
+        <Annotation Term="OData.Description" String="The available OEM specific actions for this resource."/>
+        <Annotation Term="OData.LongDescription" String="This type shall contain any additional OEM actions for this resource."/>
+      </ComplexType>
+
+    </Schema>
+
+  </edmx:DataServices>
+</edmx:Edmx>

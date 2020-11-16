@@ -1,0 +1,14 @@
+[
+	{
+		"name" : "CrayEPO",
+		"outlet_access" : ["AA1","AA2","AA3","AA4","AA5","AA6","AA7","AA8","AA9","AA10","AA11","AA12","AA13","AA14","AA15","AA16","AA17","AA18","AA19","AA20","AA21","AA22","AA23","AA24","AA25","AA26","AA27","AA28","AA29","AA30","AA31","AA32","AA33","AA34","AA35","AA36","BA1","BA2","BA3","BA4","BA5","BA6","BA7","BA8","BA9","BA10","BA11","BA12","BA13","BA14","BA15","BA16","BA17","BA18","BA19","BA20","BA21","BA22","BA23","BA24","BA25","BA26","BA27","BA28","BA29","BA30","BA31","BA32","BA33","BA34","BA35","BA36"]
+	},
+	{
+		"name" : "CrayEPO_A",
+		"outlet_access" : ["AA1","AA2","AA3","AA4","AA5","AA6","AA7","AA8","AA9","AA10","AA11","AA12","AA13","AA14","AA15","AA16","AA17","AA18","AA19","AA20","AA21","AA22","AA23","AA24","AA25","AA26","AA27","AA28","AA29","AA30","AA31","AA32","AA33","AA34","AA35","AA36"]
+	},
+	{
+		"name" : "CrayEPO_B",
+		"outlet_access" : ["BA1","BA2","BA3","BA4","BA5","BA6","BA7","BA8","BA9","BA10","BA11","BA12","BA13","BA14","BA15","BA16","BA17","BA18","BA19","BA20","BA21","BA22","BA23","BA24","BA25","BA26","BA27","BA28","BA29","BA30","BA31","BA32","BA33","BA34","BA35","BA36"]
+	}
+]

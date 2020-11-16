@@ -1,0 +1,60 @@
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cray-rts-vault-watcher-crb
+subjects:
+  - kind: ServiceAccount
+    name: cray-rts-vault-watcher
+    namespace: services
+roleRef:
+  kind: ClusterRole
+  name: cray-rts-vault-watcher-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: services
+  name: cray-rts-vault-watcher
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cray-rts-vault-watcher-role
+rules:
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    resourceNames: ["cray-vault"]
+    verbs: ["get"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cray-rts-dispatcher-crb
+subjects:
+  - kind: ServiceAccount
+    name: cray-rts-dispatcher
+    namespace: services
+roleRef:
+  kind: ClusterRole
+  name: cray-rts-dispatcher-cr
+  apiGroup: ""
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: services
+  name: cray-rts-dispatcher
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cray-rts-dispatcher-cr
+rules:
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "create"]
+  - apiGroups: ["", "batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list"]

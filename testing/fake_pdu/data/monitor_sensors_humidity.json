@@ -1,0 +1,24 @@
+[
+	{
+		"id" : "A1",
+		"name" : "Humid_Sensor_A1",
+		"relative_humidity" : 49,
+		"status" : "Normal"
+	},
+	{
+		"id" : "A2",
+		"name" : "Humid_Sensor_A2",
+		"status" : "Not Found"
+	},
+	{
+		"id" : "B1",
+		"name" : "Humid_Sensor_B1",
+		"relative_humidity" : 57,
+		"status" : "Normal"
+	},
+	{
+		"id" : "B2",
+		"name" : "Humid_Sensor_B2",
+		"status" : "Not Found"
+	}
+]

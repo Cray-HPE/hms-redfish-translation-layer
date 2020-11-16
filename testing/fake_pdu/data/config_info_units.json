@@ -1,0 +1,18 @@
+[
+	{
+		"id" : "A",
+		"name" : "Master",
+		"manufacture_date" : "2019-01-14",
+		"model_number" : "C2WG36TE-DQME2M66",
+		"product_serial_number" : "ALPN0000001",
+		"type" : "Master"
+	},
+	{
+		"id" : "B",
+		"name" : "Link1",
+		"manufacture_date" : "2019-01-14",
+		"model_number" : "C2XG36TE-DQME2M66",
+		"product_serial_number" : "ALQL0000002",
+		"type" : "Link"
+	}
+]

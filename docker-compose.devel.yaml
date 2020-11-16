@@ -1,0 +1,92 @@
+version: '3'
+services:
+  #
+  # Vault
+  #
+  vault:
+    hostname: vault
+    image: dtr.dev.cray.com/library/vault:1.4.0
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=hms
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+      - VAULT_ADDR=http://127.0.0.1:8200
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+  vault-kv-enabler:
+    build:
+      context: .
+      dockerfile: vault-kv-enabler.dockerfile
+    environment:
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=hms
+      - KV_STORES=hms-creds
+    depends_on:
+      - vault
+
+  #
+  # State Manager
+  #
+  hmsds-postgres:
+    hostname: hmsds-postgres
+    image: dtr.dev.cray.com/library/postgres:11-alpine
+    environment:
+      - POSTGRES_PASSWORD=hmsdsuser
+      - POSTGRES_USER=hmsdsuser
+      - POSTGRES_DB=hmsds
+    ports:
+      - "5432:5432"
+  cray-smd-init:
+    image: dtr.dev.cray.com/cray/cray-smd
+    environment:
+      - SMD_DBHOST=hmsds-postgres
+      - SMD_DBPORT=5432
+    depends_on:
+      - hmsds-postgres
+    command: /entrypoint.sh smd-init
+  cray-smd:
+    image: dtr.dev.cray.com/cray/cray-smd
+    environment:
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PORT=5432
+      - RF_MSG_HOST
+      - CRAY_VAULT_AUTH_PATH=auth/token/create
+      - CRAY_VAULT_ROLE_FILE=configs/namespace
+      - CRAY_VAULT_JWT_FILE=configs/token
+      - VAULT_ADDR=http://localhost:8200
+      - VAULT_TOKEN=hms
+      - VAULT_KEYPATH=hms-creds
+      - SMD_WVAULT=true
+      - SMD_RVAULT=true
+    hostname: cray-smd
+    depends_on:
+      - cray-smd-init
+      - vault
+    ports:
+      - "27779:27779"
+    network_mode: "host"
+    extra_hosts:
+      - "x0c0s21b0:127.0.0.1"
+      - "x0c0s22b0:127.0.0.1"
+      - "x0c0s23b0:127.0.0.1"
+      - "x0c0s24b0:127.0.0.1"
+      - "x1000c0:127.0.0.1"
+      - "x1000c0b0:127.0.0.1"
+      - "x0m0:127.0.0.1"
+      - "x0m1:127.0.0.1"
+
+  #
+  # RTS Dependencies
+  #
+  redis:
+    image: dtr.dev.cray.com/library/redis:5.0-alpine
+    hostname: hms-redfish-redis
+    ports:
+      - "6379:6379"
+  redis-prep:
+    build:
+      context: .
+      dockerfile: redis_prep.dockerfile
+    environment:
+      - REDIS_HOSTNAME=redis

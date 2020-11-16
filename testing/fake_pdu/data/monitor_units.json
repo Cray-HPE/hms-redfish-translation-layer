@@ -1,0 +1,18 @@
+[
+	{
+		"id" : "A",
+		"name" : "Master",
+		"display_orientation" : "Auto (Normal)",
+		"outlet_sequence" : "Normal",
+		"status" : "Normal",
+		"type" : "Master"
+	},
+	{
+		"id" : "B",
+		"name" : "Link1",
+		"display_orientation" : "Auto (Normal)",
+		"outlet_sequence" : "Normal",
+		"status" : "Normal",
+		"type" : "Link"
+	}
+]

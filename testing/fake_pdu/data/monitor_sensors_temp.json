@@ -1,0 +1,24 @@
+[
+	{
+		"id" : "A1",
+		"name" : "Temp_Sensor_A1",
+		"status" : "Normal",
+		"temperature_celsius" : 20.9
+	},
+	{
+		"id" : "A2",
+		"name" : "Temp_Sensor_A2",
+		"status" : "Not Found"
+	},
+	{
+		"id" : "B1",
+		"name" : "Temp_Sensor_B1",
+		"status" : "Normal",
+		"temperature_celsius" : 18.9
+	},
+	{
+		"id" : "B2",
+		"name" : "Temp_Sensor_B2",
+		"status" : "Not Found"
+	}
+]

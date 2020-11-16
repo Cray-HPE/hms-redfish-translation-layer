@@ -1,0 +1,28 @@
+{
+    "$id": "http://redfish.dmtf.org/schemas/v1/Facility.json",
+    "$ref": "#/definitions/Facility",
+    "$schema": "http://redfish.dmtf.org/schemas/v1/redfish-schema-v1.json",
+    "copyright": "Copyright 2014-2018 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright",
+    "definitions": {
+        "Facility": {
+            "anyOf": [
+                {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/idRef"
+                },
+                {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Facility.v0_9_0.json#/definitions/Facility"
+                }
+            ],
+            "deletable": false,
+            "description": "The Facility schema represents the physical location containing equipment, such as a room, building, or campus.",
+            "insertable": false,
+            "longDescription": "This resource shall be used to represent a location containing equipment, such as a room, building, or campus, for a Redfish implementation.",
+            "updatable": false,
+            "uris": [
+                "/redfish/v1/Facilities/{FacilityId}"
+            ]
+        }
+    },
+    "owningEntity": "DMTF",
+    "title": "#Facility.Facility"
+}

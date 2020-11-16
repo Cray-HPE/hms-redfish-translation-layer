@@ -1,0 +1,25 @@
+{
+    "$id": "http://redfish.dmtf.org/schemas/v1/HVACDomain.json",
+    "$ref": "#/definitions/HVACDomain",
+    "$schema": "http://redfish.dmtf.org/schemas/v1/redfish-schema-v1.json",
+    "copyright": "Copyright 2014-2018 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright",
+    "definitions": {
+        "HVACDomain": {
+            "anyOf": [
+                {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/idRef"
+                },
+                {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/HVACDomain.v0_9_0.json#/definitions/HVACDomain"
+                }
+            ],
+            "deletable": false,
+            "description": "This is the schema definition for the HVAC domain.",
+            "insertable": false,
+            "longDescription": "This resource shall be used to represent a HVAC  Domain for a Redfish implementation.",
+            "updatable": true
+        }
+    },
+    "owningEntity": "DMTF",
+    "title": "#HVACDomain.HVACDomain"
+}

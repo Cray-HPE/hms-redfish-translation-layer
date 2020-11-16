@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cray-rts-config
+  namespace: services
+data:
+  # Settings injected into the 'cray-hms-rts' container environment
+  cray-hms-rts.log_level: "{{ .Values.environment.cray_hms_rts.log_level }}"
+  cray-hms-rts.rf_msg_host: "{{ .Values.environment.cray_hms_rts.rf_msg_host }}"
+  cray-hms-rts.vault_addr: "{{ .Values.environment.cray_hms_rts.vault_addr }}"
+  cray-hms-rts.vault_skip_verify: "{{ .Values.environment.cray_hms_rts.vault_skip_verify }}"
+  cray-hms-rts.hms_vault_keypath: "{{ .Values.environment.cray_hms_rts.hms_vault_keypath }}"
+  cray-hms-rts.hsm_url: "{{ .Values.environment.cray_hms_rts.hsm_url }}"
+  cray-hms-rts.https_cert: "{{ .Values.environment.cray_hms_rts.https_cert }}"
+  cray-hms-rts.https_key: "{{ .Values.environment.cray_hms_rts.https_key }}"
+  cray-hms-rts.collector_url: "{{ .Values.environment.cray_hms_rts.collector_url }}"
+  cray-hms-rts.backend_helper: "{{ .Values.environment.cray_hms_rts.backend_helper }}"
+  cray-hms-rts.rts_dns_provider: "{{ .Values.environment.cray_hms_rts.rts_dns_provider }}"
+  cray-hms-rts.certificate_vault_keypath: "{{ .Values.environment.cray_hms_rts.certificate_vault_keypath }}"
+  
+
+  # JAWs Backend Helper enviroment
+  cray-hms-rts.jaws_vault_keypath: "{{ .Values.environment.cray_hms_rts.jaws_vault_keypath }}"
+  cray-hms-rts.jaws_polling_enabled: "{{ .Values.environment.cray_hms_rts.jaws_polling_enabled }}"
+  cray-hms-rts.jaws_polling_interval: "{{ .Values.environment.cray_hms_rts.jaws_polling_interval }}"
+  cray-hms-rts.jaws_polling_temperature_interval: "{{ .Values.environment.cray_hms_rts.jaws_polling_temperature_interval }}"
+  cray-hms-rts.jaws_polling_humidity_interval: "{{ .Values.environment.cray_hms_rts.jaws_polling_humidity_interval }}"
+  cray-hms-rts.jaws_polling_workers: "{{ .Values.environment.cray_hms_rts.jaws_polling_workers }}"
+
+  # Settings injected into the 'wait-for-cray-hms-rts-init' container environment
+  wait-for-cray-hms-rts-init.dont_wait: "{{ .Values.environment.wait_for_cray_hms_rts_init.dont_wait }}"

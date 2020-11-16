@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!---->
+<!--################################################################################       -->
+<!--# Redfish Schema:  Circuit  v0.9.0-->
+<!--#                                                                                      -->
+<!--# For a detailed change log, see the README file contained in the DSP8010 bundle,      -->
+<!--# available at http://www.dmtf.org/standards/redfish                                   -->
+<!--# Copyright 2018 Distributed Management Task Force, Inc. (DMTF).                       -->
+<!--# For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright -->
+<!--################################################################################       -->
+<!---->
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/csd01/complete/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="OData"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/csd01/complete/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/csd01/complete/vocabularies/Org.OData.Measures.V1.xml">
+    <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://redfish.dmtf.org/schemas/v1/RedfishExtensions_v1.xml">
+    <edmx:Include Namespace="RedfishExtensions.v1_0_0" Alias="Redfish"/>
+    <edmx:Include Namespace="Validation.v1_0_0" Alias="Validation"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://redfish.dmtf.org/schemas/v1/Resource_v1.xml">
+    <edmx:Include Namespace="Resource"/>
+    <edmx:Include Namespace="Resource.v1_0_0"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://redfish.dmtf.org/schemas/v1/Sensor_v1.xml">
+    <edmx:Include Namespace="Sensor"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://redfish.dmtf.org/schemas/v1/Outlet_v1.xml">
+    <edmx:Include Namespace="Outlet"/>
+  </edmx:Reference>
+  
+  <edmx:DataServices>
+
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Circuit">
+      <Annotation Term="Redfish.OwningEntity" String="DMTF"/>
+
+      <Action Name="PowerControl" IsBound="true">
+        <Parameter Name="Circuit" Type="Circuit.v0_9_0.Actions"/>
+        <Parameter Name="PowerState" Type="Resource.PowerState">
+          <Annotation Term="OData.Description" String="The desired power state of the circuit."/>
+          <Annotation Term="OData.LongDescription" String="This parameter shall define the desired power state of the circuit."/>
+        </Parameter>
+        <Annotation Term="OData.Description" String="This action is used to turn the circuit on or off."/>
+        <Annotation Term="OData.LongDescription" String="TBD."/>
+      </Action>
+
+      <Action Name="ResetBreaker" IsBound="true">
+        <Parameter Name="Circuit" Type="Circuit.v0_9_0.Actions"/>
+        <Parameter Name="PowerState" Type="Circuit.PowerState">
+          <Annotation Term="OData.Description" String="The desired power state of the circuit if the breaker is reset successfully."/>
+          <Annotation Term="OData.LongDescription" String="This parameter shall define the desired power state of the circuit."/>
+        </Parameter>
+        <Annotation Term="OData.Description" String="This action is used to attempt to reset the circuit breaker."/>
+        <Annotation Term="OData.LongDescription" String="TBD."/>
+      </Action>
+
+      <Action Name="ResetStatistics" IsBound="true">
+        <Parameter Name="Circuit" Type="Circuit.v0_9_0.Actions"/>
+        <Annotation Term="OData.Description" String="This action is used to reset statistics related to this circuit."/>
+        <Annotation Term="OData.LongDescription" String="This action shall perform a reset of any time intervals or counted values for this circuit."/>
+      </Action>
+
+      <EntityType Name="Circuit" BaseType="Resource.v1_0_0.Resource" Abstract="true">
+        <Annotation Term="OData.Description" String="This is the schema definition for an electrical circuit."/>
+        <Annotation Term="OData.LongDescription" String="This resource shall be used to represent an electrical circuit for a Redfish implementation."/>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Property="Updatable" Bool="true"/>
+            <Annotation Term="OData.Description" String="Circuit properties can be updated to change limits, exceptions and other writable properties."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Redfish.Uris">
+          <Collection>
+            <String>/redfish/v1/PowerEquipment/RackPDUs/{PowerDistributionId}/Inputs/{CircuitId}</String>
+            <String>/redfish/v1/PowerEquipment/RackPDUs/{PowerDistributionId}/Branches/{CircuitId}</String>
+            <String>/redfish/v1/PowerEquipment/FloorPDUs/{PowerDistributionId}/Inputs/{CircuitId}</String>
+            <String>/redfish/v1/PowerEquipment/FloorPDUs/{PowerDistributionId}/Branches/{CircuitId}</String>
+            <String>/redfish/v1/PowerEquipment/FloorPDUs/{PowerDistributionId}/Subfeeds/{CircuitId}</String> 
+            <String>/redfish/v1/PowerEquipment/TransferSwitches/{PowerDistributionId}/Inputs/{CircuitId}</String>
+            <String>/redfish/v1/PowerEquipment/TransferSwitches/{PowerDistributionId}/Feeders/{CircuitId}</String>
+          </Collection>
+        </Annotation>
+      </EntityType>
+    </Schema>
+
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Circuit.v0_9_0">
+      <Annotation Term="Redfish.OwningEntity" String="DMTF"/>
+      <Annotation Term="Redfish.Release" String="TBD"/>
+      <EntityType Name="Circuit" BaseType="Circuit.Circuit">
+        <Property Name="Status" Type="Resource.Status" Nullable="false">
+          <Annotation Term="OData.Description" String="This property describes the status and health of the resource and its children."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain any status or health properties of the resource."/>
+        </Property>
+        <Property Name="CircuitType" Type="Circuit.v0_9_0.CircuitType">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="The type of circuit."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain the type of circuit."/>
+        </Property>
+        <Property Name="CriticalCircuit" Type="Edm.Boolean">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="Designates if this is a critical circuit or outlet."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall indicate whether the circuit is desginated as a critical circuit, and therefore is excluded from autonomous logic that could affect the state of the circuit. The value shall be true if the circuit is deemed critical, and false if the circuit is not critical."/>
+        </Property>
+        <Property Name="PhaseWiringType" Type="Circuit.v0_9_0.PhaseWiringType">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="The number of ungrounded current-carrying conductors (phases) and the total number of conductors (wires)."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent the number of ungrounded current-carrying conductors (phases) and the total number of conductors (wires)."/>
+        </Property>
+        <Property Name="VoltageType" Type="Circuit.v0_9_0.VoltageType">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="The type of voltage applied to the circuit."/>
+          <Annotation Term="OData.LongDescription" String="This property shall show the type of voltage applied to the circuit."/>
+        </Property>
+        <Property Name="PlugType" Type="Circuit.v0_9_0.PlugType">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="The type of plug according to NEMA, IEC, or regional standards."/>
+          <Annotation Term="OData.LongDescription" String="This property shall show the type of physical plug used for this circuit, as defined by IEC, NEMA, or regional standard."/>
+        </Property>
+        <Property Name="NominalVoltage" Type="Circuit.v0_9_0.NominalVoltageType">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="The nominal voltage for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent the nominal voltage for this circuit, in Volts."/>
+        </Property>
+        <Property Name="RatedCurrentAmps" Type="Edm.Decimal">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="The rated maximum current allowed for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent the rated maximum current for this circuit, in Amps."/>
+          <Annotation Term="Measures.Unit" String="A"/>
+          <Annotation Term="Validation.Minimum" Int="0"/>
+        </Property>
+        <Property Name="IndicatorLED" Type="Resource.IndicatorLED">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="The state of the indicator LED, used to identify the circuit."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall contain the indicator light state for the indicator light associated with this circuit."/>
+        </Property>
+        <Property Name="BreakerState" Type="Circuit.v0_9_0.BreakerStates">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="The state of the over current protection device."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall contain the state of the over current protection device."/>
+        </Property>
+        <Property Name="PowerOnDelaySeconds" Type="Edm.Decimal">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="The number of seconds to delay power up after a power cycle or a PowerControl request. Zero seconds indicates no delay to power up."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain the number of seconds to delay power up after a power cycle or a PowerControl request. Zero seconds indicates no delay to power up."/>
+        </Property>
+        <Property Name="PowerOffDelaySeconds" Type="Edm.Decimal">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="The number of seconds to delay power off after a PowerControl request. Zero seconds indicates no delay to power off."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain the number of seconds to delay power off after a PowerControl request. Zero seconds indicates no delay to power off."/>
+        </Property>
+        <Property Name="PowerCycleDelaySeconds" Type="Edm.Decimal">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="The number of seconds to delay power on after a PowerControl request to cycle power. Zero seconds indicates no delay."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain the number of seconds to delay power on after a PowerControl request to cycle power. Zero seconds indicates no delay to power on."/>
+        </Property>
+        <Property Name="PowerRestoreDelaySeconds" Type="Edm.Decimal">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="The number of seconds to delay power on after power has been restored. Zero seconds indicates no delay."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain the number of seconds to delay power on after a power fault. Zero seconds indicates no delay to power on."/>
+        </Property>
+        <Property Name="PowerRestorePolicy" Type="Circuit.v0_9_0.PowerRestorePolicyTypes" Nullable="false">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+          <Annotation Term="OData.Description" String="The desired power state of the outlet when power is restored after a power loss."/>
+          <Annotation Term="OData.LongDescription" String="This property shall indicate the desired PowerState of the outlet when power is applied.  A value of 'LastState' shall return the outlet to the PowerState it was in when power was lost."/>
+        </Property>
+        <Property Name="PowerState" Type="Resource.PowerState">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="The power state of the circuit."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall contain the power state of the circuit."/>
+        </Property>
+        <Property Name="PowerEnabled" Type="Edm.Boolean">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="Indicates if the circuit can be powered."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall contain the power enable state of the circuit.  True shall indicate that the circuit may be powered on, and false shall indicate that the circuit cannot be powered."/>
+        </Property>
+        <NavigationProperty Name="Outlets" Type="Collection(Outlet.Outlet)">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="An array of references to the outlets contained by this circuit."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall be a reference to the resource that this circuit is associated with and shall reference a resource of type Outlet."/>
+          <Annotation Term="OData.AutoExpandReferences"/>
+        </NavigationProperty>
+
+        <NavigationProperty Name="VoltageSensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The voltage sensor for this single phase circuit."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the voltage, measured in Volts, for this single phase circuit. This object shall not appear in resource instances representing poly-phase circuits."/>
+        </NavigationProperty>
+        <NavigationProperty Name="CurrentSensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The current sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the current, measured in Amperes, for this single phase circuit. This object shall not appear in resource instances representing poly-phase circuits."/>
+        </NavigationProperty>
+        <NavigationProperty Name="TemperatureSensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The temperature sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the temperature sensor for this circuit."/>
+        </NavigationProperty>
+        <NavigationProperty Name="PowerSensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The power sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the total power, measured in Watts, for this circuit, which represents the 'Total' ElectricalContext sensor when multiple power sensors exist for this circuit."/>
+        </NavigationProperty>
+        <NavigationProperty Name="EnergySensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The energy sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the total energy, measured in kilowatt-hours (units of 'kW.h'), for this circuit, which represents the 'Total' ElectricalContext sensor when multiple energy sensors exist for this circuit."/>
+        </NavigationProperty>
+        <NavigationProperty Name="FrequencySensor" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The frequency sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain the frequency sensor for this circuit."/>
+        </NavigationProperty>
+
+        <Property Name="PolyPhaseVoltageSensors" Type="Circuit.v0_9_0.Voltages">
+          <Annotation Term="OData.Description" String="The voltage sensors for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="This object shall contain the voltage sensor(s) for this circuit. For single phase circuits this object will contain a duplicate copy of the voltage sensor referenced in the 'Voltage' object. For poly-phase circuits this object may contain multiple voltage sensor readings used to fully describe the circuit."/>
+        </Property>
+        <Property Name="PolyPhaseCurrentSensors" Type="Circuit.v0_9_0.Currents">
+          <Annotation Term="OData.Description" String="The current sensors for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </Property>
+        <Property Name="PolyPhasePowerSensors" Type="Circuit.v0_9_0.PowerReadings">
+          <Annotation Term="OData.Description" String="The power sensors for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </Property>
+        <Property Name="PolyPhaseEnergySensors" Type="Circuit.v0_9_0.EnergyReadings">
+          <Annotation Term="OData.Description" String="The energy sensors for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </Property>
+        <Property Name="Links" Type="Circuit.v0_9_0.Links" Nullable="false">
+          <Annotation Term="OData.Description" String="Contains references to other resources that are related to this resource."/>
+          <Annotation Term="OData.LongDescription" String="The Links property, as described by the Redfish Specification, shall contain references to resources that are related to, but not contained by (subordinate to), this resource."/>
+        </Property>
+        <Property Name="Actions" Type="Circuit.v0_9_0.Actions" Nullable="false">
+          <Annotation Term="OData.Description" String="The available actions for this resource."/>
+          <Annotation Term="OData.LongDescription" String="The Actions property shall contain the available actions for this resource."/>
+        </Property>
+      </EntityType>
+
+      <ComplexType Name="Links" BaseType="Resource.Links">
+        <Annotation Term="OData.Description" String="Contains references to other resources that are related to this resource."/>
+        <Annotation Term="OData.LongDescription" String="This type, as described by the Redfish Specification, shall contain references to resources that are related to, but not contained by (subordinate to), this resource."/>
+        <NavigationProperty Name="BranchCircuit" Type="Circuit.Circuit">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="OData.Description" String="A reference to the branch circuit related to this circuit."/>
+          <Annotation Term="OData.LongDescription" String="The value of this property shall be a reference to the branch circuit resource that this circuit is associated with and shall reference a resource of type Circuit."/>
+          <Annotation Term="OData.AutoExpandReferences"/>
+        </NavigationProperty>
+      </ComplexType>
+
+      <ComplexType Name="Actions">
+        <Annotation Term="OData.AdditionalProperties" Bool="false"/>
+        <Annotation Term="OData.Description" String="The available actions for this resource."/>
+        <Annotation Term="OData.LongDescription" String="This type shall contain the available actions for this resource."/>
+        <Property Name="Oem" Type="Circuit.v0_9_0.OemActions" Nullable="false">
+          <Annotation Term="OData.Description" String="This property contains the available OEM specific actions for this resource."/>
+          <Annotation Term="OData.LongDescription" String="This property shall contain any additional OEM actions for this resource."/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OemActions">
+        <Annotation Term="OData.AdditionalProperties" Bool="true"/>
+        <Annotation Term="OData.Description" String="The available OEM specific actions for this resource."/>
+        <Annotation Term="OData.LongDescription" String="This type shall contain any additional OEM actions for this resource."/>
+      </ComplexType>
+
+      <ComplexType Name="Voltages">
+        <Annotation Term="OData.AdditionalProperties" Bool="false"/>
+        <Annotation Term="OData.Description" String="This object contains the voltages."/>
+        <Annotation Term="OData.LongDescription" String="This object shall contain the voltage sensor(s) for this circuit. For single phase circuits this object will contain a duplicate copy of the voltage sensor referenced in the 'Voltage' object. For poly-phase circuits this object may contain multiple voltage sensor readings used to fully describe the circuit."/>
+        <NavigationProperty Name="Line1ToLine2" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The voltage sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line2ToLine3" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The voltage sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line3ToLine1" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The voltage sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line1ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy"/>
+          <Annotation Term="OData.Description" String="The voltage sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line2ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The voltage sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line3ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The voltage sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+      </ComplexType>
+
+      <ComplexType Name="Currents">
+        <Annotation Term="OData.AdditionalProperties" Bool="false"/>
+        <Annotation Term="OData.Description" String="This object contains the current sensors."/>
+        <Annotation Term="OData.LongDescription" String="."/>
+        <NavigationProperty Name="Line1" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The current sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line2" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The current sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line3" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The current sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Neutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The current sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+      </ComplexType>
+
+      <ComplexType Name="EnergyReadings">
+        <Annotation Term="OData.AdditionalProperties" Bool="false"/>
+        <Annotation Term="OData.Description" String="This object contains the energy sensors."/>
+        <Annotation Term="OData.LongDescription" String="."/>
+        <NavigationProperty Name="Line1ToLine2" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The energy sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line2ToLine3" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The Energy sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line3ToLine1" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The Energy sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line1ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The energy sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line2ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The energy sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line3ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" />
+          <Annotation Term="OData.Description" String="The energy sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+      </ComplexType>
+
+      <ComplexType Name="PowerReadings">
+        <Annotation Term="OData.AdditionalProperties" Bool="false"/>
+        <Annotation Term="OData.Description" String="This object contains the power sensors."/>
+        <Annotation Term="OData.LongDescription" String="."/>
+        <NavigationProperty Name="Line1ToLine2" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The power sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line2ToLine3" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The Power sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line3ToLine1" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The Power sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line1ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The Power sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line2ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The Power sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+        <NavigationProperty Name="Line3ToNeutral" Type="Sensor.Sensor">
+          <Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+          <Annotation Term="Redfish.ExcerptCopy" String="Power"/>
+          <Annotation Term="OData.Description" String="The Power sensor for this circuit."/>
+          <Annotation Term="OData.LongDescription" String="TBD."/>
+        </NavigationProperty>
+      </ComplexType>
+
+      <EnumType Name="CircuitType">
+        <Member Name="Mains">
+          <Annotation Term="OData.Description" String="A mains input or utility circuit."/>
+        </Member>
+        <Member Name="Branch">
+          <Annotation Term="OData.Description" String="A branch (output) circuit."/>
+        </Member>
+        <Member Name="Subfeed">
+          <Annotation Term="OData.Description" String="A subfeed (output) circuit."/>
+        </Member>
+        <Member Name="Feeder">
+          <Annotation Term="OData.Description" String="A feeder (output) circuit."/>
+        </Member>
+      </EnumType>
+
+      <EnumType Name="PowerState">
+        <Member Name="On">
+          <Annotation Term="OData.Description" String="The circuit or outlet is powered on."/>
+        </Member>
+        <Member Name="Off">
+          <Annotation Term="OData.Description" String="The circuit or outlet is powered off."/>
+        </Member>
+      </EnumType>
+		
+      <EnumType Name="PowerRestorePolicyTypes">
+        <Annotation Term="OData.Description" String="The enumerations of PowerRestorePolicyTypes specify the choice of power state for the outlet when power is applied."/>
+        <Member Name="AlwaysOn">
+          <Annotation Term="OData.Description" String="The outlet will always power on when power is applied."/>
+        </Member>
+        <Member Name="AlwaysOff">
+          <Annotation Term="OData.Description" String="The outlet will always remain powered off when power is applied."/>
+        </Member>
+        <Member Name="LastState">
+          <Annotation Term="OData.Description" String="The outlet will return to its last power state (on or off) when power is applied."/>
+        </Member>
+      </EnumType>
+
+      <EnumType Name="BreakerStates">
+        <Member Name="Normal">
+          <Annotation Term="OData.Description" String="The breaker is powered on."/>
+        </Member>
+        <Member Name="Tripped">
+          <Annotation Term="OData.Description" String="The breaker has been tripped."/>
+        </Member>
+        <Member Name="Off">
+          <Annotation Term="OData.Description" String="The breaker is off."/>
+        </Member>		  
+        <Member Name="Reset">
+          <Annotation Term="OData.Description" String="The breaker is to be reset to the Normal state."/>
+        </Member>			  
+      </EnumType>
+
+      <EnumType Name="PhaseWiringType">
+        <Member Name="OnePhase3Wire">
+          <Annotation Term="OData.Description" String="1-Phase / 3-Wire (Line1, Neutral, Protective Earth."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent a 1-Phase / 3-Wire (Line1, Neutral, Protective Earth)  wiring."/>
+        </Member>
+        <Member Name="TwoPhase3Wire">
+          <Annotation Term="OData.Description" String="2-Phase / 3-Wire (Line1, Line2, Protective Earth)."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent a 2-Phase / 3-Wire (Line1, Line2, Protective Earth) wiring."/>
+        </Member>
+        <Member Name="TwoPhase4Wire">
+          <Annotation Term="OData.Description" String="2-Phase / 4-Wire (Line1, Line2, Neutral, Protective Earth)."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent a 2-Phase / 4-Wire (Line1, Line2, Neutral, Protective Earth) wiring."/>
+        </Member>
+        <Member Name="ThreePhase4Wire">
+          <Annotation Term="OData.Description" String="3-Phase / 4-Wire (Line1, Line2, Line3, Protective Earth)."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent a 3-Phase / 4-Wire (Line1, Line2, Line3, Protective Earth) wiring."/>
+        </Member>
+        <Member Name="ThreePhase5Wire">
+          <Annotation Term="OData.Description" String="3-Phase / 5-Wire (Line1, Line2, Line3, Neutral, Protective Earth)."/>
+          <Annotation Term="OData.LongDescription" String="This property shall represent a 3-Phase / 5-Wire (Line1, Line2, Line3, Neutral, Protective Earth) wiring."/>
+        </Member>
+      </EnumType>
+
+      <EnumType Name="PlugType">
+        <Member Name="NEMA_5_15P">
+          <Annotation Term="OData.Description" String="NEMA 5-15P (Single-phase 125V; 15A; 1P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified 5-15 straight (non-locking) plug (Single-phase 125V; 15A; 1P3W)."/>
+        </Member>
+        <Member Name="NEMA_L5_15P">
+          <Annotation Term="OData.Description" String="NEMA L5-15P (Single-phase 125V; 15A; 1P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L5-15 plug (Single-phase 125V; 15A; 1P3W)."/>
+        </Member>
+        <Member Name="NEMA_5_20P">
+          <Annotation Term="OData.Description" String="NEMA 5-20P (Single-phase 125V; 20A; 1P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match The NEMA specified 5-20 straight (non-locking) plug that exhibits a T-slot (120V; 16A)."/>
+        </Member>
+        <Member Name="NEMA_L5_20P">
+          <Annotation Term="OData.Description" String="NEMA L5-20P (Single-phase 125V; 20A; 1P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L5-20 plug (Single-phase 125V; 20A; 1P3W)."/>
+        </Member>
+        <Member Name="NEMA_L5_30P">
+          <Annotation Term="OData.Description" String="NEMA L5-30P (Single-phase 125V; 30A; 1P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L5-30 plug (Single-phase 125V; 30A; 1P3W)."/>
+        </Member>
+        <Member Name="NEMA_6_15P">
+          <Annotation Term="OData.Description" String="NEMA 6-15P (Single-phase 250V; 15A; 2P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified 6-15 straight (non-locking) plug (Single-phase 250V; 15A; 2P3W)."/>
+        </Member>
+        <Member Name="NEMA_L6_15P">
+          <Annotation Term="OData.Description" String="NEMA L6-15P (Single-phase 250V; 15A; 2P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L6-15 plug (Single-phase 250V; 15A; 2P3W)."/>
+        </Member>
+        <Member Name="NEMA_6_20P">
+          <Annotation Term="OData.Description" String="NEMA 6-20P (Single-phase 250V; 20A; 2P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified 6-20 straight (non-locking) plug (Single-phase 250V; 20A; 2P3W)."/>
+        </Member>
+        <Member Name="NEMA_L6_20P">
+          <Annotation Term="OData.Description" String="NEMA L6-20P (Single-phase 250V; 20A; 2P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L6-20 plug (Single-phase 250V; 20A; 2P3W)."/>
+        </Member>
+        <Member Name="NEMA_L6_30P">
+          <Annotation Term="OData.Description" String="NEMA L6-30P (Single-phase 250V; 30A; 2P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L6-30 plug (Single-phase 250V; 30A; 2P3W)."/>
+        </Member>
+        <Member Name="NEMA_L14_20P">
+          <Annotation Term="OData.Description" String="NEMA L14-20P (Split-phase 125/250V; 20A; 2P4W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L14-20 plug (Split-phase 125/250V; 20A; 2P4W)."/>
+        </Member>
+        <Member Name="NEMA_L14_30P">
+          <Annotation Term="OData.Description" String="NEMA L14-30P (Split-phase 125/250V; 30A; 2P4W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L14-30 plug (Split-phase 125/250V; 30A; 2P4W)."/>
+        </Member>
+        <Member Name="NEMA_L15_20P">
+          <Annotation Term="OData.Description" String="NEMA L15-20P (Three-phase 250V; 20A; 3P4W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L15-20 plug (Three-phase 250V; 20A; 3P4W)."/>
+        </Member>
+        <Member Name="NEMA_L15_30P">
+          <Annotation Term="OData.Description" String="NEMA L15-30P (Three-phase 250V; 30A; 3P4W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L15-30 plug (Three-phase 250V; 30A; 3P4W)."/>
+        </Member>
+        <Member Name="NEMA_L21_20P">
+          <Annotation Term="OData.Description" String="NEMA L21-20P (Three-phase 120/208V; 20A; 3P5W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L21-20 plug (Three-phase 120/208V; 20A; 3P5W)."/>
+        </Member>
+        <Member Name="NEMA_L21_30P">
+          <Annotation Term="OData.Description" String="NEMA L21-30P (Three-phase 120/208V; 30A; 3P5W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L21-30 plug (Three-phase 120/208V; 30A; 3P5W)."/>
+        </Member>
+        <Member Name="NEMA_L22_20P">
+          <Annotation Term="OData.Description" String="NEMA L22-20P (Three-phase 277/480V; 20A; 3P5W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L22-20 plug (Three-phase 277/480V; 20A; 3P5W)."/>
+        </Member>
+        <Member Name="NEMA_L22_30P">
+          <Annotation Term="OData.Description" String="NEMA L22-30P (Three-phase 277/480V; 30A; 3P5W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the NEMA specified locking L22-30 plug (Three-phase 277/480V; 30A; 3P5W)."/>
+        </Member>
+        <Member Name="California_CS8265">
+          <Annotation Term="OData.Description" String="California Standard CS8265 (Single-phase 250V; 50A; 2P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the 'California Standard' CS8265 style plug (Three-phase 250V; 50A; 3P4W)."/>
+        </Member>
+        <Member Name="California_CS8365">
+          <Annotation Term="OData.Description" String="California Standard CS8365 (Three-phase 250V; 50A; 3P4W)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the 'California Standard' CS8365 style plug (Three-phase 250V; 50A; 3P4W)."/>
+        </Member>
+        <Member Name="IEC_60320_C14">
+          <Annotation Term="OData.Description" String="IEC C14 (Single-phase 250V; 10A; 1P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This input shall match the IEC 60320 specified C14 input (Single-phase 250V; 10A; 1P3W)."/>
+        </Member>
+        <Member Name="IEC_60320_C20">
+          <Annotation Term="OData.Description" String="IEC C20 (Single-phase 250V; 16A; 1P3W)."/>
+          <Annotation Term="OData.LongDescription" String="This input shall match the IEC 60320 specified C20 input (Single-phase 250V; 16A; 1P3W)."/>
+        </Member>
+        <Member Name="IEC_60309_1P3W_16A">
+          <Annotation Term="OData.Description" String="IEC 60309 316P6 (Single-phase 200-250V; 16A; 1P3W; Blue, 6-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 316P6 plug (Single-phase 200-250V; 16A; 1P3W; Blue, 6-hour)."/>
+        </Member>
+        <Member Name="IEC_60309_1P3W_32A">
+          <Annotation Term="OData.Description" String="IEC 60309 332P6 (Single-phase 200-250V; 32A; 1P3W; Blue, 6-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 332P6 plug (Single-phase 200-250V; 32A; 1P3W; Blue, 6-hour)."/>
+        </Member>
+        <Member Name="IEC_60309_1P3W_63A">
+          <Annotation Term="OData.Description" String="IEC 60309 363P6 (Single-phase 200-250V; 63A; 1P3W; Blue, 6-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 363P6 plug (Single-phase 200-250V; 63A; 1P3W; Blue, 6-hour)."/>
+        </Member>
+        <Member Name="IEC_60309_3P5W_16A">
+          <Annotation Term="OData.Description" String="IEC 60309 516P6 (Three-phase 200-240/346-415V; 16A; 3P5W; Red; 6-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 516P6 plug (Three-phase 200-240/346-415V; 16A; 3P5W; Red; 6-hour)."/>
+        </Member>
+        <Member Name="IEC_60309_3P5W_32A">
+          <Annotation Term="OData.Description" String="IEC 60309 532P6 (Three-phase 200-240/346-415V; 32A; 3P5W; Red; 6-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 plug 532P6 (Three-phase 200-240/346-415V; 32A; 3P5W; Red; 6-hour)."/>
+        </Member>
+        <Member Name="IEC_60309_3P5W_63A">
+          <Annotation Term="OData.Description" String="IEC 60309 563P6 (Three-phase 200-240/346-415V; 63A; 3P5W; Red; 6-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 563P6 plug (Three-phase 200-240/346-415V; 63A; 3P5W; Red; 6-hour)."/>
+        </Member>
+        <Member Name="IEC_60309_3P4W_60A">
+          <Annotation Term="OData.Description" String="IEC 60309 460P9 (Three-phase 200-250V; 60A; 3P4W; Blue; 9-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 460P9 plug (Three-phase 200-250V; 60A; 3P4W; Blue; 9-hour)."/>
+        </Member>
+        <Member Name="IEC_60309_3P5W_60A">
+          <Annotation Term="OData.Description" String="IEC 60309 560P9 (Three-phase 120-144/208-250V; 60A; 3P5W; Blue; 9-hour)."/>
+          <Annotation Term="OData.LongDescription" String="This plug shall match the IEC 60309 plug 560P9 (Three-phase 120-144/208-250V; 60A; 3P5W; Blue; 9-hour)."/>
+        </Member>
+        <Member Name="Field_208V_3P4W_60A">
+          <Annotation Term="OData.Description" String="Field-wired; three-phase 200-250V; 60A; 3P4W)."/>
+          <Annotation Term="OData.LongDescription" String="This field-wired input is three-phase 200-250V; 60A; 3P4W.  It is appropriate for use on a 60A branch circuit."/>
+        </Member>
+        <Member Name="Field_400V_3P5W_32A">
+          <Annotation Term="OData.Description" String="Field-wired; three-phase 200-240/346-415V; 32A; 3P5W."/>
+          <Annotation Term="OData.LongDescription" String="This field-wired input is three-phase 200-240/346-415V; 32A; 3P5W.  It is appropriate for use on a 30, 32A, or 40A branch circuit."/>
+        </Member>
+      </EnumType>
+
+      <EnumType Name="VoltageType">
+        <Member Name="AC">
+          <Annotation Term="OData.Description" String="Alternating Current (AC) circuit."/>
+        </Member>
+        <Member Name="DC">
+          <Annotation Term="OData.Description" String="Direct Current (DC) circuit."/>
+        </Member>
+      </EnumType>
+
+      <EnumType Name="NominalVoltageType">
+        <Member Name="DCNeg48V">
+          <Annotation Term="OData.Description" String="-48V DC input."/>
+        </Member>
+        <Member Name="DC380V">
+          <Annotation Term="OData.Description" String="High Voltage DC input (380V)."/>
+        </Member>
+        <Member Name="AC120V">
+          <Annotation Term="OData.Description" String="AC 120V nominal input."/>
+        </Member>
+        <Member Name="AC240V">
+          <Annotation Term="OData.Description" String="AC 240V nominal input."/>
+        </Member>
+        <Member Name="AC277V">
+          <Annotation Term="OData.Description" String="AC 277V nominal input."/>
+        </Member>
+        <Member Name="ACandDCWideRange">
+          <Annotation Term="OData.Description" String="Wide range AC or DC input."/>
+        </Member>
+        <Member Name="ACWideRange">
+          <Annotation Term="OData.Description" String="Wide range AC input."/>
+        </Member>
+        <Member Name="DC240V">
+          <Annotation Term="OData.Description" String="DC 240V nominal input."/>
+        </Member>
+      </EnumType>
+
+    </Schema>
+
+  </edmx:DataServices>
+</edmx:Edmx>

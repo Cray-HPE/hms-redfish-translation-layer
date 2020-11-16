@@ -1,0 +1,8 @@
+{
+    "@odata.type": "#PowerDistributionCollection.PowerDistributionCollection",
+    "Name": "UPS Collection",
+    "Members@odata.count": 0,
+    "Members": [],
+    "@odata.id": "/redfish/v1/PowerEquipment/UPSs",
+    "@Redfish.Copyright": "Copyright 2014-2019 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright."
+}

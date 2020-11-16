@@ -1,0 +1,926 @@
+{
+    "$id": "http://redfish.dmtf.org/schemas/v1/VFD.v0_2_0.json",
+    "$ref": "#/definitions/VFD",
+    "$schema": "http://redfish.dmtf.org/schemas/v1/redfish-schema-v1.json",
+    "copyright": "Copyright 2014-2018 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright",
+    "definitions": {
+        "AcInput": {
+            "additionalProperties": false,
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "@odata.id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/id"
+                },
+                "ACVoltage": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more AC voltage sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure AC voltage.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "ACVoltage@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "Actions": {
+                    "$ref": "#/definitions/AcInputActions",
+                    "description": "The available actions for this resource.",
+                    "longDescription": "The Actions property shall contain the available actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                },
+                "Amperage": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more amperage sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure amperage.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Amperage@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "MemberId": {
+                    "description": "This is the identifier for the member within the collection.",
+                    "longDescription": "The value of this string shall uniquely identify the member within the collection.  For services supporting Redfish v1.6 or higher, this value shall be the zero-based array index.",
+                    "readonly": true,
+                    "type": "string"
+                },
+                "Oem": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Oem",
+                    "description": "This is the manufacturer/provider specific extension moniker used to divide the Oem object into sections.",
+                    "longDescription": "The value of this string shall be of the format for the reserved word *Oem*."
+                },
+                "PercentCurrent": {
+                    "description": "The Percent Current for this AC Input.",
+                    "longDescription": "This property shall indicate the Percent Current percentage value of this AC Input.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "required": [
+                "@odata.id",
+                "MemberId"
+            ],
+            "type": "object"
+        },
+        "AcInputActions": {
+            "additionalProperties": false,
+            "description": "The available actions for this resource.",
+            "longDescription": "This type shall contain the available actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Oem": {
+                    "$ref": "#/definitions/AcInputOemActions",
+                    "description": "This property contains the available OEM specific actions for this resource.",
+                    "longDescription": "This property shall contain any additional OEM actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "type": "object"
+        },
+        "AcInputOemActions": {
+            "additionalProperties": true,
+            "description": "The available OEM specific actions for this resource.",
+            "longDescription": "This type shall contain any additional OEM actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {},
+            "type": "object"
+        },
+        "AcOutput": {
+            "additionalProperties": false,
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "@odata.id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/id"
+                },
+                "ACVoltage": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more AC voltage sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure AC voltage.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "ACVoltage@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "Actions": {
+                    "$ref": "#/definitions/AcOutputActions",
+                    "description": "The available actions for this resource.",
+                    "longDescription": "The Actions property shall contain the available actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                },
+                "Amperage": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more amperage sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure amperage.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Amperage@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "Frequency": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more frequency sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure frequency.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Frequency@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "KWHours": {
+                    "description": "The Kilowatt-Hours for this AC Output.",
+                    "longDescription": "This property shall indicate the Kilowatt-Hours of this AC Output.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "kWh",
+                    "versionAdded": "v0_2_0"
+                },
+                "MemberId": {
+                    "description": "This is the identifier for the member within the collection.",
+                    "longDescription": "The value of this string shall uniquely identify the member within the collection.  For services supporting Redfish v1.6 or higher, this value shall be the zero-based array index.",
+                    "readonly": true,
+                    "type": "string"
+                },
+                "Oem": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Oem",
+                    "description": "This is the manufacturer/provider specific extension moniker used to divide the Oem object into sections.",
+                    "longDescription": "The value of this string shall be of the format for the reserved word *Oem*."
+                },
+                "PercentRatedPower": {
+                    "description": "The Percent Rated Power for this AC Output.",
+                    "longDescription": "This property shall indicate the Percent Rated Power information of this AC Output.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "PercentRatedTorque": {
+                    "description": "The Percent Rated Torque for this AC Output.",
+                    "longDescription": "This property shall indicate the Percent Rated Torque information of this AC Output.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "required": [
+                "@odata.id",
+                "MemberId"
+            ],
+            "type": "object"
+        },
+        "AcOutputActions": {
+            "additionalProperties": false,
+            "description": "The available actions for this resource.",
+            "longDescription": "This type shall contain the available actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Oem": {
+                    "$ref": "#/definitions/AcOutputOemActions",
+                    "description": "This property contains the available OEM specific actions for this resource.",
+                    "longDescription": "This property shall contain any additional OEM actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "type": "object"
+        },
+        "AcOutputOemActions": {
+            "additionalProperties": true,
+            "description": "The available OEM specific actions for this resource.",
+            "longDescription": "This type shall contain any additional OEM actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {},
+            "type": "object"
+        },
+        "Actions": {
+            "additionalProperties": false,
+            "description": "The available actions for this resource.",
+            "longDescription": "This type shall contain the available actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Oem": {
+                    "$ref": "#/definitions/OemActions",
+                    "description": "This property contains the available OEM specific actions for this resource.",
+                    "longDescription": "This property shall contain any additional OEM actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "type": "object"
+        },
+        "DcBus": {
+            "additionalProperties": false,
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "@odata.id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/id"
+                },
+                "Actions": {
+                    "$ref": "#/definitions/DcBusActions",
+                    "description": "The available actions for this resource.",
+                    "longDescription": "The Actions property shall contain the available actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                },
+                "DCVoltage": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more DC voltage sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure DC voltage.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "DCVoltage@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "DcUnderOverVolts": {
+                    "description": "The DC Under/Over Volts for this DC Bus.",
+                    "longDescription": "This property shall indicate the DC Under/Over Volts sensor reading value of this DC Bus.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "V",
+                    "versionAdded": "v0_2_0"
+                },
+                "MemberId": {
+                    "description": "This is the identifier for the member within the collection.",
+                    "longDescription": "The value of this string shall uniquely identify the member within the collection.  For services supporting Redfish v1.6 or higher, this value shall be the zero-based array index.",
+                    "readonly": true,
+                    "type": "string"
+                },
+                "Oem": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Oem",
+                    "description": "This is the manufacturer/provider specific extension moniker used to divide the Oem object into sections.",
+                    "longDescription": "The value of this string shall be of the format for the reserved word *Oem*."
+                }
+            },
+            "required": [
+                "@odata.id",
+                "MemberId"
+            ],
+            "type": "object"
+        },
+        "DcBusActions": {
+            "additionalProperties": false,
+            "description": "The available actions for this resource.",
+            "longDescription": "This type shall contain the available actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Oem": {
+                    "$ref": "#/definitions/DcBusOemActions",
+                    "description": "This property contains the available OEM specific actions for this resource.",
+                    "longDescription": "This property shall contain any additional OEM actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "type": "object"
+        },
+        "DcBusOemActions": {
+            "additionalProperties": true,
+            "description": "The available OEM specific actions for this resource.",
+            "longDescription": "This type shall contain any additional OEM actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {},
+            "type": "object"
+        },
+        "OemActions": {
+            "additionalProperties": true,
+            "description": "The available OEM specific actions for this resource.",
+            "longDescription": "This type shall contain any additional OEM actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {},
+            "type": "object"
+        },
+        "VFD": {
+            "additionalProperties": false,
+            "description": "This is the schema definition for Variable Frequency Drive - VFD equipment.",
+            "longDescription": "This resource shall be used to represent a Variable Frequency Drive (VFD) for a Redfish implementation.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "@odata.context": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/context"
+                },
+                "@odata.etag": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/etag"
+                },
+                "@odata.id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/id"
+                },
+                "@odata.type": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/type"
+                },
+                "AcInput": {
+                    "autoExpand": true,
+                    "description": "This is the definition for AC Input.",
+                    "items": {
+                        "$ref": "#/definitions/AcInput"
+                    },
+                    "longDescription": "These properties shall be the definition for AC Input for a Redfish implementation.",
+                    "readonly": false,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "AcInput@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "AcOutput": {
+                    "autoExpand": true,
+                    "description": "This is the definition for AC Output.",
+                    "items": {
+                        "$ref": "#/definitions/AcOutput"
+                    },
+                    "longDescription": "These properties shall be the definition for AC Output for a Redfish implementation.",
+                    "readonly": false,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "AcOutput@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "Actions": {
+                    "$ref": "#/definitions/Actions",
+                    "description": "The available actions for this resource.",
+                    "longDescription": "The Actions property shall contain the available actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                },
+                "Alarms": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/AlarmCollection.json#/definitions/AlarmCollection",
+                    "description": "Contains the naivgation pointer to the equipment Alarm collection.",
+                    "longDescription": "This property shall be a reference to a resource of type AlarmCollection that contains the alarms for the equipment.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "AssetTag": {
+                    "description": "The actual Asset Tag of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Asset Tag of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CommandSpeed": {
+                    "description": "The actual Command Speed of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Command Speed of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CommunicationsError": {
+                    "description": "The actual Communications Error status of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Communications Error boolean value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DateOfManufacture": {
+                    "description": "The date of manufacture of VFD.",
+                    "format": "date-time",
+                    "longDescription": "The value of this property shall represent the actual date of manufacture of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DcBus": {
+                    "autoExpand": true,
+                    "description": "This is the definition for DC Bus.",
+                    "items": {
+                        "$ref": "#/definitions/DcBus"
+                    },
+                    "longDescription": "These properties shall be the definition for DC Bus for a Redfish implementation.",
+                    "readonly": false,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "DcBus@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "DcUnderOverVolts": {
+                    "description": "The actual DC Under/Over Volts value of VFD.",
+                    "longDescription": "The value of this property shall represent the actual DC Under/Over Volts value of this VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "V",
+                    "versionAdded": "v0_2_0"
+                },
+                "Description": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Description"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "readonly": true
+                },
+                "DriveAtSpeed": {
+                    "description": "The actual Drive At Speed value of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Drive At Speed value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DriveControl": {
+                    "description": "The actual Drive Control of VFD.",
+                    "longDescription": "This property shall indicate the actual Drive Control of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DriveFail": {
+                    "description": "The actual Drive Fail of VFD.",
+                    "longDescription": "This property shall indicate the actual Drive Fail of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DriveOverTemperature": {
+                    "description": "The actual Drive Over Temperature value of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Drive Over Temperature value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DriveStatus": {
+                    "description": "The actual Drive Status of VFD.",
+                    "longDescription": "This property shall indicate the actual Drive Status of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FirmwareRevision": {
+                    "description": "The actual Firmware Revision of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Firmware Revision of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FirstFault": {
+                    "description": "The actual First Fault of VFD.",
+                    "longDescription": "This property shall indicate the actual First Fault of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FlyingStart": {
+                    "description": "The actual Flying Start status of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Flying Start boolean value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "HardwareRevision": {
+                    "description": "The actual Hardware Revision of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Hardware Revision of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Id",
+                    "readonly": true
+                },
+                "KWHours": {
+                    "description": "The actual Kilowatt-Hours of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Kilowatt-Hours of this VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "kWh",
+                    "versionAdded": "v0_2_0"
+                },
+                "LastFault": {
+                    "description": "The actual Last Fault of VFD.",
+                    "longDescription": "This property shall indicate the actual Last Fault of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Manufacturer": {
+                    "description": "The actual Manufacturer of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Manufacturer of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Model": {
+                    "description": "The actual Model Number of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Model Number of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "MotorOverTemperature": {
+                    "description": "The actual Motor Over Temperature value of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Motor Over Temperature value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Name": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Name",
+                    "readonly": true
+                },
+                "Oem": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Oem",
+                    "description": "This is the manufacturer/provider specific extension moniker used to divide the Oem object into sections.",
+                    "longDescription": "The value of this string shall be of the format for the reserved word *Oem*."
+                },
+                "PartNumber": {
+                    "description": "The actual Part Number of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Part Number of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "PhysicalLocation": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Location"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Physical Location of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Physical Location of VFD.",
+                    "versionAdded": "v0_2_0"
+                },
+                "ReverseDirection": {
+                    "description": "The actual Reverse Direction status of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Reverse Direction boolean value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Rotational": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more rotational sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure rotation.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Rotational@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "RunTime": {
+                    "description": "The actual Run Time of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Run Time of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "[psi]",
+                    "versionAdded": "v0_2_0"
+                },
+                "SecondFault": {
+                    "description": "The actual Second Fault of VFD.",
+                    "longDescription": "This property shall indicate the actual Second Fault of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Sensors": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/SensorCollection.json#/definitions/SensorCollection",
+                    "description": "The naivgation pointer to the collection of sensors located in the equipment and sub-components.",
+                    "longDescription": "This property shall be a reference to a resource of type SensorCollection that contains the sensors located in the equipment and sub-components.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "SerialNumber": {
+                    "description": "The actual Serial Number of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Serial Number of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Speed": {
+                    "description": "The actual Speed value of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Speed value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Started": {
+                    "description": "The actual Started status of VFD.",
+                    "longDescription": "The value of this property shall represent the actual Started boolean value of VFD.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Temperature": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more temperature sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure temperature.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Temperature@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "TriggeredAlarms": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 0 or more triggered alarms.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Alarm.json#/definitions/Alarm"
+                    },
+                    "longDescription": "This array shall contain the set of Members of the Alarm Collection which have an 'AlarmStatus' of 'Triggered'.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "TriggeredAlarms@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                }
+            },
+            "required": [
+                "@odata.id",
+                "@odata.type",
+                "Id",
+                "Name"
+            ],
+            "type": "object"
+        }
+    },
+    "owningEntity": "DMTF",
+    "release": "TBD",
+    "title": "#VFD.v0_2_0.VFD"
+}

@@ -1,0 +1,32 @@
+# Copyright 2019-2020 Hewlett Packard Enterprise Development LP
+
+# Dockerfile for building the HMS Redfish Translation Service (RTS) Vault loader.
+
+FROM dtr.dev.cray.com/baseos/golang:1.14-alpine3.12 AS builder
+
+# Copy all the necessary files to the image.
+COPY cmd $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/cmd
+COPY internal $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/internal
+COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/vendor
+
+RUN set -ex \
+    && go build -v -i stash.us.cray.com/HMS/hms-redfish-translation-service/cmd/vault_loader
+
+## Final Stage ###
+
+FROM dtr.dev.cray.com/baseos/alpine:3.12
+LABEL maintainer="Cray, Inc."
+STOPSIGNAL SIGTERM
+
+ENV VAULT_HOSTNAME vault
+ENV VAULT_PORT 8200
+ENV VAULT_ADDR http://$VAULT_HOSTNAME:$VAULT_PORT
+ENV JAWS_VAULT_KEYPATH secret/data/iPDUs
+
+COPY --from=builder /go/vault_loader /usr/local/bin
+
+COPY scripts/wait-for.sh /
+COPY configs /configs
+COPY .version /
+
+CMD ["sh", "-c", "./wait-for.sh $VAULT_HOSTNAME:$VAULT_PORT -- echo 'Vault ready.' && vault_loader"]
