@@ -1,0 +1,824 @@
+{
+    "$id": "http://redfish.dmtf.org/schemas/v1/OutletGroup.v0_9_0.json",
+    "$ref": "#/definitions/OutletGroup",
+    "$schema": "http://redfish.dmtf.org/schemas/v1/redfish-schema-v1.json",
+    "copyright": "Copyright 2014-2018 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright",
+    "definitions": {
+        "Actions": {
+            "additionalProperties": false,
+            "description": "The available actions for this resource.",
+            "longDescription": "This type shall contain the available actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "#OutletGroup.PowerControl": {
+                    "$ref": "#/definitions/PowerControl"
+                },
+                "#OutletGroup.ResetStatistics": {
+                    "$ref": "#/definitions/ResetStatistics"
+                },
+                "Oem": {
+                    "$ref": "#/definitions/OemActions",
+                    "description": "This property contains the available OEM specific actions for this resource.",
+                    "longDescription": "This property shall contain any additional OEM actions for this resource.",
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "type": "object"
+        },
+        "Currents": {
+            "additionalProperties": false,
+            "description": "This object contains the current sensors.",
+            "longDescription": ".",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Line1": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The current sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line2": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The current sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line3": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The current sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Neutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The current sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "type": "object"
+        },
+        "EnergyReadings": {
+            "additionalProperties": false,
+            "description": "This object contains the energy sensors.",
+            "longDescription": ".",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Line1ToLine2": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The energy sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line1ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The energy sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line2ToLine3": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Energy sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line2ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The energy sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line3ToLine1": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Energy sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line3ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The energy sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "type": "object"
+        },
+        "OemActions": {
+            "additionalProperties": true,
+            "description": "The available OEM specific actions for this resource.",
+            "longDescription": "This type shall contain any additional OEM actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {},
+            "type": "object"
+        },
+        "OutletGroup": {
+            "additionalProperties": false,
+            "description": "This is the schema definition for an electrical OutletGroup.",
+            "longDescription": "This resource shall be used to represent an electrical OutletGroup for a Redfish implementation.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "@odata.context": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/context"
+                },
+                "@odata.etag": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/etag"
+                },
+                "@odata.id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/id"
+                },
+                "@odata.type": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/type"
+                },
+                "Actions": {
+                    "$ref": "#/definitions/Actions",
+                    "description": "The available actions for this resource.",
+                    "longDescription": "The Actions property shall contain the available actions for this resource.",
+                    "versionAdded": "v0_9_0"
+                },
+                "CreatedBy": {
+                    "description": "The creator of this outlet group.",
+                    "longDescription": "The value of this property shall contain the name of the person or application that created this outlet group.",
+                    "readonly": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "CurrentSensor": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The current sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "This object shall contain the current, measured in Amperes, for this single phase circuit. This object shall not appear in resource instances representing poly-phase circuits.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Description": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Description"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "readonly": true
+                },
+                "EnergySensor": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The energy sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "This object shall contain the total energy, measured in Watt-hours (units of Watts), for this outlet group, which represents the 'Total' ElectricalContext sensor when multiple energy sensors exist for this outlet group.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "FrequencySensor": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The frequency sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Id",
+                    "readonly": true
+                },
+                "Name": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Name",
+                    "readonly": true
+                },
+                "Oem": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Oem",
+                    "description": "This is the manufacturer/provider specific extension moniker used to divide the Oem object into sections.",
+                    "longDescription": "The value of this string shall be of the format for the reserved word *Oem*."
+                },
+                "Outlets": {
+                    "description": "The set of outlets in this Outlet Group.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Outlet.json#/definitions/Outlet"
+                    },
+                    "longDescription": "A collection that indicates all the Outlets  included in the Outlet Group that this resource represents.",
+                    "readonly": false,
+                    "type": "array",
+                    "versionAdded": "v0_9_0"
+                },
+                "Outlets@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "PolyPhaseCurrentSensors": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Currents"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The current sensors for this outlet group.",
+                    "longDescription": "TBD.",
+                    "versionAdded": "v0_9_0"
+                },
+                "PolyPhaseEnergySensors": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/EnergyReadings"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The energy sensors for this outlet group.",
+                    "longDescription": "TBD.",
+                    "versionAdded": "v0_9_0"
+                },
+                "PolyPhasePowerSensors": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/PowerReadings"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The power sensors for this outlet group.",
+                    "longDescription": "TBD.",
+                    "versionAdded": "v0_9_0"
+                },
+                "PolyPhaseVoltageSensors": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Voltages"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensors for this outlet group.",
+                    "longDescription": "This object shall contain the voltage sensor(s) for this outlet group. For single phase circuits this object will contain a duplicate copy of the voltage sensor referenced in the 'Voltage' object. For poly-phase circuits this object may contain multiple voltage sensor readings used to fully describe the circuit.",
+                    "versionAdded": "v0_9_0"
+                },
+                "PowerEnabled": {
+                    "description": "Indicates if the outlet group can be powered.",
+                    "longDescription": "The value of this property shall contain the power enable state of the outlet group.  True shall indicate that the group may be powered on, and false shall indicate that the group cannot be powered.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "PowerOffDelaySeconds": {
+                    "description": "The number of seconds to delay power off after a PowerControl request. Zero seconds indicates no delay to power off.",
+                    "longDescription": "TBD.",
+                    "readonly": false,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "PowerOnDelaySeconds": {
+                    "description": "The number of seconds to delay power up after a power cycle or a PowerControl request. Zero seconds indicates no delay to power up.",
+                    "longDescription": "TBD.",
+                    "readonly": false,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "PowerSensor": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The power sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "This object shall contain the total power, measured in Watts, for this outlet group, which represents the 'Total' ElectricalContext sensor when multiple power sensors exist for this outlet group.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "PowerState": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/PowerState"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The power state of the outlet group.",
+                    "longDescription": "The value of this property shall contain the power state of the outlet group.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Status": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Status",
+                    "description": "This property describes the status and health of the resource and its children.",
+                    "longDescription": "This property shall contain any status or health properties of the resource.",
+                    "versionAdded": "v0_9_0"
+                },
+                "VoltageSensor": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensor for this single phase circuit.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "This object shall contain the voltage, measured in Volts, for this single phase circuit. This object shall not appear in resource instances representing poly-phase circuits.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "required": [
+                "@odata.id",
+                "@odata.type",
+                "Id",
+                "Name"
+            ],
+            "type": "object"
+        },
+        "PowerControl": {
+            "additionalProperties": false,
+            "description": "This action is used to turn the OutletGroup on or off.",
+            "longDescription": "TBD.",
+            "parameters": {
+                "PowerState": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/PowerState",
+                    "description": "The desired power state of the OutletGroup.",
+                    "longDescription": "This parameter shall define the desired power state of the OutletGroup."
+                }
+            },
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "target": {
+                    "description": "Link to invoke action",
+                    "format": "uri-reference",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Friendly action name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "PowerReadings": {
+            "additionalProperties": false,
+            "description": "This object contains the power sensors.",
+            "longDescription": ".",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Line1ToLine2": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The power sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line1ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Power sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line2ToLine3": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Power sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line2ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Power sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line3ToLine1": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Power sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line3ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorPowerExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Power sensor for this outlet group.",
+                    "excerptCopy": "SensorPowerExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "type": "object"
+        },
+        "ResetStatistics": {
+            "additionalProperties": false,
+            "description": "This action is used to reset statistics related to this outlet group.",
+            "longDescription": "This action shall perform a reset of any time intervals or counted values for this outlet group.",
+            "parameters": {},
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "target": {
+                    "description": "Link to invoke action",
+                    "format": "uri-reference",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Friendly action name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Voltages": {
+            "additionalProperties": false,
+            "description": "This object contains the voltages.",
+            "longDescription": "This object shall contain the voltage sensor(s) for this outlet group. For single phase circuits this object will contain a duplicate copy of the voltage sensor referenced in the 'Voltage' object. For poly-phase circuits this object may contain multiple voltage sensor readings used to fully describe the circuit.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Line1ToLine2": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line1ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line2ToLine3": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line2ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line3ToLine1": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Line3ToNeutral": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/SensorExcerpt"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The voltage sensor for this outlet group.",
+                    "excerptCopy": "SensorExcerpt",
+                    "longDescription": "TBD.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "owningEntity": "DMTF",
+    "release": "TBD",
+    "title": "#OutletGroup.v0_9_0.OutletGroup"
+}

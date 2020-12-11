@@ -1,0 +1,24 @@
+{
+    "@odata.type": "#PowerEquipment.v0_9_0.PowerEquipment",
+    "Id": "EnergyEquipment",
+    "Name": "DCIM Energy Equipment",
+    "Status": {
+        "State": "Enabled",
+        "HealthRollup": "OK"
+    },
+    "FloorPDUs": {
+        "@odata.id": "/redfish/v1/PowerEquipment/FloorPDUs"
+    },
+    "RackPDUs": {
+        "@odata.id": "/redfish/v1/PowerEquipment/RackPDUs"
+    },
+    "TransferSwitches": {
+        "@odata.id": "/redfish/v1/PowerEquipment/TransferSwitches"
+    },
+    "UPSs": {
+        "@odata.id": "/redfish/v1/PowerEquipment/UPSs"
+    },
+    "Links": {},
+    "@odata.id": "/redfish/v1/PowerEquipment",
+    "@Redfish.Copyright": "Copyright 2014-2019 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright."
+}

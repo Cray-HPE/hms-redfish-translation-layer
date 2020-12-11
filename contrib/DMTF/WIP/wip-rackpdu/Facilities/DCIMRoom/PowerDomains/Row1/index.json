@@ -1,0 +1,22 @@
+{
+    "@odata.type": "#PowerDomain.v0_9_0.PowerDomain",
+    "Id": "Row1",
+    "Name": "Row #1 Domain",
+    "Status": {
+        "State": "Enabled",
+        "Health": "OK"
+    },
+    "RackPDUs": [{
+        "@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1"
+    }],
+    "Links": {
+        "ManagedBy": [
+            {
+                "@odata.id": "/redfish/v1/Managers/BMC"
+            }
+        ],
+        "RelatedSystems": []
+    },
+    "@odata.id": "/redfish/v1/Facilities/DCIMRoom/PowerDomains/Row1",
+    "@Redfish.Copyright": "Copyright 2014-2019 Distributed Management Task Force, Inc. (DMTF). For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright."
+}

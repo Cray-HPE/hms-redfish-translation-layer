@@ -1,0 +1,99 @@
+{
+	"@odata.type": "#Circuit.v0_9_0.Circuit",
+	"Id": "C",
+	"Name": "Branch Circuit C",
+	"Status": {
+		"State": "Enabled",
+		"Health": "OK"
+	},
+	"CircuitType": "Branch",
+	"PhaseWiringType": "TwoPhase3Wire",
+	"NominalVoltage": "AC240V",
+	"RatedCurrentAmps": 16,
+	"BreakerState": "Normal",
+	"PolyPhaseVoltageSensors": {
+		"Line3ToNeutral": {
+			"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/VoltageCL3N",
+			"Name": "Branch C Voltage L3N",
+			"Reading": 118.4,
+			"ReadingUnits": "V"
+		},
+		"Line3ToLine1": {
+			"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/VoltageCL3L1",
+			"Name": "Branch C Voltage L31",
+			"Reading": 205.1,
+			"ReadingUnits": "V"
+		}
+	},
+	"CurrentSensor": {
+		"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/CurrentC",
+		"Name": "Branch C Current",
+		"Reading": 4.13,
+		"PeakReading": 4.48,
+		"ReadingUnits": "A"
+	},
+	"PolyPhaseCurrentSensors": {
+		"Line3": {
+			"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/CurrentC",
+			"Name": "Branch C Current",
+			"Reading": 4.13,
+			"PeakReading": 4.48,
+			"ReadingUnits": "A"
+		}
+	},
+	"PowerSensor": {
+		"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/PowerC",
+		"Name": "Branch C Power",
+		"Reading": 816.5,
+		"PeakReading": 920.8,
+		"ReadingUnits": "W",
+		"ApparentVA": 816.5,
+		"ReactiveVAR": 0.0,
+		"PowerFactor": 1.00
+	},
+	"PolyPhasePowerSensors": {
+		"Line1ToNeutral": {
+			"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/PowerC1",
+			"Name": "Branch C Power",
+			"Reading": 816.5,
+			"PeakReading": 920.8,
+			"ReadingUnits": "W",
+			"ApparentVA": 816.5,
+			"ReactiveVAR": 0.0,
+			"PowerFactor": 1.00
+		}
+	},
+	"FrequencySensor": {
+		"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/FrequencyC",
+		"Name": "Branch C Frequency",
+		"Reading": 60.0,
+		"ReadingUnits": "Hz"
+	},
+	"EnergySensor": {
+		"DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/EnergyC",
+		"Name": "Branch C Energy",
+		"Reading": 121666,
+		"ReadingUnits": "kW"
+	},
+
+	"Outlets": [{
+			"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/C1"
+		},
+		{
+			"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/C2"
+		},
+		{
+			"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/C3"
+		}
+	],
+	"Actions": {
+		"#Circuit.ResetBreaker": {
+			"target": "/redfish/v1/PowerEquipment/RackPDUs/1/Branches/C/Circuit.ResetBreaker"
+        },
+        "#Outlet.ResetStatistics": {
+            "target": "/redfish/v1/PowerEquipment/RackPDUs/1/Branches/C/Circuit.ResetStatistics"
+        }
+    },
+	"@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Branches/C",
+	"@Redfish.Copyright": "Copyright 2014-2019 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright."
+}

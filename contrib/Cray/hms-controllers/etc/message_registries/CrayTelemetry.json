@@ -1,0 +1,56 @@
+{
+    "@Redfish.Copyright": "Copyright 2018 Cray Inc. All rights reserved.",
+    "@odata.type": "#MessageRegistry.v1_0_0.MessageRegistry",
+    "Id": "CrayTelemetry.1.0.0",
+    "Name": "Cray Telemetry Message Registry",
+    "Language": "en",
+    "Description": "Cray high-speed telemetry messages for Redfish",
+    "RegistryPrefix": "CrayTelemetry",
+    "RegistryVersion":  "1.0.0",
+    "OwningEntity": "CrayTelemetry",
+    "Messages": {
+        "Temperature": {
+            "Description": "Includes all enabled temperature sensors in Celsius",
+            "Message": "See Oem/CrayPayload property",
+            "Severity": "OK",
+            "NumberOfArgs": 0,
+            "Resolution": "None"
+        },
+        "Voltage": {
+            "Description": "Includes all enabled Voltage sensors in volts",
+            "Message": "See Oem/CrayPayload property",
+            "Severity": "OK",
+            "NumberOfArgs": 0,
+            "Resolution": "None"
+        },
+        "Power": {
+            "Description": "Includes all enabled power sensors in watts",
+            "Message": "See Oem/CrayPayload property",
+            "Severity": "OK",
+            "NumberOfArgs": 0,
+            "Resolution": "None"
+        },
+        "Energy": {
+            "Description": "Includes all enabled energy sensors in Joules",
+            "Message": "See Oem/CrayPayload property",
+            "Severity": "OK",
+            "NumberOfArgs": 0,
+            "Resolution": "None"
+        },
+        "Fan": {
+            "Description": "Includes all enabled fan speed sensors in RPMs",
+            "Message": "See Oem/CrayPayload property",
+            "Severity": "OK",
+            "NumberOfArgs": 0,
+            "Resolution": "None"
+        },
+        "Pressure": {
+            "Description": "Includes all enabled pressure sensors in PSI",
+            "Message": "See Oem/CrayPayload property",
+            "Severity": "OK",
+            "NumberOfArgs": 0,
+            "Resolution": "None"
+        }
+    }
+}
+

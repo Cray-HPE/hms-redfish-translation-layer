@@ -1,0 +1,106 @@
+{
+    "@odata.type": "#Outlet.v0_9_0.Outlet",
+    "Id": "A3",
+    "Name": "Outlet A3, Branch Circuit A",
+    "Status": {
+        "Health": "OK",
+        "State": "Enabled"
+    },
+
+    "PhaseWiringType": "TwoPhase3Wire",
+    "VoltageType": "AC",
+    "OutletType": "C13",
+    
+    "RatedCurrentAmps": 12,
+    "NominalVoltage": "AC240V",
+
+    "IndicatorLED": "Lit",
+    "PowerOnDelaySeconds": 10,
+    "PowerOffDelaySeconds": 0,
+
+    "PowerState": "On",
+
+    "PowerEnabled": true,
+
+    "VoltageSensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/VoltageA3",
+        "Name": "Outlet A3 Voltage L12",
+        "Reading": 202.3,
+        "ReadingUnits": "V"
+    },
+    "PolyPhaseVoltageSensors": {
+        "Line1ToLine2": {
+            "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/VoltageA3",
+            "Name": "Outlet A3 Voltage L12",
+            "Reading": 202.3,
+            "ReadingUnits": "V"
+        }
+    },
+    "CurrentSensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/CurrentA3",
+        "Name": "Outlet A3 Current",
+        "Reading": 1.73,
+        "PeakReading": 2.50,
+        "ReadingUnits": "A"
+    },
+    "PolyPhaseCurrentSensors": {
+        "Line1": {
+            "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/CurrentA3",
+            "Name": "Outlet A3 Current",
+            "Reading": 1.73,
+            "PeakReading": 2.50,
+            "ReadingUnits": "A"
+        }
+    },
+    "PowerSensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/PowerA3",
+        "Name": "Outlet A3 Power",
+        "Reading": 349.9,
+        "PeakReading": 505.7,
+        "ReadingUnits": "W",
+        "ApparentVA": 349.9,
+        "ReactiveVAR": 0.0,
+        "PowerFactor": 1.00
+    },
+    "PolyPhasePowerSensors": {
+        "Line1ToLine2": {
+            "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/PowerA3",
+            "Name": "Outlet A3 Power",
+            "Reading": 349.9,
+            "PeakReading": 505.7,
+            "ReadingUnits": "W",
+            "ApparentVA": 349.9,
+            "ReactiveVAR": 0.0,
+            "PowerFactor": 1.00
+        }
+    },
+    "FrequencySensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/FrequencyA3",
+        "Name": "Outlet A3 Frequency",
+        "Reading": 60.0,
+        "ReadingUnits": "Hz"
+    },
+    "EnergySensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/EnergyA3",
+        "Name": "Outlet A3 Energy",
+        "Reading": 61848,
+        "ReadingUnits": "kW"
+    },
+
+    "Actions": {
+        "#Outlet.PowerControl": {
+            "target": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/A3/Outlet.PowerControl"
+        },
+        "#Outlet.ResetStatistics": {
+            "target": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/A3/Outlet.ResetStatistics"
+        }
+    },
+
+    "Links": {
+        "BranchCircuit": {
+            "@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Branches/A"
+        }
+    },
+    "@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/A3",
+    "@Redfish.Copyright": "Copyright 2018-2019 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright."
+}

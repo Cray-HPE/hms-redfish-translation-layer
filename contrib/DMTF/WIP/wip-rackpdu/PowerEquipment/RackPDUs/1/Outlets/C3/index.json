@@ -1,0 +1,100 @@
+{
+    "@odata.type": "#Outlet.v0_9_0.Outlet",
+    "Id": "C3",
+    "Name": "Outlet C3, Branch Circuit C",
+    "Status": {
+        "Health": "OK",
+        "State": "Enabled"
+    },
+
+    "PhaseWiringType": "TwoPhase3Wire",
+    "VoltageType": "AC",
+    "OutletType": "NEMA_L6_20R",
+    
+    "RatedCurrentAmps": 12,
+    "NominalVoltage": "AC240V",
+
+    "IndicatorLED": "Lit",
+    "PowerOnDelaySeconds": 10,
+    "PowerOffDelaySeconds": 0,
+
+    "PowerState": "On",
+
+    "PowerEnabled": true,
+
+    "VoltageSensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/VoltageC3",
+        "Name": "Outlet C3 Voltage L31",
+        "Reading": 204.3,
+        "ReadingUnits": "V"
+    },
+    "PolyPhaseVoltageSensors": {
+        "Line3ToLine1": {
+            "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/VoltageC3",
+            "Name": "Outlet C3 Voltage L31",
+            "Reading": 204.3,
+            "ReadingUnits": "V"
+        }
+    },
+    "CurrentSensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/CurrentC3",
+        "Name": "Outlet C3 Current",
+        "Reading": 1.74,
+        "PeakReading": 2.85,
+        "ReadingUnits": "A"
+    },
+    "PolyPhaseCurrentSensors": {
+        "Line3": {
+            "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/CurrentC3",
+            "Name": "Outlet C3 Current",
+            "Reading": 1.74,
+            "PeakReading": 2.85,
+            "ReadingUnits": "A"
+        }
+    },
+    "PowerSensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/PowerC3",
+        "Name": "Outlet C3 Power",      
+        "Reading": 355.4,
+        "PeakReading": 582.3,
+        "ReadingUnits": "W",
+        "ApparentVA": 355.4,
+        "ReactiveVAR": 0.0,
+        "PowerFactor": 1.00
+    },
+    "PolyPhasePowerSensors": {
+        "Line3ToLine1": {
+            "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/PowerC3",
+          "Name": "Outlet C3 Power",
+            "Reading": 355.4,
+            "PeakReading": 582.3,
+            "ReadingUnits": "W",
+            "ApparentVA": 355.4,
+          "ReactiveVAR": 0.0,
+          "PowerFactor": 1.00
+        }
+    },
+    "EnergySensor": {
+        "DataSourceUri": "/redfish/v1/PowerEquipment/RackPDUs/1/Sensors/EnergyC3",
+        "Name": "Outlet C3 Energy",
+        "Reading": 61848,
+        "ReadingUnits": "kW"
+    },
+
+    "Actions": {
+        "#Outlet.PowerControl": {
+            "target": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/C3/Outlet.PowerControl"
+        },
+        "#Outlet.ResetStatistics": {
+            "target": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/C3/Outlet.ResetStatistics"
+        }
+    },
+
+    "Links": {
+        "BranchCircuit": {
+            "@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Branches/C"
+        }
+    },
+    "@odata.id": "/redfish/v1/PowerEquipment/RackPDUs/1/Outlets/C3",
+    "@Redfish.Copyright": "Copyright 2018-2019 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright."
+}

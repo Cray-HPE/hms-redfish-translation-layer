@@ -1,0 +1,457 @@
+{
+    "$id": "http://redfish.dmtf.org/schemas/v1/PowerDistribution.v0_9_0.json",
+    "$ref": "#/definitions/PowerDistribution",
+    "$schema": "http://redfish.dmtf.org/schemas/v1/redfish-schema-v1.json",
+    "copyright": "Copyright 2014-2018 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright",
+    "definitions": {
+        "Actions": {
+            "additionalProperties": false,
+            "description": "The available actions for this resource.",
+            "longDescription": "This type shall contain the available actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Oem": {
+                    "$ref": "#/definitions/OemActions",
+                    "description": "This property contains the available OEM specific actions for this resource.",
+                    "longDescription": "This property shall contain any additional OEM actions for this resource.",
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "type": "object"
+        },
+        "CircuitSummary": {
+            "additionalProperties": false,
+            "description": "The summary of circuit information for this equipment.",
+            "longDescription": "This type shall contain the summary information regarding circuits for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "ControlledOutlets": {
+                    "description": "The number of controlled Outlets included in this equipment.",
+                    "longDescription": "The value of this property shall represent the actual maximum number of controlled Outlets of PowerDistribution.",
+                    "minimum": 1,
+                    "readonly": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "MonitoredBranches": {
+                    "description": "The number of monitored Branches supported by this equipment.",
+                    "longDescription": "The value of this property shall represent the actual maximum number of Branches of PowerDistribution.",
+                    "minimum": 1,
+                    "readonly": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "MonitoredOutlets": {
+                    "description": "The number of monitored Outlets included in this equipment.",
+                    "longDescription": "The value of this property shall represent the actual maximum number of monitored Outlets present in this equipment.",
+                    "minimum": 1,
+                    "readonly": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "MonitoredPhases": {
+                    "description": "The number of monitored Phases supported by this equipment.",
+                    "longDescription": "The value of this property shall represent the actual maximum number of Phases of PowerDistribution.",
+                    "minimum": 1,
+                    "readonly": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "TotalBranches": {
+                    "description": "The maximum number of Branch Circuits supported by the equipment.",
+                    "longDescription": "The value of this property shall represent the actual maximum number of Branch Circuits for this PowerDistribution.",
+                    "minimum": 1,
+                    "readonly": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "TotalOutlets": {
+                    "description": "The total number of Outlets included in this equipment.",
+                    "longDescription": "The value of this property shall represent the actual maximum number of Outlets present in this equipment.",
+                    "minimum": 1,
+                    "readonly": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "TotalPhases": {
+                    "description": "The maximum number of Phases of PowerDistribution.",
+                    "longDescription": "The value of this property shall represent the actual maximum number of Phases of PowerDistribution.",
+                    "minimum": 1,
+                    "readonly": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "type": "object"
+        },
+        "OemActions": {
+            "additionalProperties": true,
+            "description": "The available OEM specific actions for this resource.",
+            "longDescription": "This type shall contain any additional OEM actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {},
+            "type": "object"
+        },
+        "PowerDistribution": {
+            "additionalProperties": false,
+            "description": "This is the schema definition for a Rack Power Distribution Unit - PowerDistribution.",
+            "longDescription": "This resource shall be used to represent a Power Distribution component or unit for a Redfish implementation.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "@odata.context": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/context"
+                },
+                "@odata.etag": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/etag"
+                },
+                "@odata.id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/id"
+                },
+                "@odata.type": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/type"
+                },
+                "Actions": {
+                    "$ref": "#/definitions/Actions",
+                    "description": "The available actions for this resource.",
+                    "longDescription": "The Actions property shall contain the available actions for this resource.",
+                    "versionAdded": "v0_9_0"
+                },
+                "Alarms": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/AlarmCollection.json#/definitions/AlarmCollection",
+                    "description": "Contains the navigation pointer to the equipment Alarm collection.",
+                    "longDescription": "This property shall be a reference to a resource of type AlarmCollection that contains the alarms for the equipment.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "AssetTag": {
+                    "description": "The actual Asset Tag of this equipment.",
+                    "longDescription": "This property shall indicate the actual Asset Tag of this equipment.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "Branches": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/CircuitCollection.json#/definitions/CircuitCollection",
+                    "description": "This is the definition for Branch Circuits.",
+                    "longDescription": "These properties shall be the definition for Branch Circuits for a Redfish implementation.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "CircuitSummary": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/CircuitSummary"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "Contains summary information about the circuits of this PDU.",
+                    "longDescription": "This property shall indicate the circuit summary information for this PowerDistribution.",
+                    "versionAdded": "v0_9_0"
+                },
+                "DateOfManufacture": {
+                    "description": "The date of manufacture of this equipment.",
+                    "format": "date-time",
+                    "longDescription": "This property shall indicate the actual date of manufacture of this equipment.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "Description": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Description"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "readonly": true
+                },
+                "EquipmentType": {
+                    "$ref": "#/definitions/PowerEquipmentType",
+                    "description": "The type of equipment this resource represents.",
+                    "longDescription": "PowerEquipmentType shall indicate the type of location this resource represents.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Feeders": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/CircuitCollection.json#/definitions/CircuitCollection",
+                    "description": "This is the definition for Feeder Circuits.",
+                    "longDescription": "These properties shall be the definition for Feeder Circuits for a Redfish implementation.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "FirmwareVersion": {
+                    "description": "The Firmware Version of this equipment.",
+                    "longDescription": "This property shall indicate the actual Firmware Version of this equipment.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "HardwareRevision": {
+                    "description": "The actual Hardware Revision of this equipment.",
+                    "longDescription": "This property shall indicate the actual Hardware Revision of PDU.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "Id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Id",
+                    "readonly": true
+                },
+                "Location": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Location"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Physical Location of this equipment.",
+                    "longDescription": "This property shall indicate the actual Physical Location of this equipment.",
+                    "versionAdded": "v0_9_0"
+                },
+                "Mains": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/CircuitCollection.json#/definitions/CircuitCollection",
+                    "description": "Link to the power input circuits for this unit.",
+                    "longDescription": "These properties shall be the definition for an input circuit for a Redfish implementation.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Manufacturer": {
+                    "description": "The manufacturer of this equipment.",
+                    "longDescription": "This property shall indicate the actual Manufacturer of this equipment.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "Metrics": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/PowerDistributionMetrics.json#/definitions/PowerDistributionMetrics",
+                    "description": "Link to the summary metrics for this unit.",
+                    "longDescription": "These properties shall be the definition for PowerDistributionMetrics for a Redfish implementation.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Model": {
+                    "description": "The Model Number of this equipment.",
+                    "longDescription": "This property shall indicate the Model Number of this equipment.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "Name": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Name",
+                    "readonly": true
+                },
+                "Oem": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Oem",
+                    "description": "This is the manufacturer/provider specific extension moniker used to divide the Oem object into sections.",
+                    "longDescription": "The value of this string shall be of the format for the reserved word *Oem*."
+                },
+                "OutletGroups": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/OutletGroupCollection.json#/definitions/OutletGroupCollection",
+                    "description": "This is the definition for Outlet Groups.",
+                    "longDescription": "These properties shall be the definition for Outlet Groups for a Redfish implementation.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "Outlets": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/OutletCollection.json#/definitions/OutletCollection",
+                    "description": "This is the definition for Outlets.",
+                    "longDescription": "These properties shall be the definition for Outlets for a Redfish implementation.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "PartNumber": {
+                    "description": "The actual Part Number of this equipment.",
+                    "longDescription": "This property shall indicate the actual Part Number of this equipment.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "Sensors": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/SensorCollection.json#/definitions/SensorCollection",
+                    "description": "The naivgation pointer to the collection of sensors located in the equipment and sub-components.",
+                    "longDescription": "This property shall be a reference to a resource of type SensorCollection that contains the sensors located in the equipment and sub-components.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "SerialNumber": {
+                    "description": "The actual Serial Number of this equipment.",
+                    "longDescription": "This property shall indicate the actual Serial Number of this equipment.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_9_0"
+                },
+                "Status": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Status",
+                    "description": "This property describes the status and health of the resource and its children.",
+                    "longDescription": "This property shall contain any status or health properties of the resource.",
+                    "versionAdded": "v0_9_0"
+                },
+                "Subfeeds": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/CircuitCollection.json#/definitions/CircuitCollection",
+                    "description": "This is the definition for Subfeed Circuits.",
+                    "longDescription": "These properties shall be the definition for Subfeed Circuits for a Redfish implementation.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                },
+                "TriggeredAlarms": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 0 or more triggered alarms.",
+                    "filter": "AlarmState eq 'Triggered'",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Alarm.json#/definitions/Alarm"
+                    },
+                    "longDescription": "This array shall contain the set of Members of the Alarm Collection which have an 'AlarmStatus' of 'Triggered'.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_9_0"
+                },
+                "TriggeredAlarms@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "UUID": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/UUID"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The Universal Unique Identifier (UUID) for this this equipment.",
+                    "longDescription": "The value of this property shall contain the universal unique identifier number for the this equipment.",
+                    "readonly": true,
+                    "versionAdded": "v0_9_0"
+                }
+            },
+            "required": [
+                "EquipmentType",
+                "@odata.id",
+                "@odata.type",
+                "Id",
+                "Name"
+            ],
+            "type": "object"
+        },
+        "PowerEquipmentType": {
+            "enum": [
+                "RackPDU",
+                "FloorPDU",
+                "ManualTransferSwitch",
+                "AutomaticTransferSwitch"
+            ],
+            "enumDescriptions": {
+                "AutomaticTransferSwitch": "An automatic power transfer switch.",
+                "FloorPDU": "A power distribution unit providing feeder circuits for further power distribution.",
+                "ManualTransferSwitch": "A manual power transfer switch.",
+                "RackPDU": "A power distribution unit providing outlets for a rack or similiar quantity of devices."
+            },
+            "type": "string"
+        }
+    },
+    "owningEntity": "DMTF",
+    "release": "TBD",
+    "title": "#PowerDistribution.v0_9_0.PowerDistribution"
+}

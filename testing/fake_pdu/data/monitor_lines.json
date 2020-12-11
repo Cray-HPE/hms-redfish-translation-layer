@@ -1,0 +1,62 @@
+[
+	{
+		"id" : "AA1",
+		"name" : "AA:L1",
+		"current" : 2.81,
+		"current_capacity" : 60,
+		"current_status" : "Normal",
+		"current_utilized" : 4.6,
+		"state" : "On",
+		"status" : "Normal"
+	},
+	{
+		"id" : "AA2",
+		"name" : "AA:L2",
+		"current" : 2.55,
+		"current_capacity" : 60,
+		"current_status" : "Normal",
+		"current_utilized" : 4.2,
+		"state" : "On",
+		"status" : "Normal"
+	},
+	{
+		"id" : "AA3",
+		"name" : "AA:L3",
+		"current" : 2.93,
+		"current_capacity" : 60,
+		"current_status" : "Normal",
+		"current_utilized" : 4.8,
+		"state" : "On",
+		"status" : "Normal"
+	},
+	{
+		"id" : "BA1",
+		"name" : "BA:L1",
+		"current" : 2.78,
+		"current_capacity" : 60,
+		"current_status" : "Normal",
+		"current_utilized" : 4.6,
+		"state" : "On",
+		"status" : "Normal"
+	},
+	{
+		"id" : "BA2",
+		"name" : "BA:L2",
+		"current" : 2.64,
+		"current_capacity" : 60,
+		"current_status" : "Normal",
+		"current_utilized" : 4.4,
+		"state" : "On",
+		"status" : "Normal"
+	},
+	{
+		"id" : "BA3",
+		"name" : "BA:L3",
+		"current" : 3.10,
+		"current_capacity" : 60,
+		"current_status" : "Normal",
+		"current_utilized" : 5.1,
+		"state" : "On",
+		"status" : "Normal"
+	}
+]

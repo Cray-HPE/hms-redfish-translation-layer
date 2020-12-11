@@ -1,0 +1,1121 @@
+{
+    "$id": "http://redfish.dmtf.org/schemas/v1/CRAC.v0_2_0.json",
+    "$ref": "#/definitions/CRAC",
+    "$schema": "http://redfish.dmtf.org/schemas/v1/redfish-schema-v1.json",
+    "copyright": "Copyright 2014-2018 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright",
+    "definitions": {
+        "Actions": {
+            "additionalProperties": false,
+            "description": "The available actions for this resource.",
+            "longDescription": "This type shall contain the available actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "Oem": {
+                    "$ref": "#/definitions/OemActions",
+                    "description": "This property contains the available OEM specific actions for this resource.",
+                    "longDescription": "This property shall contain any additional OEM actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "type": "object"
+        },
+        "CRAC": {
+            "additionalProperties": false,
+            "description": "This is the schema definition for Computer Room Air Conditioning - CRAC equipment.",
+            "longDescription": "This resource shall be used to represent a Computer Room Air Conditioning (CRAC) for a Redfish implementation.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {
+                "@odata.context": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/context"
+                },
+                "@odata.etag": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/etag"
+                },
+                "@odata.id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/id"
+                },
+                "@odata.type": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/type"
+                },
+                "Actions": {
+                    "$ref": "#/definitions/Actions",
+                    "description": "The available actions for this resource.",
+                    "longDescription": "The Actions property shall contain the available actions for this resource.",
+                    "versionAdded": "v0_2_0"
+                },
+                "AirflowLossAlarmOn": {
+                    "description": "The actual Airflow Loss Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Airflow Loss Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Alarms": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/AlarmCollection.json#/definitions/AlarmCollection",
+                    "description": "Contains the naivgation pointer to the equipment Alarm collection.",
+                    "longDescription": "This property shall be a reference to a resource of type AlarmCollection that contains the alarms for the equipment.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "AssetTag": {
+                    "description": "The actual Asset Tag of CRAC.",
+                    "longDescription": "The value of this property shall represent the Asset Tag of CRAC.",
+                    "readonly": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ChilledWaterValveCommand": {
+                    "description": "The actual Chilled Water Valve Command percentage value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Chilled Water Valve Command percentage value of CRAC.",
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorDischargeTempAlarmOn": {
+                    "description": "The actual Compressor Discharge Temp Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Discharge Temp Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorHighPressureAlarmOn": {
+                    "description": "The actual Compressor High Pressure Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor High Pressure Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorHighPressureTransitionAlarmOn": {
+                    "description": "The actual Compressor High Pressure Transition Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor High Pressure Transition Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorLossAlarmOn": {
+                    "description": "The actual Compressor Loss Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Loss Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorLossMasterAlarmOn": {
+                    "description": "The actual Compressor Loss Master Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Loss Master Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorLowPressureAlarmOn": {
+                    "description": "The actual Compressor Low Pressure Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Low Pressure Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorLowPressureTransitionAlarmOn": {
+                    "description": "The actual Compressor Low Pressure Transition Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Low Pressure Transition Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorMaintenanceAlarmOn": {
+                    "description": "The actual Compressor Maintenance Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Maintenance Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorOverTempAlarmOn": {
+                    "description": "The actual Compressor Over Temp Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Over Temp Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorPumpDownAlarmOn": {
+                    "description": "The actual Compressor Pump Down Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Pump Down Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorRunTimeAlarmOn": {
+                    "description": "The actual Compressor Run Time Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Run Time Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorShortCycleAlarmOn": {
+                    "description": "The actual Compressor Short Cycle Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Short Cycle Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CompressorThermalOverloadAlarmOn": {
+                    "description": "The actual Compressor Thermal Overload Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Compressor Thermal Overload Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CondensorAlarmOn": {
+                    "description": "The actual Condensor Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Condensor Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CondensorVoltageSurgeAlarmOn": {
+                    "description": "The actual Condensor Voltage Surge Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Condensor Voltage Surge Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ControlDerivative": {
+                    "description": "The actual Control Derivative of CRAC.",
+                    "longDescription": "This property shall indicate the actual Control Derivative of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ControlIntegrationTime": {
+                    "description": "The actual Control Integration Time of CRAC.",
+                    "longDescription": "This property shall indicate the actual Control Integration Time in minutes of CRAC.",
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "min",
+                    "versionAdded": "v0_2_0"
+                },
+                "ControlLoopMechanism": {
+                    "description": "The actual Control Type of CRAC.",
+                    "longDescription": "This property shall indicate the actual Control Type (P, PI, PID or Custom) of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ControlProportionalGain": {
+                    "description": "The actual Control Proportional Gain of CRAC.",
+                    "longDescription": "This property shall indicate the actual Control Proportional Gain of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CoolingCapacity": {
+                    "description": "The actual Cooling Capacity percentage value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Cooling Capacity percentage value of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CoolingOutput": {
+                    "description": "The actual Cooling Output percentage value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Cooling Output percentage value of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CustomAlarm1On": {
+                    "description": "The actual Custom Alarm 1 On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Custom Alarm 1 On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "CustomAlarm2On": {
+                    "description": "The actual Custom Alarm 2 On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Custom Alarm 2 On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DateOfManufacture": {
+                    "description": "Date of manufacture of CRAC.",
+                    "format": "date-time",
+                    "longDescription": "The value of this property shall represent the actual date of manufacture of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DehumidificationFanSpeed": {
+                    "description": "The actual Dehumidification Fan Speed percentage value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Dehumidification Fan Speed percentage value of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "DehumidifyingStatus": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/OnOff"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Dehumidification Status [ON/OFF] of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Dehumidification Status [ON/OFF] of CRAC.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "Description": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Description"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "readonly": true
+                },
+                "DirtyFilterAlarmOn": {
+                    "description": "The actual Dirty Filter Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Dirty Filter Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FanAlarmOn": {
+                    "description": "The actual Fan Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Fan Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FanControlDeadband": {
+                    "description": "The actual Fan Control Tolerance percentage value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Fan Control Tolerance percentage value of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FanOverloadAlarmOn": {
+                    "description": "The actual Fan Overload Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Fan Overload Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FanRunTime": {
+                    "description": "The actual Fan Run Time of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Fan Run Time in hours of CRAC.",
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "h",
+                    "versionAdded": "v0_2_0"
+                },
+                "FanRunTimeAlarmOn": {
+                    "description": "The actual Fan Run Time Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Fan Run Time Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "FanStatus": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/OnOff"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Fan Status [ON/OFF] of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Fan Status [ON/OFF] of CRAC.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "Fanspeed": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more fan speed rotational sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure fan speed.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Fanspeed@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "FirmwareRevision": {
+                    "description": "The actual Firmware Revision of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Firmware Rev of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "HardwareRevision": {
+                    "description": "The actual Hardware Revision of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Hardware Rev of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "HeatingOutput": {
+                    "description": "The actual Heating Output percentage value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Heating Output percentage value of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "HiAlarmSetPoint": {
+                    "description": "The actual Parameter High Alarm Set Point of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Parameter High Alarm Set Point of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "HiHumidityAlarmOn": {
+                    "description": "The actual High Humidity Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual High Humidity Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "HighHumidityAlarm": {
+                    "description": "The actual High Humidity Alarm setting (percentage value) of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual High Humidity Alarm setting (percentage value) of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "HumidifyingStatus": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/OnOff"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Humidification Status [ON/OFF] of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Humidification Status [ON/OFF] of CRAC.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "Humidity": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more humidity sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure humidity.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Humidity@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "HumidityControlDeadband": {
+                    "description": "The actual Relative Humidity Control Tolerance percentage value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Relative Humidity Control Tolerance percentage value of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Id": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Id",
+                    "readonly": true
+                },
+                "LoAlarmSetPoint": {
+                    "description": "The actual Parameter Low Alarm Set Point of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Parameter Low Alarm Set Point of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "LoHumidityAlarmOn": {
+                    "description": "The actual Low Humidity Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Low Humidity Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "LossOfWaterFlowAlarmOn": {
+                    "description": "The actual Loss Of Water Flow Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Loss Of Water Flow Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "LowHumidityAlarm": {
+                    "description": "The actual Low Humidity Alarm setting (percentage value) of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Low Humidity Alarm setting (percentage value) of CRAC.",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ManualOverrideAlarmOn": {
+                    "description": "The actual Manual Override Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Manual Override Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Manufacturer": {
+                    "description": "The actual Manufacturer of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Manufacturer of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Model": {
+                    "description": "The actual Model Number of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Model Number of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Name": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Name",
+                    "readonly": true
+                },
+                "Oem": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Oem",
+                    "description": "This is the manufacturer/provider specific extension moniker used to divide the Oem object into sections.",
+                    "longDescription": "The value of this string shall be of the format for the reserved word *Oem*."
+                },
+                "PartNumber": {
+                    "description": "The actual Part Number of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Part Number of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "PhysicalLocation": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://redfish.dmtf.org/schemas/v1/Resource.json#/definitions/Location"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual location of the CRAC unit.",
+                    "longDescription": "The value of this property shall represent the actual geohysical location of CRAC.",
+                    "versionAdded": "v0_2_0"
+                },
+                "Pressure": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more pressure sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure pressure.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Pressure@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "RemoteSensorAlarmOn": {
+                    "description": "The actual Remote Sensor Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Remote Sensor Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ResetAllAlarms": {
+                    "description": "The actual Reset All Alarms setting of CRAC.",
+                    "longDescription": "This property shall indicate the actual Reset All Alarms setting of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ReturnAirHighTempAlarmOn": {
+                    "description": "The actual Return Air High Temp Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Return Air High Temp Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ReturnAirLowTempAlarmOn": {
+                    "description": "The actual Return Air Low Temp Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Return Air Low Temp Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "ReturnAirTempSensorAlarmOn": {
+                    "description": "The actual Return Air Temp Sensor Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Return Air Temp Sensor Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Sensors": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/SensorCollection.json#/definitions/SensorCollection",
+                    "description": "Contains the naivgation pointer to the equipment sensor collection.",
+                    "longDescription": "This property shall be a reference to a resource of type SensorCollection that contains the sensors located in the equipment and sub-components.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "SerialNumber": {
+                    "description": "The actual Serial Number of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Serial Number of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Setpoints": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more sensors that have setpoints.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that have setpoints.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Setpoints@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "SmokeDetectedAlarmOn": {
+                    "description": "The actual Smoke Detected Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Smoke Detected Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "SummaryAlarmOn": {
+                    "description": "The actual Summary Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Summary Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "SupplyAirHighTempAlarmOn": {
+                    "description": "The actual Supply Air High Temp Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Supply Air High Temp Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "SupplyAirLowTempAlarmOn": {
+                    "description": "The actual Supply Air Low Temp Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Supply Air Low Temp Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "SupplyAirTempSensorAlarmOn": {
+                    "description": "The actual Supply Air Temp Sensor Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Supply Air Temp Sensor Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "Temperature": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 1 or more temperature sensors.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Sensor.json#/definitions/Sensor"
+                    },
+                    "longDescription": "The value of this property shall be an array of sensors that measure temperature.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "Temperature@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "TemperatureControlDeadband": {
+                    "description": "The actual Temperature Control Tolerance value of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Temperature Control Tolerance value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "C",
+                    "versionAdded": "v0_2_0"
+                },
+                "TriggeredAlarms": {
+                    "autoExpand": true,
+                    "description": "Contains the array of 0 or more triggered alarms.",
+                    "items": {
+                        "$ref": "http://redfish.dmtf.org/schemas/v1/Alarm.json#/definitions/Alarm"
+                    },
+                    "longDescription": "This array shall contain the set of Members of the Alarm Collection which have an 'AlarmStatus' of 'Triggered'.",
+                    "readonly": true,
+                    "type": "array",
+                    "versionAdded": "v0_2_0"
+                },
+                "TriggeredAlarms@odata.count": {
+                    "$ref": "http://redfish.dmtf.org/schemas/v1/odata.v4_0_3.json#/definitions/count"
+                },
+                "UnitCommunicationLossAlarmOn": {
+                    "description": "The actual Unit Communication Loss Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Communication Loss Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitCoolingStatus": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/OnOff"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Unit Cooling Status [ON/OFF] of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Cooling Status [ON/OFF] of CRAC.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitHeatingStatus": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/OnOff"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Unit Heating Status [ON/OFF] of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Heating Status [ON/OFF] of CRAC.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitHiTempAlarmSetPoint": {
+                    "description": "The actual High Return or Supply Air Temperature Alarm Setting of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual High Return or Supply Air Temperature Alarm Setting of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "C",
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitLoTempAlarmSetPoint": {
+                    "description": "The actual Low Return or Supply Air Temperature Alarm Setting of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Low Return or Supply Air Temperature Alarm Setting of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "units": "C",
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitMaintenanceDueAlarmOn": {
+                    "description": "The actual Unit Maintenance Due Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Maintenance Due Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitOffAlarmOn": {
+                    "description": "The actual Unit Off Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Off Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitOnAlarmOn": {
+                    "description": "The actual Unit On Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit On Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitOperationStatus": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/OnOff"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Unit Operation Status [ON/OFF] of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Operation Status [ON/OFF] of CRAC.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitPaused": {
+                    "description": "The actual Unit Paused status of CRAC.",
+                    "longDescription": "This property shall indicate the actual Unit Paused boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitPowerLossAlarmOn": {
+                    "description": "The actual Unit Power Loss Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Power Loss Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitServiceRequestAlarmOn": {
+                    "description": "The actual Unit Service Request Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Service Request Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitShutdownAlarmOn": {
+                    "description": "The actual Unit Shutdown Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Shutdown Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitShutdownHighPowerAlarmOn": {
+                    "description": "The actual Unit Shutdown High Power Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Shutdown High Power Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitShutdownPartialAlarmOn": {
+                    "description": "The actual Unit Shutdown Partial Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Shutdown Partial Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitStandbyAlarmOn": {
+                    "description": "The actual Unit Standby Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Standby Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                },
+                "UnitStatus": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/OnOff"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The actual Unit Status [ON/OFF] of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Unit Status [ON/OFF] of CRAC.",
+                    "readonly": true,
+                    "versionAdded": "v0_2_0"
+                },
+                "WaterUnderFloorAlarmOn": {
+                    "description": "The actual Water Under Floor Alarm On status of CRAC.",
+                    "longDescription": "The value of this property shall represent the actual Water Under Floor Alarm On boolean value of CRAC.",
+                    "readonly": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "versionAdded": "v0_2_0"
+                }
+            },
+            "required": [
+                "@odata.id",
+                "@odata.type",
+                "Id",
+                "Name"
+            ],
+            "type": "object"
+        },
+        "OemActions": {
+            "additionalProperties": true,
+            "description": "The available OEM specific actions for this resource.",
+            "longDescription": "This type shall contain any additional OEM actions for this resource.",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)?@(odata|Redfish|Message)\\.[a-zA-Z_][a-zA-Z0-9_.]+$": {
+                    "description": "This property shall specify a valid odata or Redfish property.",
+                    "type": [
+                        "array",
+                        "boolean",
+                        "integer",
+                        "number",
+                        "null",
+                        "object",
+                        "string"
+                    ]
+                }
+            },
+            "properties": {},
+            "type": "object"
+        },
+        "OnOff": {
+            "enum": [
+                "On",
+                "Off"
+            ],
+            "type": "string"
+        }
+    },
+    "owningEntity": "DMTF",
+    "release": "TBD",
+    "title": "#CRAC.v0_2_0.CRAC"
+}
