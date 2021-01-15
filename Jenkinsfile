@@ -1,6 +1,7 @@
 @Library('dst-shared@master') _
 
 dockerBuildPipeline {
+        githubPushRepo = "Cray-HPE/hms-redfish-translation-layer"
    repository = "cray"
    imagePrefix = "hms"
    app = "redfish-translation-service"
