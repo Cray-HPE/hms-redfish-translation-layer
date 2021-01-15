@@ -24,6 +24,14 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+
+## [1.9.0] - 2021-01-14
+
+### Changed
+
+- Updated license file.
+
+
 ## [1.8.2] - 2020-11-16
 ### Security
 - CASMHMS-3457 - Removed hard coded passwords
