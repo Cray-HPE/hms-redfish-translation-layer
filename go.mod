@@ -19,8 +19,8 @@ require (
 	k8s.io/api v0.17.2
 	k8s.io/apimachinery v0.17.2
 	k8s.io/client-go v0.17.2
-	stash.us.cray.com/HMS/hms-compcredentials v1.7.0
-	stash.us.cray.com/HMS/hms-go-http-lib v1.2.2
-	stash.us.cray.com/HMS/hms-securestorage v1.8.0
-	stash.us.cray.com/HMS/hms-smd v1.25.1
+	stash.us.cray.com/HMS/hms-compcredentials v1.10.0
+	stash.us.cray.com/HMS/hms-go-http-lib v1.4.0
+	stash.us.cray.com/HMS/hms-securestorage v1.11.0
+	stash.us.cray.com/HMS/hms-smd v1.28.0
 )

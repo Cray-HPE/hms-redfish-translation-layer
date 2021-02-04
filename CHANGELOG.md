@@ -25,6 +25,13 @@ Security - in case of vulnerabilities
 -->
 
 
+## [1.10.0] - 2021-02-04
+
+### Changed
+
+- Update Copyright/License in source files.
+- Re-vendor go packages
+
 ## [1.9.0] - 2021-01-14
 
 ### Changed
