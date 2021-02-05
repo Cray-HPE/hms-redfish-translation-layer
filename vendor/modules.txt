@@ -396,15 +396,15 @@ k8s.io/klog
 k8s.io/utils/integer
 # sigs.k8s.io/yaml v1.1.0
 sigs.k8s.io/yaml
-# stash.us.cray.com/HMS/hms-base v1.8.1
+# stash.us.cray.com/HMS/hms-base v1.12.0
 stash.us.cray.com/HMS/hms-base
-# stash.us.cray.com/HMS/hms-certs v1.0.3
+# stash.us.cray.com/HMS/hms-certs v1.2.0
 stash.us.cray.com/HMS/hms-certs/pkg/hms_certs
-# stash.us.cray.com/HMS/hms-compcredentials v1.7.0
+# stash.us.cray.com/HMS/hms-compcredentials v1.10.0
 stash.us.cray.com/HMS/hms-compcredentials
-# stash.us.cray.com/HMS/hms-go-http-lib v1.2.2
+# stash.us.cray.com/HMS/hms-go-http-lib v1.4.0
 stash.us.cray.com/HMS/hms-go-http-lib
-# stash.us.cray.com/HMS/hms-securestorage v1.8.0
+# stash.us.cray.com/HMS/hms-securestorage v1.11.0
 stash.us.cray.com/HMS/hms-securestorage
-# stash.us.cray.com/HMS/hms-smd v1.25.1
+# stash.us.cray.com/HMS/hms-smd v1.28.0
 stash.us.cray.com/HMS/hms-smd/pkg/redfish

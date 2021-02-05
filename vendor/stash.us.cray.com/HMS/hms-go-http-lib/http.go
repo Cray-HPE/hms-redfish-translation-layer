@@ -1,5 +1,24 @@
-// Copyright 2020 Hewlett Packard Enterprise Development LP
-
+// MIT License
+//
+// (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
 
 package hmshttp
 
@@ -8,10 +27,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/go-retryablehttp"
 	"io/ioutil"
 	"log"
 	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
 	"stash.us.cray.com/HMS/hms-certs/pkg/hms_certs"
 )
 
@@ -40,19 +60,19 @@ type HTTPRequest struct {
 // Return:      HTTP request descriptor.
 
 func NewHTTPRequest(fullURL string) *HTTPRequest {
-	cl,_ := hms_certs.CreateHTTPClientPair("",30)
+	cl, _ := hms_certs.CreateHTTPClientPair("", 30)
 
 	return &HTTPRequest{
-		TLSClientPair:       cl,
-		Client:              retryablehttp.NewClient(),
-		Context:             context.Background(),
-		FullURL:             fullURL,
-		Method:              "GET",
-		Payload:             nil,
-		Auth:                nil,
-		Timeout:             time.Duration(30) * time.Second,
-		ContentType:         "application/json",
-		CustomHeaders:       make(map[string]string),
+		TLSClientPair: cl,
+		Client:        retryablehttp.NewClient(),
+		Context:       context.Background(),
+		FullURL:       fullURL,
+		Method:        "GET",
+		Payload:       nil,
+		Auth:          nil,
+		Timeout:       time.Duration(30) * time.Second,
+		ContentType:   "application/json",
+		CustomHeaders: make(map[string]string),
 	}
 }
 
@@ -66,24 +86,24 @@ func NewHTTPRequest(fullURL string) *HTTPRequest {
 // Return:      Ptr to HTTP request descriptor;
 //              nil on success, error object on error.
 
-func NewCAHTTPRequest(fullURL string, caURI string) (*HTTPRequest,error) {
-	cl,err := hms_certs.CreateHTTPClientPair(caURI,30)
-	if (err != nil) {
-		return &HTTPRequest{},fmt.Errorf("ERROR creating cert-enabled HTTP transports: %v",err)
+func NewCAHTTPRequest(fullURL string, caURI string) (*HTTPRequest, error) {
+	cl, err := hms_certs.CreateHTTPClientPair(caURI, 30)
+	if err != nil {
+		return &HTTPRequest{}, fmt.Errorf("ERROR creating cert-enabled HTTP transports: %v", err)
 	}
 
 	return &HTTPRequest{
-		TLSClientPair:       cl,
-		Client:              retryablehttp.NewClient(),
-		Context:             context.Background(),
-		FullURL:             fullURL,
-		Method:              "GET",
-		Payload:             nil,
-		Auth:                nil,
-		Timeout:             time.Duration(30) * time.Second,
-		ContentType:         "application/json",
-		CustomHeaders:       make(map[string]string),
-	},nil
+		TLSClientPair: cl,
+		Client:        retryablehttp.NewClient(),
+		Context:       context.Background(),
+		FullURL:       fullURL,
+		Method:        "GET",
+		Payload:       nil,
+		Auth:          nil,
+		Timeout:       time.Duration(30) * time.Second,
+		ContentType:   "application/json",
+		CustomHeaders: make(map[string]string),
+	}, nil
 }
 
 func (request HTTPRequest) String() string {
@@ -125,7 +145,6 @@ func (auth Auth) String() string {
 	return fmt.Sprintf("Username: %s, Password: <REDACTED>", auth.Username)
 }
 
-
 // Given a HTTPRequest this function will facilitate the desired operation using the retryablehttp package to gracefully
 // retry should the connection fail.
 //
@@ -146,12 +165,12 @@ func (request *HTTPRequest) DoHTTPAction() (payloadBytes []byte, responseStatusC
 	}
 
 	// Setup the common HTTP request stuff.
-	if (request.TLSClientPair != nil) {
-		if (request.TLSClientPair.SecureClient != nil) {
-			request.TLSClientPair.SecureClient.Timeout = request.Timeout
+	if request.TLSClientPair != nil {
+		if request.TLSClientPair.SecureClient != nil {
+			request.TLSClientPair.SecureClient.HTTPClient.Timeout = request.Timeout
 		}
-		if (request.TLSClientPair.InsecureClient != nil) {
-			request.TLSClientPair.InsecureClient.Timeout = request.Timeout
+		if request.TLSClientPair.InsecureClient != nil {
+			request.TLSClientPair.InsecureClient.HTTPClient.Timeout = request.Timeout
 		}
 	} else {
 		request.Client.HTTPClient.Timeout = request.Timeout
@@ -181,19 +200,19 @@ func (request *HTTPRequest) DoHTTPAction() (payloadBytes []byte, responseStatusC
 	}
 
 	//If the caller set up a TLS-aware client pair, we will try the secure one
-	//first, and if the transaction fails, the insecure.  Since retryablehttp 
-	//default retry count is 4, and since the backoff goes to a max of 30 
-	//seconds, retrying will be very expensive.  Thus, the caller needs to 
-	//take this into account when using secure/insecure fallback, and should 
+	//first, and if the transaction fails, the insecure.  Since retryablehttp
+	//default retry count is 4, and since the backoff goes to a max of 30
+	//seconds, retrying will be very expensive.  Thus, the caller needs to
+	//take this into account when using secure/insecure fallback, and should
 	//either reduce the retry max count and/or the retry max time.
 	//
-	//At this point we will look at what the caller set the retry params to 
+	//At this point we will look at what the caller set the retry params to
 	//and set the retryablehttp client accordingly.
 
-	if (request.MaxRetryCount > 0) {
+	if request.MaxRetryCount > 0 {
 		request.Client.RetryMax = request.MaxRetryCount
 	}
-	if (request.MaxRetryWait > 0) {
+	if request.MaxRetryWait > 0 {
 		request.Client.RetryWaitMax = (time.Duration(request.MaxRetryWait) * time.Second)
 	}
 
@@ -201,26 +220,26 @@ func (request *HTTPRequest) DoHTTPAction() (payloadBytes []byte, responseStatusC
 	//not use the TLSClientPair.  If that is the case the retryablehttp client
 	//will use all defaults and will be cert-insecure.  If a TLSClientPair
 	//is used, we will first try the secure client, and if that is not present
-	//or fails, use the insecure one and log the incident.  Note that the 
+	//or fails, use the insecure one and log the incident.  Note that the
 	//caller can instantiate a TLSClientPair with no CA bundle data and it
 	//will create only an insecure client.  This insures backward compatibility
 	//all the way around.
 
-	if (request.TLSClientPair != nil) {
-		if (request.TLSClientPair.SecureClient != nil) {
-			request.Client.HTTPClient = request.TLSClientPair.SecureClient
+	if request.TLSClientPair != nil {
+		if request.TLSClientPair.SecureClient != nil {
+			request.Client = request.TLSClientPair.SecureClient
 		} else {
-			request.Client.HTTPClient = request.TLSClientPair.InsecureClient
+			request.Client = request.TLSClientPair.InsecureClient
 		}
 	}
 	resp, doErr := request.Client.Do(req)
-	if (doErr != nil) {
+	if doErr != nil {
 		//If we tried the secure client and it got an error, try the insecure one
-		if ((request.TLSClientPair != nil) &&
-		    (request.TLSClientPair.SecureClient != nil) &&
-		    (request.TLSClientPair.SecureClient != request.TLSClientPair.InsecureClient)) {
+		if (request.TLSClientPair != nil) &&
+			(request.TLSClientPair.SecureClient != nil) &&
+			(request.TLSClientPair.SecureClient != request.TLSClientPair.InsecureClient) {
 			log.Printf("INFO: Cert-validating HTTP client request failed, trying non-validating client.")
-			request.Client.HTTPClient = request.TLSClientPair.InsecureClient
+			request.Client = request.TLSClientPair.InsecureClient
 			resp, doErr = request.Client.Do(req)
 		}
 	}
@@ -237,11 +256,11 @@ func (request *HTTPRequest) DoHTTPAction() (payloadBytes []byte, responseStatusC
 
 	// Make sure we get the status code we expect if any are defined.
 
-	if (len(request.ExpectedStatusCodes) > 0) {
+	if len(request.ExpectedStatusCodes) > 0 {
 		isExpectedStatusCode := false
 		for _, expectedStatusCode := range request.ExpectedStatusCodes {
 			if resp.StatusCode == expectedStatusCode {
-				isExpectedStatusCode = true;
+				isExpectedStatusCode = true
 				break
 			}
 		}
