@@ -24,6 +24,11 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.8.4] - 2021-02-08
+
+### Changed
+- Update Copyright/License info
+
 ## [1.8.3] - 2020-12-10
 
 ### Changed
