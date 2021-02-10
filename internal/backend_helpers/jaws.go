@@ -1149,6 +1149,7 @@ func (helper JAWSBackedHelper) initDevice(ctx context.Context, xname string,
 		Context:             ctx,
 		ExpectedStatusCodes: []int{http.StatusOK},
 		Method:              "GET",
+		CustomHeaders:       getSvcInstName(),
 		Auth:                &auth,
 	}
 
@@ -1944,6 +1945,7 @@ func (helper *JAWSBackedHelper) RunBackendHelper(ctx context.Context, key string
 		Auth:                &auth,
 		FullURL:             baseURL + urlPath,
 		Method:              op,
+		CustomHeaders:       getSvcInstName(),
 		Payload:             payload,
 	}
 

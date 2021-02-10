@@ -115,6 +115,7 @@ func (helper *JAWSBackedHelper) pollPDU(ctx context.Context, device pdu_credenti
 		Timeout:             10 * time.Second,
 		ExpectedStatusCodes: []int{http.StatusOK},
 		Auth:                &auth,
+		CustomHeaders:       getSvcInstName(),
 		Method:              http.MethodGet,
 	}
 
