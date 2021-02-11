@@ -25,6 +25,12 @@ Security - in case of vulnerabilities
 -->
 
 
+## [1.10.1] - 2021-02-10
+
+### Changed
+
+- Added User-Agent headers to outbound HTTP requests.
+
 ## [1.10.0] - 2021-02-04
 
 ### Changed

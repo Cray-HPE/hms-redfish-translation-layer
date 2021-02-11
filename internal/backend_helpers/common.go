@@ -46,6 +46,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"stash.us.cray.com/HMS/hms-base"
 	compcredentials "stash.us.cray.com/HMS/hms-compcredentials"
 	hmshttp "stash.us.cray.com/HMS/hms-go-http-lib"
 	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
@@ -65,6 +66,18 @@ var httpClient *retryablehttp.Client
 var compCredStore compcredentials.CompCredStore
 
 var RFEventID uint64 = 1
+
+// Get the service/instance name, create UserAgent headers.
+
+func getSvcInstName() map[string]string {
+	sn,err := base.GetServiceInstanceName()
+	if (err != nil) {
+		sn = "RTS_BE"
+	}
+	hdr := make(map[string]string)
+	hdr[base.USERAGENT] = sn
+	return hdr
+}
 
 // Structure for making Redis stuff generic
 type RedisHelper struct {
@@ -382,6 +395,7 @@ func informHSMWithFQDN(ctx context.Context, xname, fqdn string) (err error) {
 		ExpectedStatusCodes: []int{http.StatusCreated},
 		FullURL:             hsmURL + "/hsm/v1/Inventory/RedfishEndpoints",
 		Method:              "POST",
+		CustomHeaders:       getSvcInstName(),
 		Payload:             payload,
 	}
 
@@ -417,6 +431,7 @@ func deleteFromHSM(ctx context.Context, xname string) (err error) {
 		ExpectedStatusCodes: []int{http.StatusOK},
 		FullURL:             hsmURL + "/hsm/v1/Inventory/RedfishEndpoints/" + xname,
 		Method:              "DELETE",
+		CustomHeaders:       getSvcInstName(),
 	}
 	_, _, deleteErr := deleteRequest.DoHTTPAction()
 	if deleteErr != nil {
@@ -500,6 +515,7 @@ func postRFPowerEvent(ctx context.Context, xname string, resource string, powerS
 		ExpectedStatusCodes: []int{http.StatusOK},
 		FullURL:             collectorURL,
 		Method:              "POST",
+		CustomHeaders:       getSvcInstName(),
 		Payload:             payload,
 	}
 
@@ -543,6 +559,7 @@ func postTelemetryEvent(ctx context.Context, event telemetry.Event) (err error) 
 		ExpectedStatusCodes: []int{http.StatusOK},
 		FullURL:             collectorURL,
 		Method:              "POST",
+		CustomHeaders:       getSvcInstName(),
 		Payload:             payload,
 	}
 	_, _, informErr := rfPOST.DoHTTPAction()
@@ -710,6 +727,7 @@ func checkReady(ctx context.Context, xname string) (err error) {
 		ExpectedStatusCodes: []int{http.StatusOK},
 		FullURL:             path,
 		Method:              "GET",
+		CustomHeaders:       getSvcInstName(),
 		Auth: &hmshttp.Auth{
 			Username: cred.Username,
 			Password: cred.Password,
