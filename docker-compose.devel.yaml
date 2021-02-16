@@ -80,7 +80,7 @@ services:
   # RTS Dependencies
   #
   redis:
-    image: dtr.dev.cray.com/library/redis:5.0-alpine
+    image: dtr.dev.cray.com/library/redis:5.0-alpine3.12
     hostname: hms-redfish-redis
     ports:
       - "6379:6379"
