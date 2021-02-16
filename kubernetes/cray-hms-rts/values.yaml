@@ -133,7 +133,7 @@ cray-service:
       name: "cray-hms-rts-redis"
       image:
         repository: "library/redis"
-        tag: 5.0-alpine
+        tag: 5.0-alpine3.12
       livenessProbe:
         exec:
           command:
