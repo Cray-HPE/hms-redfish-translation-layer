@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.8.5] - 2021-02-16
+
+### Changed
+
+- Updated to use a newer redis image to fix snyk issues.
+
 ## [1.8.4] - 2021-02-08
 
 ### Changed
