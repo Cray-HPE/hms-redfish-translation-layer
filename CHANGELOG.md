@@ -25,6 +25,12 @@ Security - in case of vulnerabilities
 -->
 
 
+## [1.11.0] - 2021-02-16
+
+### Changed
+
+- Updated to use a newer redis image to fix snyk issues.
+
 ## [1.10.1] - 2021-02-10
 
 ### Changed
