@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.8.6] - 2021-03-22
+
+### Security
+
+- CASMHMS-4574 - Bump version to rebuild release/shasta-1.4 branch and pull in redis v5.0.11 package with security fixes.
+
 ## [1.8.5] - 2021-02-16
 
 ### Changed
@@ -43,7 +49,6 @@ Security - in case of vulnerabilities
 ## [1.8.2] - 2020-11-16
 ### Security
 - CASMHMS-3457 - Removed hard coded passwords
-
 
 ## [1.8.1] - 2020-10-21
 ### Security
