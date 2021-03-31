@@ -1,6 +1,6 @@
 ---
 
-dockerKubectlTag: 0.2.0-20200421212755_170bb37
+dockerKubectlTag: 0.2.0
 
 cray-service:
   type: "Deployment"

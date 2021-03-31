@@ -24,6 +24,11 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.11.1] - 2021-03-31
+
+### Changed
+
+- CASMHMS-4605 - Update the loftsman/docker-kubectl image to use a production version.
 
 ## [1.11.0] - 2021-02-16
 
