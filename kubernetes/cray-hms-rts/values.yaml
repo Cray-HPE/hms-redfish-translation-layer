@@ -179,7 +179,7 @@ cray-service:
               key: wait-for-cray-hms-rts-init.dont_wait
       image:
         repository: "loftsman/docker-kubectl"
-        tag: 0.2.0-20200421212755_170bb37
+        tag: 0.2.0
       command:
         - /bin/sh
         - -c
