@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.11.2] - 2021-04-07
+
+### Changed
+
+- Bumped service version to fix release/csm-1.0 build.
+
 ## [1.11.1] - 2021-03-31
 
 ### Changed
@@ -54,7 +60,6 @@ Security - in case of vulnerabilities
 ### Changed
 
 - Updated license file.
-
 
 ## [1.8.2] - 2020-11-16
 ### Security
