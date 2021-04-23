@@ -22,7 +22,7 @@
 
 # Dockerfile for building the HMS Redfish Translation Service (RTS).
 
-FROM dtr.dev.cray.com/baseos/golang:1.14-alpine3.12 AS builder
+FROM arti.dev.cray.com/baseos-docker-master-local/golang:1.14-alpine3.12 AS builder
 
 # Copy all the necessary files to the image.
 COPY cmd $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/cmd
@@ -35,7 +35,7 @@ RUN set -ex \
 
 ### Final Stage ###
 
-FROM dtr.dev.cray.com/baseos/alpine:3.12
+FROM arti.dev.cray.com/baseos-docker-master-local/alpine:3.12
 LABEL maintainer="Cray, Inc."
 EXPOSE 8082
 STOPSIGNAL SIGTERM
