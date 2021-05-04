@@ -21,10 +21,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 FROM arti.dev.cray.com/third-party-docker-stable-local/vault:1.5.5
+
 LABEL maintainer="Cray, Inc."
 
-RUN apk add --no-cache \
-    bash
+RUN set -ex \
+    && apk update \
+    && apk add --no-cache \
+        bash
 
 # Vault
 ENV VAULT_ADDR http://localhost:8200
