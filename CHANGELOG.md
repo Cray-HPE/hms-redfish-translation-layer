@@ -24,6 +24,11 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.13.0] - 2021-06-18
+
+### Changed
+- Bump minor version for CSM 1.2 release branch
+
 ## [1.12.0] - 2021-06-18
 
 ### Changed
