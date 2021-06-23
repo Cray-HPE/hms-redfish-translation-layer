@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.8.7] - 2021-06-23
+
+### Changed
+
+- CASMHMS-4833 - Update ClusterRole to allow the NET_RAW capability for the RTS Vault loader job.
+
 ## [1.8.6] - 2021-03-22
 
 ### Security
