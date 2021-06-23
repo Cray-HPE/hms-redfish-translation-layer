@@ -24,6 +24,14 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.8.7] - 2021-06-23
+
+### Changed
+
+- CASMHMS-4833 - Update ClusterRole to allow the NET_RAW capability for the RTS Vault loader job.
+- Updated Dockerfiles to pull base images from Artifactory instead of DTR.
+- Updated docker-compose files to pull images from Artifactory instead of DTR.
+
 ## [1.8.6] - 2021-03-22
 
 ### Security
