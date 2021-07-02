@@ -24,9 +24,16 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.12.1] - 2021-07-01
+
+### Security
+
+- CASMHMS-4898 - Updated base container images for security updates.
+
 ## [1.12.0] - 2021-06-18
 
 ### Changed
+
 - Bump minor version for CSM 1.1 release branch
 
 ## [1.11.5] - 2021-05-12
