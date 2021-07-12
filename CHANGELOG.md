@@ -24,6 +24,11 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.12.2] - 2021-07-12
+
+### Changed
+- CASMINST-2669 - Updated the `docker-entrypoint.sh` script to account for the new redis-cli command that was pulled in the last base container update. The redis-cli command is now at version 6.0.14 with the Alpine 3.13 base image, and before it was at 5.0.11 with the Alpine 3.12 base image.
+
 ## [1.12.1] - 2021-07-01
 
 ### Security
