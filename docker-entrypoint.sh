@@ -24,7 +24,7 @@
 REDIS_CLI=$(command -v redis-cli)
 REDIS_CMD="${REDIS_CLI} -h ${REDIS_HOSTNAME} -p ${REDIS_PORT}"
 
-set -e
+set -xe
 
 setup_redis() {
   # Make sure redis is around before we go any further
@@ -36,7 +36,7 @@ setup_redis() {
 
   # This method is likely temporary, but for now we need to populate redis if it's not already.
   redis_keys="$(${REDIS_CMD} --no-raw KEYS "*")"
-  if [ "$redis_keys" = "(empty list or set)" ]; then
+  if [ "$redis_keys" = "(empty array)" ]; then
     echo "Redis database empty...populating..."
     /scripts/redfish-pdu-schema-load.sh 2>&1 | tee schema_load.log
     result=$?

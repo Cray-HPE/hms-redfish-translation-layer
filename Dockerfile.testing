@@ -22,11 +22,13 @@
 
 # Dockerfile for running the HMS Redfish Translation Service (RTS) unit tests.
 
-FROM arti.dev.cray.com/baseos-docker-master-local/golang:1.14-alpine3.12 AS builder-base
+FROM arti.dev.cray.com/baseos-docker-master-local/golang:1.16-alpine3.13 AS builder-base
 
 RUN set -ex \
     && apk update \
     && apk add build-base
+
+RUN go env -w GO111MODULE=auto
 
 FROM builder-base AS builder
 
