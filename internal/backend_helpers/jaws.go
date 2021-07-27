@@ -35,20 +35,20 @@ import (
 	"regexp"
 	"runtime"
 
+	compcredentials "github.com/Cray-HPE/hms-compcredentials"
+	hmshttp "github.com/Cray-HPE/hms-go-http-lib"
 	"github.com/go-redis/redis"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/mitchellh/mapstructure"
 	log "github.com/sirupsen/logrus"
-	compcredentials "stash.us.cray.com/HMS/hms-compcredentials"
-	hmshttp "stash.us.cray.com/HMS/hms-go-http-lib"
 
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
 )
 
 const RackPDUsKeyspace = ServiceRootKeyspace + "/PowerEquipment/RackPDUs"

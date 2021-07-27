@@ -26,7 +26,8 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/accountservice"
+
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/accountservice"
 
 	"golang.org/x/crypto/bcrypt"
 )
