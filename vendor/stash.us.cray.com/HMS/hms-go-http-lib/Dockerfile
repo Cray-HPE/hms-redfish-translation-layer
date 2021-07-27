@@ -35,11 +35,11 @@ FROM build-base AS base
 
 RUN go env -w GO111MODULE=auto
 
-COPY . $GOPATH/src/stash.us.cray.com/HMS/hms-go-http-lib
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-go-http-lib/vendor
+COPY . $GOPATH/src/github.com/Cray-HPE/hms-go-http-lib
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-go-http-lib/vendor
 
 # Now we can build.
 FROM base
 
 RUN set -ex \
-    && go build -v stash.us.cray.com/HMS/hms-go-http-lib/./...
+    && go build -v github.com/Cray-HPE/hms-go-http-lib/./...

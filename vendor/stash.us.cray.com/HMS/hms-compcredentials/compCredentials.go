@@ -27,8 +27,8 @@ package compcredentials
 import (
 	"fmt"
 
+	sstorage "github.com/Cray-HPE/hms-securestorage"
 	log "github.com/sirupsen/logrus"
-	sstorage "stash.us.cray.com/HMS/hms-securestorage"
 )
 
 const DefaultCompCredPath = "hms-creds"
@@ -36,8 +36,8 @@ const DefaultCompCredPath = "hms-creds"
 // Usage example using vault as the backing secure storage:
 //import (
 //    "log"
-//    sstorage "stash.us.cray.com/HMS/hms-securestorage"
-//    cc "stash.us.cray.com/HMS/hms-compcredentials"
+//    sstorage "github.com/Cray-HPE/hms-securestorage"
+//    cc "github.com/Cray-HPE/hms-compcredentials"
 //)
 //func compCredVaultExample() {
 //    // Create the Vault adapter and connect to Vault

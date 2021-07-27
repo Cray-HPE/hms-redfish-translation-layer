@@ -1,4 +1,4 @@
-module stash.us.cray.com/HMS/hms-securestorage
+module github.com/Cray-HPE/hms-securestorage
 
 go 1.16
 

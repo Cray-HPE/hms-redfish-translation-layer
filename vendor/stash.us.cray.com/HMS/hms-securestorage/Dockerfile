@@ -35,11 +35,11 @@ FROM build-base AS base
 
 RUN go env -w GO111MODULE=auto
 
-COPY *.go $GOPATH/src/stash.us.cray.com/HMS/hms-securestorage/
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-securestorage/vendor
+COPY *.go $GOPATH/src/github.com/Cray-HPE/hms-securestorage/
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-securestorage/vendor
 
 # Now we can build.
 FROM base
 
 RUN set -ex \
-    && go build -v stash.us.cray.com/HMS/hms-securestorage/...
+    && go build -v github.com/Cray-HPE/hms-securestorage/...

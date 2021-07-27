@@ -29,7 +29,7 @@ import (
 	"strconv"
 	"strings"
 
-	base "stash.us.cray.com/HMS/hms-base"
+	base "github.com/Cray-HPE/hms-base"
 )
 
 /////////////////////////////////////////////////////////////////////////////
@@ -45,10 +45,10 @@ type EpHpeDevice struct {
 
 	InventoryData
 
-	DeviceURL   string `json:"deviceURL"` // Full URL to this RF Assembly obj
-	ParentOID   string `json:"parentOID"`   // odata.id for parent
-	ParentType  string `json:"parentType"`  // Chassis
-	LastStatus  string `json:"LastStatus"`
+	DeviceURL  string `json:"deviceURL"`  // Full URL to this RF Assembly obj
+	ParentOID  string `json:"parentOID"`  // odata.id for parent
+	ParentType string `json:"parentType"` // Chassis
+	LastStatus string `json:"LastStatus"`
 
 	DeviceRF  HpeDevice `json:"DeviceRF"`
 	deviceRaw *json.RawMessage

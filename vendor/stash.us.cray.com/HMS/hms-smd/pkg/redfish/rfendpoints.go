@@ -38,8 +38,8 @@ import (
 	"time"
 	"unicode"
 
-	base "stash.us.cray.com/HMS/hms-base"
-	"stash.us.cray.com/HMS/hms-certs/pkg/hms_certs"
+	base "github.com/Cray-HPE/hms-base"
+	"github.com/Cray-HPE/hms-certs/pkg/hms_certs"
 )
 
 const PKG_VERSION = "0.2"
@@ -155,8 +155,8 @@ const (
 
 const MaxFanout int = 1000
 
-var ErrRFDiscFQDNMissing   = errors.New("FQDN unexpectedly empty string")
-var ErrRFDiscURLNotFound   = errors.New("URL request returned 404: Not Found")
+var ErrRFDiscFQDNMissing = errors.New("FQDN unexpectedly empty string")
+var ErrRFDiscURLNotFound = errors.New("URL request returned 404: Not Found")
 var ErrRFDiscILOLicenseReq = errors.New("iLO License Required")
 
 /////////////////////////////////////////////////////////////////////////////

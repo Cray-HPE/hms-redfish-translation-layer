@@ -35,5 +35,5 @@ FROM build-base
 
 RUN go env -w GO111MODULE=auto
 
-COPY *.go namespace token $GOPATH/src/stash.us.cray.com/HMS/hms-securestorage/
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-securestorage/vendor
+COPY *.go namespace token $GOPATH/src/github.com/Cray-HPE/hms-securestorage/
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-securestorage/vendor

@@ -25,7 +25,7 @@ package rf
 import (
 	"os"
 
-	"stash.us.cray.com/HMS/hms-certs/pkg/hms_certs"
+	"github.com/Cray-HPE/hms-certs/pkg/hms_certs"
 )
 
 var httpRFClient *hms_certs.HTTPClientPair

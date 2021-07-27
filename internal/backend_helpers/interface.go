@@ -28,10 +28,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/certificate_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
 	"google.golang.org/api/compute/v1"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/certificate_store"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
 )
 
 // Redfish CertificateService implementation

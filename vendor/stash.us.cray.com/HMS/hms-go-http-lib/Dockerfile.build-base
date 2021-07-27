@@ -35,5 +35,5 @@ FROM build-base
 
 RUN go env -w GO111MODULE=auto
 
-COPY . $GOPATH/src/stash.us.cray.com/HMS/hms-go-http-lib
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-go-http-lib/vendor
+COPY . $GOPATH/src/github.com/Cray-HPE/hms-go-http-lib
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-go-http-lib/vendor

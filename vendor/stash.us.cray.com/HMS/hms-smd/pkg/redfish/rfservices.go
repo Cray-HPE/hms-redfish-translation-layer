@@ -25,7 +25,7 @@ package rf
 import (
 	//"bytes"
 	"encoding/json"
-	//base "stash.us.cray.com/HMS/hms-base"
+	//base "github.com/Cray-HPE/hms-base"
 	//"io/ioutil"
 	//"path"
 	//"strings"

@@ -1,4 +1,4 @@
-module stash.us.cray.com/HMS/hms-redfish-translation-service
+module github.com/Cray-HPE/hms-redfish-translation-service
 
 go 1.16
 
@@ -19,9 +19,9 @@ require (
 	k8s.io/api v0.17.2
 	k8s.io/apimachinery v0.17.2
 	k8s.io/client-go v0.17.2
-	stash.us.cray.com/HMS/hms-base v1.13.0
-	stash.us.cray.com/HMS/hms-compcredentials v1.11.0
-	stash.us.cray.com/HMS/hms-go-http-lib v1.5.0
-	stash.us.cray.com/HMS/hms-securestorage v1.12.0
-	stash.us.cray.com/HMS/hms-smd v1.30.4
+	github.com/Cray-HPE/hms-base v1.13.0
+	github.com/Cray-HPE/hms-compcredentials v1.11.0
+	github.com/Cray-HPE/hms-go-http-lib v1.5.0
+	github.com/Cray-HPE/hms-securestorage v1.12.0
+	github.com/Cray-HPE/hms-smd v1.30.4
 )

@@ -30,7 +30,7 @@ import (
 	"strings"
 	"time"
 
-	base "stash.us.cray.com/HMS/hms-base"
+	base "github.com/Cray-HPE/hms-base"
 )
 
 /////////////////////////////////////////////////////////////////////////////
@@ -141,10 +141,10 @@ type CrayPwrLimit struct {
 }
 
 type PwrCtlOEMHPE struct {
-	PowerLimit CrayPwrLimit     `json:"PowerLimit"`
-	PowerRegulationEnabled bool `json:"PowerRegulationEnabled"`
-	Status     string           `json:"Status"`
-	Target     string           `json:"Target"`
+	PowerLimit             CrayPwrLimit `json:"PowerLimit"`
+	PowerRegulationEnabled bool         `json:"PowerRegulationEnabled"`
+	Status                 string       `json:"Status"`
+	Target                 string       `json:"Target"`
 }
 
 type PwrCtlRelatedItem struct {
@@ -919,7 +919,7 @@ type EpSystem struct {
 	// associate it with nodes (systems) so we record it here.
 	Assembly        *EpAssembly       `json:"Assembly"`
 	NodeAccelRisers EpNodeAccelRisers `json:"NodeAccelRisers"`
-	
+
 	// HpeDevice info comes from the Chassis level HPE OEM Links but we
 	// associate it with nodes (systems) so we record it here. We discover
 	// GPUs on HPE hardware as an HpeDevice.
@@ -1159,7 +1159,7 @@ func (s *EpSystem) discoverRemotePhase1() {
 					if s.PowerInfo.OEM.HPE.Links.AccPowerService.Oid == "" {
 						break
 					}
-					
+
 					path = s.PowerInfo.OEM.HPE.Links.AccPowerService.Oid
 					hpeAccPowerServiceJSON, err := s.epRF.GETRelative(path)
 					if err != nil || hpeAccPowerServiceJSON == nil {

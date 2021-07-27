@@ -27,4 +27,4 @@ FROM cray/hms-base-build-base
 
 # Run any tests that might be present.
 RUN set -ex \
-    && go test -v stash.us.cray.com/HMS/hms-base
+    && go test -v github.com/Cray-HPE/hms-base

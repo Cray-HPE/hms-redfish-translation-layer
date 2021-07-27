@@ -35,11 +35,11 @@ FROM build-base AS base
 
 RUN go env -w GO111MODULE=auto
 
-COPY compCredentials.go compCredentials_test.go $GOPATH/src/stash.us.cray.com/HMS/hms-compcredentials/
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-compcredentials/vendor
+COPY compCredentials.go compCredentials_test.go $GOPATH/src/github.com/Cray-HPE/hms-compcredentials/
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-compcredentials/vendor
 
 # Now we can build.
 FROM base
 
 RUN set -ex \
-    && go build -v stash.us.cray.com/HMS/hms-compcredentials/...
+    && go build -v github.com/Cray-HPE/hms-compcredentials/...

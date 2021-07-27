@@ -1,17 +1,17 @@
 // MIT License
-// 
+//
 // (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
 // the rights to use, copy, modify, merge, publish, distribute, sublicense,
 // and/or sell copies of the Software, and to permit persons to whom the
 // Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included
 // in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -20,37 +20,32 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-
 package hms_certs
 
-
-
 import (
-	"fmt"
-	"net/http"
-	"net/url"
-	"encoding/json"
-	"io"
-	"io/ioutil"
-	"os"
-	"path"
-	"strings"
-	"strconv"
 	"bytes"
-	"time"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"os"
+	"path"
+	"strconv"
+	"strings"
+	"time"
 
-	"stash.us.cray.com/HMS/hms-base"
-	sstorage "stash.us.cray.com/HMS/hms-securestorage"
-	"github.com/sirupsen/logrus"
+	sstorage "github.com/Cray-HPE/hms-securestorage"
 	"github.com/hashicorp/go-retryablehttp"
+	"github.com/sirupsen/logrus"
+	base "stash.us.cray.com/HMS/hms-base"
 )
-
 
 // This package provides a means to create TLS cert/key pairs as well as
 // to fetch the CA bundle/chain.    See README.md for more info.
-
 
 // Used for authentication in k8s, to get to the vault data
 
@@ -112,7 +107,6 @@ type CertInfo struct {
   "auth": null
 }*/
 
-
 // Used for storing cert info in Vault secure storage
 
 type CertStorage struct {
@@ -127,21 +121,20 @@ type HTTPClientPair struct {
 	InsecureClient *retryablehttp.Client
 	MaxRetryCount  int
 	MaxRetryWait   int
-	FailedOver     bool			//true if most recent op failed over
+	FailedOver     bool //true if most recent op failed over
 }
-
 
 // Configuration parameters. Changeable by applications, but DO NOT
 // change them unless you know what you're doing!!
 
 type Config struct {
-	K8SAuthUrl          string	//Defaults to k8sAuthURL
-	VaultPKIUrl         string	//Defaults to vaultPKIURL
-	VaultCAUrl          string	//Defaults to vaultCAURL
-	VaultKeyBase        string	//Defaults to vaultKeyBase
-	VaultJWTFile        string	//Defaults to k8sJWTFile
-	CertKeyBasePath     string	//Defaults to certKeyBasePath
-	LogInsecureFailover bool	//Defaults to true
+	K8SAuthUrl          string //Defaults to k8sAuthURL
+	VaultPKIUrl         string //Defaults to vaultPKIURL
+	VaultCAUrl          string //Defaults to vaultCAURL
+	VaultKeyBase        string //Defaults to vaultKeyBase
+	VaultJWTFile        string //Defaults to k8sJWTFile
+	CertKeyBasePath     string //Defaults to certKeyBasePath
+	LogInsecureFailover bool   //Defaults to true
 }
 
 // Constants available to the user of this package
@@ -158,10 +151,10 @@ const (
 // Constants used within this package
 
 const (
-	k8sJWTFile      = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-	k8sAuthURL      = "http://cray-vault.vault:8200/v1/auth/kubernetes/login"
-	vaultPKIURL     = "http://cray-vault.vault:8200/v1/pki_common/issue/pki-common"
-	vaultCAURL      = "http://cray-vault.vault:8200/v1/pki_common/ca_chain"
+	k8sJWTFile  = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+	k8sAuthURL  = "http://cray-vault.vault:8200/v1/auth/kubernetes/login"
+	vaultPKIURL = "http://cray-vault.vault:8200/v1/pki_common/issue/pki-common"
+	vaultCAURL  = "http://cray-vault.vault:8200/v1/pki_common/ca_chain"
 
 	vaultKeyBase    = "secret"
 	certKeyBasePath = "certs"
@@ -172,9 +165,8 @@ const (
 	maxSlotBMC       = 8
 )
 
-
 // Config params, changeable by user of this package.  See constants above.
-// Note that in addition to these parameters there are some environment 
+// Note that in addition to these parameters there are some environment
 // variables which affect the way Vault works, and they are global to the
 // application:
 //
@@ -185,13 +177,13 @@ const (
 //                        # /auth/kubernetes/login
 // VAULT_ADDR             # URL of Vault, default is http://cray-vault.vault:8200
 
-var ConfigParams = Config{K8SAuthUrl:          k8sAuthURL,
-                          VaultPKIUrl:         vaultPKIURL,
-                          VaultCAUrl:          vaultCAURL,
-                          VaultKeyBase:        vaultKeyBase,
-                          VaultJWTFile:        k8sJWTFile,
-                          CertKeyBasePath:     certKeyBasePath,
-                          LogInsecureFailover: true,
+var ConfigParams = Config{K8SAuthUrl: k8sAuthURL,
+	VaultPKIUrl:         vaultPKIURL,
+	VaultCAUrl:          vaultCAURL,
+	VaultKeyBase:        vaultKeyBase,
+	VaultJWTFile:        k8sJWTFile,
+	CertKeyBasePath:     certKeyBasePath,
+	LogInsecureFailover: true,
 }
 
 // local global vars
@@ -199,25 +191,24 @@ var logger = logrus.New()
 var __httpTransport *http.Transport
 var __httpClient *http.Client
 var __vaultEnabled = true
-var cbmap  = make(map[string]bool)
+var cbmap = make(map[string]bool)
 var vstore = make(map[string]VaultCertData)
 var instName string
-
 
 // Initialize the certs package.  This pretty much just sets up the logging.
 
 func Init(loggerP *logrus.Logger) {
-    if loggerP != nil {
-        logger = loggerP
-    } else {
-        logger = logrus.New()
-    }
+	if loggerP != nil {
+		logger = loggerP
+	} else {
+		logger = logrus.New()
+	}
 
 	//Check for Vault-ness.  No ENV var == vault is enabled, so specifically
 	//look for 0, false, etc.
 
 	ven := os.Getenv("VAULT_ENABLE")
-	if ((ven == "0") || (strings.ToLower(ven) == "false")) {
+	if (ven == "0") || (strings.ToLower(ven) == "false") {
 		__vaultEnabled = false
 	}
 }
@@ -228,18 +219,18 @@ func InitInstance(loggerP *logrus.Logger, inst string) {
 }
 
 func seclog_Errorf(fmt string, args ...interface{}) {
-	if (ConfigParams.LogInsecureFailover) {
-		logger.Errorf(fmt,args...)
+	if ConfigParams.LogInsecureFailover {
+		logger.Errorf(fmt, args...)
 	}
 }
 
 func seclog_Warnf(fmt string, args ...interface{}) {
-	if (ConfigParams.LogInsecureFailover) {
-		logger.Warnf(fmt,args...)
+	if ConfigParams.LogInsecureFailover {
+		logger.Warnf(fmt, args...)
 	}
 }
 
-// Register for changes to a CA chain.  This is based on a URI, which can be 
+// Register for changes to a CA chain.  This is based on a URI, which can be
 // a filename or VaultCAChainURI.
 //
 // If file, it will put a watch on the file.  If vault URI, it will poll.
@@ -254,9 +245,9 @@ func seclog_Warnf(fmt string, args ...interface{}) {
 // Return:   nil on success, error info on error.
 
 func CAUpdateRegister(uri string, cb func(string)) error {
-	if (uri == VaultCAChainURI) {
-		baseChain,berr := FetchCAChain(uri)
-		if (berr != nil) {
+	if uri == VaultCAChainURI {
+		baseChain, berr := FetchCAChain(uri)
+		if berr != nil {
 			return berr
 		}
 
@@ -264,25 +255,25 @@ func CAUpdateRegister(uri string, cb func(string)) error {
 		go func() {
 			for {
 				time.Sleep(10 * time.Second)
-				if (cbmap[uri] == false) {
+				if cbmap[uri] == false {
 					break
 				}
-				newChain,nerr := FetchCAChain(uri)
-				if (nerr != nil) {
-					logger.Errorf("%v",nerr)
+				newChain, nerr := FetchCAChain(uri)
+				if nerr != nil {
+					logger.Errorf("%v", nerr)
 					continue
 				}
-				if (baseChain != newChain) {
+				if baseChain != newChain {
 					baseChain = newChain
 					cb(newChain)
 				}
 			}
 		}()
 	} else {
-		finfo,ferr := os.Stat(uri)
-		if (ferr != nil) {
+		finfo, ferr := os.Stat(uri)
+		if ferr != nil {
 			return fmt.Errorf("Error stat-ing file '%s': %v",
-				uri,ferr)
+				uri, ferr)
 		}
 		orgTime := finfo.ModTime()
 		cbmap[uri] = true
@@ -290,21 +281,21 @@ func CAUpdateRegister(uri string, cb func(string)) error {
 		go func() {
 			for {
 				time.Sleep(10 * time.Second)
-				if (cbmap[uri] == false) {
+				if cbmap[uri] == false {
 					break
 				}
-				ninfo,nerr := os.Stat(uri)
-				if (nerr != nil) {
+				ninfo, nerr := os.Stat(uri)
+				if nerr != nil {
 					logger.Errorf("Error stat-ing file '%s': %v",
-						uri,ferr)
+						uri, ferr)
 					continue
 				}
-				if (ninfo.ModTime() != orgTime) {
+				if ninfo.ModTime() != orgTime {
 					orgTime = ninfo.ModTime()
-					chain,cerr := ioutil.ReadFile(uri)
-					if (cerr != nil) {
+					chain, cerr := ioutil.ReadFile(uri)
+					if cerr != nil {
 						logger.Errorf("Error reading CA chain file '%s': %v",
-							uri,cerr)
+							uri, cerr)
 					} else {
 						cb(string(chain))
 					}
@@ -324,23 +315,21 @@ func CAUpdateRegister(uri string, cb func(string)) error {
 // Return:   nil on success, error info on error.
 
 func CAUpdateUnregister(uri string) error {
-	ok,_ := cbmap[uri]
-	if (!ok) {
-		return fmt.Errorf("No CA chain callback map entry found for '%s'",uri)
+	ok, _ := cbmap[uri]
+	if !ok {
+		return fmt.Errorf("No CA chain callback map entry found for '%s'", uri)
 	}
-	delete(cbmap,uri)
+	delete(cbmap, uri)
 	return nil
 }
 
 //Convenience function to fetch HTTP client for internal use.
 
 func getHTTPClient() *http.Client {
-	if (__httpClient == nil) {
-		__httpTransport = &http.Transport{TLSClientConfig:
-		                                 &tls.Config{InsecureSkipVerify: true},
-		}
+	if __httpClient == nil {
+		__httpTransport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 		__httpClient = &http.Client{Transport: __httpTransport,
-		                            Timeout:   (3 * time.Second),
+			Timeout: (3 * time.Second),
 		}
 	}
 	return __httpClient
@@ -349,58 +338,58 @@ func getHTTPClient() *http.Client {
 // Given a raw key, massage it into a proper vault key (prepend path).
 
 func vaultKey(raw string) string {
-	return path.Join(ConfigParams.CertKeyBasePath,raw)
+	return path.Join(ConfigParams.CertKeyBasePath, raw)
 }
 
 // Fetch the vault access token.
 
-func getVaultToken() (string,error) {
+func getVaultToken() (string, error) {
 	//Get access to vault.  Start by reading the svc acct token file.
 
 	jwtFile := os.Getenv(sstorage.EnvVaultJWTFile)
-	if (jwtFile == "") {
+	if jwtFile == "" {
 		jwtFile = ConfigParams.VaultJWTFile
 	}
-	ktoken,kerr := ioutil.ReadFile(jwtFile)
-	if (kerr != nil) {
-		return "",fmt.Errorf("ERROR reading k8s token file '%s': %v",
-			jwtFile,kerr)
+	ktoken, kerr := ioutil.ReadFile(jwtFile)
+	if kerr != nil {
+		return "", fmt.Errorf("ERROR reading k8s token file '%s': %v",
+			jwtFile, kerr)
 	}
 
 	client := getHTTPClient()
 	pld := `{"jwt":"` + string(ktoken) + `","role":"pki-common-direct"}`
-	req,reqerr := http.NewRequest("POST",ConfigParams.K8SAuthUrl,bytes.NewBuffer([]byte(pld)))
-	if (reqerr != nil) {
+	req, reqerr := http.NewRequest("POST", ConfigParams.K8SAuthUrl, bytes.NewBuffer([]byte(pld)))
+	if reqerr != nil {
 		return "", fmt.Errorf("ERROR creating a new request for kubernetes/login: %v",
 			reqerr)
 	}
-	base.SetHTTPUserAgent(req,instName)
+	base.SetHTTPUserAgent(req, instName)
 	defer req.Body.Close()
-	rsp,rsperr := client.Do(req)
-	if (rsperr != nil) {
-		return "",fmt.Errorf("ERROR executing req for kubernetes/login: %v",
+	rsp, rsperr := client.Do(req)
+	if rsperr != nil {
+		return "", fmt.Errorf("ERROR executing req for kubernetes/login: %v",
 			rsperr)
 	}
-	body,berr := ioutil.ReadAll(rsp.Body)
+	body, berr := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 
-	if (rsp.StatusCode != http.StatusOK) {
-		return "",fmt.Errorf("ERROR bad rsp code from req for kubernetes/login: %d",
+	if rsp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("ERROR bad rsp code from req for kubernetes/login: %d",
 			rsp.StatusCode)
 	}
-	if (berr != nil) {
-		return "",fmt.Errorf("ERROR can't read rsp body from kubernetes/login: %v",
+	if berr != nil {
+		return "", fmt.Errorf("ERROR can't read rsp body from kubernetes/login: %v",
 			berr)
 	}
 
 	var jdata vaultTokStuff
-	berr = json.Unmarshal(body,&jdata)
-	if (berr != nil) {
-		return "",fmt.Errorf("ERROR can't unmarshal rsp body from kubernetes/login: %v",
+	berr = json.Unmarshal(body, &jdata)
+	if berr != nil {
+		return "", fmt.Errorf("ERROR can't unmarshal rsp body from kubernetes/login: %v",
 			berr)
 	}
 
-	return jdata.Auth.ClientToken,nil
+	return jdata.Auth.ClientToken, nil
 }
 
 // Given an endpoint and a domain type, generate all possible SANs for a cert.
@@ -411,82 +400,82 @@ func getVaultToken() (string,error) {
 // Return:       Comma separated string containing all generated SANs;
 //               nil on success; error info on error.
 
-func genAllDomainAltNames(endpoint,domain string) (string,error) {
-	var eps,toks []string
-	var chassis,slot,bmc,cid,maxSlot int
+func genAllDomainAltNames(endpoint, domain string) (string, error) {
+	var eps, toks []string
+	var chassis, slot, bmc, cid, maxSlot int
 
-	switch (domain) {
-		case CertDomainCabinet:
-			//Create all node cards, switch cards, CMMs, and PDUs.
-			//This has to handle rtrs too and c0 has to have up to 64 rtrs
-			//and blades for river
-			eps = append(eps,fmt.Sprintf("%sc0",endpoint))
-			for slot = 0; slot < 4; slot ++ {
-				eps = append(eps,fmt.Sprintf("%sm%d",endpoint,slot))
-				eps = append(eps,fmt.Sprintf("%sm%d-rts",endpoint,slot))
+	switch domain {
+	case CertDomainCabinet:
+		//Create all node cards, switch cards, CMMs, and PDUs.
+		//This has to handle rtrs too and c0 has to have up to 64 rtrs
+		//and blades for river
+		eps = append(eps, fmt.Sprintf("%sc0", endpoint))
+		for slot = 0; slot < 4; slot++ {
+			eps = append(eps, fmt.Sprintf("%sm%d", endpoint, slot))
+			eps = append(eps, fmt.Sprintf("%sm%d-rts", endpoint, slot))
+		}
+		for slot = 0; slot < maxRVChassisSlot; slot++ {
+			for bmc = 0; bmc < maxSlotBMC; bmc++ {
+				eps = append(eps, fmt.Sprintf("%sc%ds%db%d",
+					endpoint, 0, slot, bmc))
+				eps = append(eps, fmt.Sprintf("%sc%dr%db%d",
+					endpoint, 0, slot, bmc))
 			}
-			for slot = 0; slot < maxRVChassisSlot; slot ++ {
-				for bmc = 0; bmc < maxSlotBMC; bmc ++ {
-					eps = append(eps,fmt.Sprintf("%sc%ds%db%d",
-							endpoint,0,slot,bmc))
-					eps = append(eps,fmt.Sprintf("%sc%dr%db%d",
-							endpoint,0,slot,bmc))
+		}
+		for chassis = 1; chassis < maxCabChassis; chassis++ {
+			eps = append(eps, fmt.Sprintf("%sc%d", endpoint, chassis))
+			for slot = 0; slot < maxChassisSlot; slot++ {
+				for bmc = 0; bmc < maxSlotBMC; bmc++ {
+					eps = append(eps, fmt.Sprintf("%sc%ds%db%d",
+						endpoint, chassis, slot, bmc))
+					eps = append(eps, fmt.Sprintf("%sc%dr%db%d",
+						endpoint, chassis, slot, bmc))
 				}
 			}
-			for chassis = 1; chassis < maxCabChassis; chassis ++ {
-				eps = append(eps,fmt.Sprintf("%sc%d",endpoint,chassis))
-				for slot = 0; slot < maxChassisSlot; slot ++ {
-					for bmc = 0; bmc < maxSlotBMC; bmc ++ {
-						eps = append(eps,fmt.Sprintf("%sc%ds%db%d",
-								endpoint,chassis,slot,bmc))
-						eps = append(eps,fmt.Sprintf("%sc%dr%db%d",
-								endpoint,chassis,slot,bmc))
-					}
-				}
-			}
-			break
+		}
+		break
 
-		case CertDomainChassis:
-			//If this is c0, slots and rtrs, up to 64
-			toks = strings.Split(endpoint,"c")
-			if (len(toks) < 2) {
-				return "",fmt.Errorf("Invalid chassis name: '%s' (missing 'c')",
-							endpoint)
+	case CertDomainChassis:
+		//If this is c0, slots and rtrs, up to 64
+		toks = strings.Split(endpoint, "c")
+		if len(toks) < 2 {
+			return "", fmt.Errorf("Invalid chassis name: '%s' (missing 'c')",
+				endpoint)
+		}
+		cid, _ = strconv.Atoi(toks[1])
+		if cid == 0 {
+			maxSlot = maxRVChassisSlot
+		} else {
+			maxSlot = maxChassisSlot
+		}
+		for slot = 0; slot < maxSlot; slot++ {
+			for bmc = 0; bmc < maxSlotBMC; bmc++ {
+				eps = append(eps, fmt.Sprintf("%ss%db%d",
+					endpoint, slot, bmc))
+				eps = append(eps, fmt.Sprintf("%sr%db%d",
+					endpoint, slot, bmc))
 			}
-			cid,_ = strconv.Atoi(toks[1])
-			if (cid == 0) {
-				maxSlot = maxRVChassisSlot
-			} else {
-				maxSlot = maxChassisSlot
-			}
-			for slot = 0; slot < maxSlot; slot ++ {
-				for bmc = 0; bmc < maxSlotBMC; bmc ++ {
-					eps = append(eps,fmt.Sprintf("%ss%db%d",
-							endpoint,slot,bmc))
-					eps = append(eps,fmt.Sprintf("%sr%db%d",
-							endpoint,slot,bmc))
-				}
-			}
-			break
+		}
+		break
 
-		case CertDomainBlade:
-			//Note: endpoint will be either xXcCsS or xXcCrR
-			for bmc = 0; bmc < maxSlotBMC; bmc ++ {
-				eps = append(eps,fmt.Sprintf("%sb%d",
-						endpoint,bmc))
-			}
-			break
+	case CertDomainBlade:
+		//Note: endpoint will be either xXcCsS or xXcCrR
+		for bmc = 0; bmc < maxSlotBMC; bmc++ {
+			eps = append(eps, fmt.Sprintf("%sb%d",
+				endpoint, bmc))
+		}
+		break
 
-		case CertDomainBMC:
-			toks = strings.Split(endpoint,"n")
-			eps = append(eps,toks[0])
-			break
+	case CertDomainBMC:
+		toks = strings.Split(endpoint, "n")
+		eps = append(eps, toks[0])
+		break
 
-		default:
-			return "",fmt.Errorf("Invalid cert domain: %s",domain)
+	default:
+		return "", fmt.Errorf("Invalid cert domain: %s", domain)
 	}
 
-	return strings.Join(eps,","),nil
+	return strings.Join(eps, ","), nil
 }
 
 // Create a cert using the Vault PKI.
@@ -497,41 +486,41 @@ func genAllDomainAltNames(endpoint,domain string) (string,error) {
 // Return:         nil on success, error info on error.
 
 func createTargCerts(reqData *vaultCertReq, vaultToken string,
-                     retData *VaultCertData) error {
+	retData *VaultCertData) error {
 	client := getHTTPClient()
-	ba,berr := json.Marshal(reqData)
-	if (berr != nil) {
+	ba, berr := json.Marshal(reqData)
+	if berr != nil {
 		return fmt.Errorf("Problem marshalling vault cert request data: %v",
-					berr)
+			berr)
 	}
-	req,reqerr := http.NewRequest("POST",ConfigParams.VaultPKIUrl,bytes.NewBuffer(ba))
-	if (reqerr != nil) {
+	req, reqerr := http.NewRequest("POST", ConfigParams.VaultPKIUrl, bytes.NewBuffer(ba))
+	if reqerr != nil {
 		return fmt.Errorf("ERROR creating req for vault cert data: %v",
 			reqerr)
 	}
-	base.SetHTTPUserAgent(req,instName)
-	req.Header.Set("X-Vault-Token",vaultToken)
-	rsp,rsperr := client.Do(req)
-	if (rsperr != nil) {
+	base.SetHTTPUserAgent(req, instName)
+	req.Header.Set("X-Vault-Token", vaultToken)
+	rsp, rsperr := client.Do(req)
+	if rsperr != nil {
 		return fmt.Errorf("ERROR executing req for vault cert data: %v",
 			rsperr)
 	}
 
-	body,berr := ioutil.ReadAll(rsp.Body)
+	body, berr := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 
-	if (rsp.StatusCode != http.StatusOK) {
+	if rsp.StatusCode != http.StatusOK {
 		return fmt.Errorf("ERROR bad rsp code from req for vault cert data: %d",
 			rsp.StatusCode)
 	}
 
-	if (berr != nil) {
+	if berr != nil {
 		return fmt.Errorf("ERROR can't read rsp body from fault cert req: %v",
 			berr)
 	}
 
-	berr = json.Unmarshal(body,retData)
-	if (berr != nil) {
+	berr = json.Unmarshal(body, retData)
+	if berr != nil {
 		return fmt.Errorf("ERROR can't read rsp body from vault cert req: %v",
 			berr)
 	}
@@ -545,12 +534,12 @@ func createTargCerts(reqData *vaultCertReq, vaultToken string,
 // sep(in):   Separator, e.g. "c"
 // Return:    Front part of xname, e.g., "x1000"
 
-func getXNameSegment(xname,sep string) string {
-	if (sep == "") {
+func getXNameSegment(xname, sep string) string {
+	if sep == "" {
 		return xname
 	}
-	toks := strings.Split(xname,sep)
-	if (len(toks) < 2) {
+	toks := strings.Split(xname, sep)
+	if len(toks) < 2 {
 		return xname
 	}
 	return toks[0]
@@ -565,29 +554,29 @@ func getXNameSegment(xname,sep string) string {
 // Return:        Domain XName, e.g. "x1000"
 //                nil on success, error info on error.
 
-func checkDomainTargs(endpoints []string, domain string, sep string) (string,error) {
-	toks := strings.Split(endpoints[0],":")
-	xname := getXNameSegment(toks[0],sep)
-	for ix := 0; ix < len(endpoints); ix ++ {
-		ttoks := strings.Split(endpoints[ix],":")
-		compName := getXNameSegment(ttoks[0],sep)
-		if (compName != xname) {
-			return "",fmt.Errorf("ERROR, endpoint not in %s domain: %s",
-				domain,endpoints[ix])
+func checkDomainTargs(endpoints []string, domain string, sep string) (string, error) {
+	toks := strings.Split(endpoints[0], ":")
+	xname := getXNameSegment(toks[0], sep)
+	for ix := 0; ix < len(endpoints); ix++ {
+		ttoks := strings.Split(endpoints[ix], ":")
+		compName := getXNameSegment(ttoks[0], sep)
+		if compName != xname {
+			return "", fmt.Errorf("ERROR, endpoint not in %s domain: %s",
+				domain, endpoints[ix])
 		}
 		//There can be -xxx annotations in some cases, e.g. x0m0-rts, so strip
 		//off anything with a dash.
-		dtoks := strings.Split(ttoks[0],"-")
-		if (base.VerifyNormalizeCompID(dtoks[0]) == "") {
-			return "",fmt.Errorf("ERROR, endpoint not a valid XName: %s (%s)",
-				ttoks[0],endpoints[ix])
+		dtoks := strings.Split(ttoks[0], "-")
+		if base.VerifyNormalizeCompID(dtoks[0]) == "" {
+			return "", fmt.Errorf("ERROR, endpoint not a valid XName: %s (%s)",
+				ttoks[0], endpoints[ix])
 		}
 	}
 
-	return xname,nil
+	return xname, nil
 }
 
-// Given a list of BMC endpoints and a domain type, verify that all endpoints 
+// Given a list of BMC endpoints and a domain type, verify that all endpoints
 // are contained in the same cert domain and return the domain xname.
 //
 // endpoints(in): Array of BMC XNames
@@ -595,27 +584,27 @@ func checkDomainTargs(endpoints []string, domain string, sep string) (string,err
 // Return:        Domain XName, e.g. "x1000"
 //                nil on success, error info on error.
 
-func CheckDomain(endpoints []string, domain string) (string,error) {
+func CheckDomain(endpoints []string, domain string) (string, error) {
 	var err error
 	var domName string
 
-	if (domain == CertDomainCabinet) {
-		domName,err = checkDomainTargs(endpoints,domain,"c")
-	} else if (domain == CertDomainChassis) {
-		domName,err = checkDomainTargs(endpoints,domain,"s")
-	} else if (domain == CertDomainBlade) {
-		domName,err = checkDomainTargs(endpoints,domain,"b")
-	} else if (domain == CertDomainBMC) {
-		if (len(endpoints) > 1) {
+	if domain == CertDomainCabinet {
+		domName, err = checkDomainTargs(endpoints, domain, "c")
+	} else if domain == CertDomainChassis {
+		domName, err = checkDomainTargs(endpoints, domain, "s")
+	} else if domain == CertDomainBlade {
+		domName, err = checkDomainTargs(endpoints, domain, "b")
+	} else if domain == CertDomainBMC {
+		if len(endpoints) > 1 {
 			err = fmt.Errorf("BMC domain target list can only contain 1 target.")
 		} else {
-			domName,err = checkDomainTargs(endpoints,domain,"")
+			domName, err = checkDomainTargs(endpoints, domain, "")
 		}
 	} else {
-		err = fmt.Errorf("Invalid domain: '%s'",domain)
+		err = fmt.Errorf("Invalid domain: '%s'", domain)
 	}
 
-	return domName,err
+	return domName, err
 }
 
 // Given a PEM encoded cert or key, convert all actual newline characters to
@@ -625,24 +614,24 @@ func CheckDomain(endpoints []string, domain string) (string,error) {
 // Return:     Input data with newlines converted to tuples.
 
 func NewlineToTuple(pemStr string) string {
-	return strings.Replace(strings.Trim(pemStr,"\n"),"\n",`\n`,-1)
+	return strings.Replace(strings.Trim(pemStr, "\n"), "\n", `\n`, -1)
 }
 
-// Given a PEM encoded cert or key, convert all \n tuples to actual newline 
+// Given a PEM encoded cert or key, convert all \n tuples to actual newline
 // characters.  If the input string already has newlines, do nothing.
 //
 // pemStr(in): PEM encoded cert or key string.
 // Return:     Input data with tuples converted to newlines.
 
 func TupleToNewline(pemStr string) string {
-	return strings.Replace(pemStr,`\n`,"\n",-1)
+	return strings.Replace(pemStr, `\n`, "\n", -1)
 }
 
 // Create TLS cert/key pair for the specified endpoints.  The endpoints
 // must be confined to the domain specified.  For example, if CertDomainCabinet
 // is specified, all endpoints must reside in the same cabinet.
 //
-// If there is only one endpoint specified, then all possible components of 
+// If there is only one endpoint specified, then all possible components of
 // the specified type in the specified domain will be included in the key.
 //
 // Example, cert/key for sparse components:
@@ -652,63 +641,63 @@ func TupleToNewline(pemStr string) string {
 // Example: cert/key for an entire cabinet:
 //   endpoints: ["x1000"], domain: cab
 //      key will be for x1000 and have SANs for all possible BMCs in the cab
-//   
+//
 // endpoints(in): List of target BMCs.
 // domain(in):    Target domain:
-//                    CertDomainCabinet 
-//                    CertDomainChassis 
-//                    CertDomainBlade   
-//                    CertDomainBMC   
+//                    CertDomainCabinet
+//                    CertDomainChassis
+//                    CertDomainBlade
+//                    CertDomainBMC
 // fqdn(in):      FQDN, e.g. "rocket.us.cray.com" to use in cert creation.
 //                Can be empty.
-// retData(out):  Returned TLS cert/key data.  Certs/keys are in JSON-frienly 
+// retData(out):  Returned TLS cert/key data.  Certs/keys are in JSON-frienly
 //                format.
 // Return:        nil on succes, error string on error.
 
 func CreateCert(endpoints []string, domain string, fqdn string,
-                retData *VaultCertData) error {
+	retData *VaultCertData) error {
 	var vreq vaultCertReq
 
-	domName,err := CheckDomain(endpoints,domain)
-	if (err != nil) {
+	domName, err := CheckDomain(endpoints, domain)
+	if err != nil {
 		return err
 	}
 
-	vaultToken,verr := getVaultToken()
-	if (verr != nil) {
+	vaultToken, verr := getVaultToken()
+	if verr != nil {
 		return verr
 	}
 
 	//Create the request for vault certs
 
 	vreq.CommonName = domName
-	vreq.TTL = "8760h"	//1 year TODO: this may change.
+	vreq.TTL = "8760h" //1 year TODO: this may change.
 
-	if (len(endpoints) == 1) {
-		vreq.AltNames,err = genAllDomainAltNames(domName,domain)
-		if (err != nil) {
+	if len(endpoints) == 1 {
+		vreq.AltNames, err = genAllDomainAltNames(domName, domain)
+		if err != nil {
 			return err
 		}
 	} else {
-		vreq.AltNames = strings.Join(endpoints,",")
+		vreq.AltNames = strings.Join(endpoints, ",")
 	}
 
 	//Append FQDN to each AltName
 
-	if (fqdn != "") {
-		npfqdn := strings.TrimLeft(fqdn,".")
+	if fqdn != "" {
+		npfqdn := strings.TrimLeft(fqdn, ".")
 		fqdn = "." + npfqdn
-		anames := strings.Split(vreq.AltNames,",")
-		for ix := 0; ix < len(anames); ix ++ {
+		anames := strings.Split(vreq.AltNames, ",")
+		for ix := 0; ix < len(anames); ix++ {
 			anames[ix] = anames[ix] + fqdn
 		}
-		vreq.AltNames = strings.Join(anames,",")
+		vreq.AltNames = strings.Join(anames, ",")
 	}
 
 	//Make the call to Vault
 
 	err = createTargCerts(&vreq, vaultToken, retData)
-	if (err != nil) {
+	if err != nil {
 		return err
 	}
 
@@ -718,55 +707,55 @@ func CreateCert(endpoints []string, domain string, fqdn string,
 	return nil
 }
 
-// Fetch the CA chain (a.k.a. 'bundle') cert.  
+// Fetch the CA chain (a.k.a. 'bundle') cert.
 //
 // uri(in): URI of CA chain data.  Can be a pathname or VaultCAChainURI
 // Return:  CA bundle cert in JSON-friendly format.
 //          nil on success, error string on error
 
-func FetchCAChain(uri string) (string,error) {
-	if (uri == VaultCAChainURI) {
-		vaultToken,err := getVaultToken()
-		if (err != nil) {
-			return "",err
+func FetchCAChain(uri string) (string, error) {
+	if uri == VaultCAChainURI {
+		vaultToken, err := getVaultToken()
+		if err != nil {
+			return "", err
 		}
 
 		client := getHTTPClient()
-		req,reqerr := http.NewRequest("GET",ConfigParams.VaultCAUrl,nil)
-		if (reqerr != nil) {
-			return "",fmt.Errorf("ERROR creating req for vault ca chain: %v",
+		req, reqerr := http.NewRequest("GET", ConfigParams.VaultCAUrl, nil)
+		if reqerr != nil {
+			return "", fmt.Errorf("ERROR creating req for vault ca chain: %v",
 				reqerr)
 		}
-		base.SetHTTPUserAgent(req,instName)
-		req.Header.Set("X-Vault-Token",vaultToken)
-		rsp,rsperr := client.Do(req)
-		if (rsperr != nil) {
-			return "",fmt.Errorf("ERROR executing req for vault ca chain: %v",
+		base.SetHTTPUserAgent(req, instName)
+		req.Header.Set("X-Vault-Token", vaultToken)
+		rsp, rsperr := client.Do(req)
+		if rsperr != nil {
+			return "", fmt.Errorf("ERROR executing req for vault ca chain: %v",
 				rsperr)
 		}
-		body,berr := ioutil.ReadAll(rsp.Body)
+		body, berr := ioutil.ReadAll(rsp.Body)
 		defer rsp.Body.Close()
 
-		if (rsp.StatusCode != http.StatusOK) {
-			return "",fmt.Errorf("ERROR bad rsp code from req for vault ca chain: %d",
+		if rsp.StatusCode != http.StatusOK {
+			return "", fmt.Errorf("ERROR bad rsp code from req for vault ca chain: %d",
 				rsp.StatusCode)
 		}
 
-		if (berr != nil) {
-			return "",fmt.Errorf("ERROR can't read rsp body from vault ca chain req: %v",
+		if berr != nil {
+			return "", fmt.Errorf("ERROR can't read rsp body from vault ca chain req: %v",
 				berr)
 		}
 
-		return string(body),nil
+		return string(body), nil
 	}
 
 	//Nope, must be a file (from configmap)
 
-	data,err := ioutil.ReadFile(uri)
-	if (err != nil) {
-		return "",fmt.Errorf("ERROR reading file '%s': %v",uri,err)
+	data, err := ioutil.ReadFile(uri)
+	if err != nil {
+		return "", fmt.Errorf("ERROR reading file '%s': %v", uri, err)
 	}
-	return string(data),nil
+	return string(data), nil
 }
 
 // Take a cert/key pair and store it in Vault.
@@ -776,18 +765,18 @@ func FetchCAChain(uri string) (string,error) {
 // Return:        nil on success, error info on error.
 
 func StoreCertData(domainID string, certData VaultCertData) error {
-	if (!__vaultEnabled) {
+	if !__vaultEnabled {
 		vstore[domainID] = certData
 		return nil
 	}
-	ss,err := sstorage.NewVaultAdapter(ConfigParams.VaultKeyBase)
-	if (err != nil) {
-		return fmt.Errorf("ERROR creating secure storage adapter: %v",err)
+	ss, err := sstorage.NewVaultAdapter(ConfigParams.VaultKeyBase)
+	if err != nil {
+		return fmt.Errorf("ERROR creating secure storage adapter: %v", err)
 	}
 
-	err = ss.Store(vaultKey(domainID),&certData)
-	if (err != nil) {
-		return fmt.Errorf("ERROR storing to key '%s': %v",domainID,err)
+	err = ss.Store(vaultKey(domainID), &certData)
+	if err != nil {
+		return fmt.Errorf("ERROR storing to key '%s': %v", domainID, err)
 	}
 
 	return nil
@@ -800,25 +789,25 @@ func StoreCertData(domainID string, certData VaultCertData) error {
 // Return:        nil on success, error info on error.
 
 func DeleteCertData(domainID string, force bool) error {
-	if (!__vaultEnabled) {
-		_,ok := vstore[domainID]
-		if (!ok) {
-			if (force) {
+	if !__vaultEnabled {
+		_, ok := vstore[domainID]
+		if !ok {
+			if force {
 				logger.Infof("Can't find key: '%s', ignoring (force==true).",
 					domainID)
 				return nil
 			} else {
 				return fmt.Errorf("ERROR looking up '%s' (force==false).",
-						domainID)
+					domainID)
 			}
 		} else {
-			delete(vstore,domainID)
+			delete(vstore, domainID)
 		}
 		return nil
 	}
-	ss,err := sstorage.NewVaultAdapter(ConfigParams.VaultKeyBase)
-	if (err != nil) {
-		return fmt.Errorf("ERROR creating secure storage adapter: %v",err)
+	ss, err := sstorage.NewVaultAdapter(ConfigParams.VaultKeyBase)
+	if err != nil {
+		return fmt.Errorf("ERROR creating secure storage adapter: %v", err)
 	}
 
 	//Since the Vault docs do everything in their power to obfuscate how
@@ -826,31 +815,31 @@ func DeleteCertData(domainID string, force bool) error {
 	//safe route and read the key first to see if it exists.
 
 	var cdata VaultCertData
-	err = ss.Lookup(vaultKey(domainID),cdata)
-	if (err != nil) {
-		if (force) {
+	err = ss.Lookup(vaultKey(domainID), cdata)
+	if err != nil {
+		if force {
 			logger.Infof("Can't find key: '%s', ignoring (force==true).",
 				domainID)
 			return nil
 		} else {
 			return fmt.Errorf("ERROR looking up '%s' (force==false): %v",
-						domainID,err)
+				domainID, err)
 		}
 	}
 
 	//No error might mean there was nothing to read.  Check if the returned
 	//data is empty to confirm.
 
-	if ((cdata.RequestID == "") && (cdata.Data.Certificate != "")) {
+	if (cdata.RequestID == "") && (cdata.Data.Certificate != "") {
 		logger.Tracef("Target key '%s' not found in Vault, not deleting.",
-				domainID)
+			domainID)
 		return nil
 	}
 
 	err = ss.Delete(vaultKey(domainID))
-	if (err != nil) {
+	if err != nil {
 		return fmt.Errorf("ERROR deleting Vault key '%s': %v",
-					domainID,err)
+			domainID, err)
 	}
 
 	return nil
@@ -863,38 +852,38 @@ func DeleteCertData(domainID string, force bool) error {
 // Return:     Cert information for target;
 //             nil on success, error info on error.
 
-func FetchCertData(xname string, domain string) (VaultCertData,error) {
+func FetchCertData(xname string, domain string) (VaultCertData, error) {
 	var jdata VaultCertData
 
-	domKey,derr := CheckDomain([]string{xname,},domain)
-	if (derr != nil) {
-		return jdata,fmt.Errorf("ERROR getting domain xname from '%s': %v",
-					xname,derr)
+	domKey, derr := CheckDomain([]string{xname}, domain)
+	if derr != nil {
+		return jdata, fmt.Errorf("ERROR getting domain xname from '%s': %v",
+			xname, derr)
 	}
 
-	if (!__vaultEnabled) {
-		_,ok := vstore[domKey]
-		if (ok) {
-			return vstore[domKey],nil
+	if !__vaultEnabled {
+		_, ok := vstore[domKey]
+		if ok {
+			return vstore[domKey], nil
 		}
-		return jdata,fmt.Errorf("ERROR fetching data for key '%s', xname '%s': Key does not exist.",
-					domKey,xname)
+		return jdata, fmt.Errorf("ERROR fetching data for key '%s', xname '%s': Key does not exist.",
+			domKey, xname)
 	}
 
-	ss,err := sstorage.NewVaultAdapter(ConfigParams.VaultKeyBase)
-	if (err != nil) {
-		return jdata,fmt.Errorf("ERROR creating secure storage adapter: %v",err)
+	ss, err := sstorage.NewVaultAdapter(ConfigParams.VaultKeyBase)
+	if err != nil {
+		return jdata, fmt.Errorf("ERROR creating secure storage adapter: %v", err)
 	}
 
 	//Create the storage key from the XName and domain
 
-	err = ss.Lookup(vaultKey(domKey),&jdata)
-	if (err != nil) {
-		return jdata,fmt.Errorf("ERROR fetching data for key '%s', xname '%s': %v",
-					domKey,xname,err)
+	err = ss.Lookup(vaultKey(domKey), &jdata)
+	if err != nil {
+		return jdata, fmt.Errorf("ERROR fetching data for key '%s', xname '%s': %v",
+			domKey, xname, err)
 	}
 
-	return jdata,nil
+	return jdata, nil
 }
 
 // Do the grunt work of creating a secure HTTP client.  A retryable http client
@@ -908,29 +897,29 @@ func FetchCertData(xname string, domain string) (VaultCertData,error) {
 // Return:            HTTP client, err string on error, nil on success.
 
 func createSecHTTPClient(caURI string, timeoutSecs int,
-                         maxRetryCount int, maxRetrySecs int) (*retryablehttp.Client,error) {
-	caChain,err := FetchCAChain(caURI)
-	if (err != nil) {
-		return nil,err
+	maxRetryCount int, maxRetrySecs int) (*retryablehttp.Client, error) {
+	caChain, err := FetchCAChain(caURI)
+	if err != nil {
+		return nil, err
 	}
 
-	certPool,cperr := x509.SystemCertPool()
-	if (cperr != nil) {
-		return nil,cperr
+	certPool, cperr := x509.SystemCertPool()
+	if cperr != nil {
+		return nil, cperr
 	}
 	certPool.AppendCertsFromPEM([]byte(TupleToNewline(caChain)))
-	tlsConfig := &tls.Config{RootCAs: certPool,}
+	tlsConfig := &tls.Config{RootCAs: certPool}
 	tlsConfig.BuildNameToCertificate()
-	transport := &http.Transport{TLSClientConfig: tlsConfig,}
+	transport := &http.Transport{TLSClientConfig: tlsConfig}
 	client := &http.Client{Transport: transport,
-	                       Timeout: (time.Duration(timeoutSecs) * time.Second),}
+		Timeout: (time.Duration(timeoutSecs) * time.Second)}
 
 	rtClient := retryablehttp.NewClient()
 	rtClient.RetryMax = maxRetryCount
 	rtClient.RetryWaitMax = time.Duration(maxRetrySecs) * time.Second
 	rtClient.HTTPClient = client
 
-	return rtClient,nil
+	return rtClient, nil
 }
 
 // Given the URI (pathname or vault URI) of a CA cert chain bundle,
@@ -941,9 +930,9 @@ func createSecHTTPClient(caURI string, timeoutSecs int,
 // Return:          Client for secure HTTP use.
 //                  nil on success, non-nil error if something went wrong.
 
-func CreateSecureHTTPClient(timeoutSecs int, caURI string) (*retryablehttp.Client,error) {
-	cl,err := createSecHTTPClient(caURI,timeoutSecs,0,1)
-	return cl,err
+func CreateSecureHTTPClient(timeoutSecs int, caURI string) (*retryablehttp.Client, error) {
+	cl, err := createSecHTTPClient(caURI, timeoutSecs, 0, 1)
+	return cl, err
 }
 
 // Given the URI (pathname or vault URI) of a CA cert chain bundle,
@@ -956,9 +945,9 @@ func CreateSecureHTTPClient(timeoutSecs int, caURI string) (*retryablehttp.Clien
 // Return:            HTTP client pair, err string on error, nil on success.
 
 func CreateRetryableSecureHTTPClient(caURI string, timeoutSecs int,
-                                     maxRetryCount int, maxRetrySecs int) (*retryablehttp.Client,error) {
-	cl,err := createSecHTTPClient(caURI,timeoutSecs,maxRetryCount,maxRetrySecs)
-	return cl,err
+	maxRetryCount int, maxRetrySecs int) (*retryablehttp.Client, error) {
+	cl, err := createSecHTTPClient(caURI, timeoutSecs, maxRetryCount, maxRetrySecs)
+	return cl, err
 }
 
 // Do the grunt work of creating a non-TLS-validated HTTP client.
@@ -969,16 +958,14 @@ func CreateRetryableSecureHTTPClient(caURI string, timeoutSecs int,
 // Return:            HTTP client, err string on error, nil on success.
 
 func createHTTPClient(timeoutSecs int, maxRetryCount int,
-                      maxRetrySecs int) (*retryablehttp.Client,error) {
-	client := &http.Client{Transport:
-	              &http.Transport{TLSClientConfig:
-	                  &tls.Config{InsecureSkipVerify: true,},},
-	                  Timeout: (time.Duration(timeoutSecs) * time.Second),}
+	maxRetrySecs int) (*retryablehttp.Client, error) {
+	client := &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}},
+		Timeout: (time.Duration(timeoutSecs) * time.Second)}
 	rtClient := retryablehttp.NewClient()
 	rtClient.RetryMax = maxRetryCount
 	rtClient.RetryWaitMax = time.Duration(maxRetrySecs) * time.Second
 	rtClient.HTTPClient = client
-	return rtClient,nil
+	return rtClient, nil
 }
 
 // Create a non-cert-verified HTTP transport, either normal or retryable.
@@ -987,15 +974,15 @@ func createHTTPClient(timeoutSecs int, maxRetryCount int,
 // Return: Client for secure HTTP use.
 //         nil on success, non-nil error if something went wrong.
 
-func CreateInsecureHTTPClient(timeoutSecs int) (*retryablehttp.Client,error) {
-	cl,err := createHTTPClient(timeoutSecs,0,1)
-	return cl,err
+func CreateInsecureHTTPClient(timeoutSecs int) (*retryablehttp.Client, error) {
+	cl, err := createHTTPClient(timeoutSecs, 0, 1)
+	return cl, err
 }
 
 func CreateRetryableInsecureHTTPClient(timeoutSecs int, maxRetryCount int,
-                                       maxRetrySecs int) (*retryablehttp.Client,error) {
-	cl,err := createHTTPClient(timeoutSecs,maxRetryCount,maxRetrySecs)
-	return cl,err
+	maxRetrySecs int) (*retryablehttp.Client, error) {
+	cl, err := createHTTPClient(timeoutSecs, maxRetryCount, maxRetrySecs)
+	return cl, err
 }
 
 // Create a struct containing both a cert-validated and a non-cert-validated
@@ -1006,239 +993,237 @@ func CreateRetryableInsecureHTTPClient(timeoutSecs int, maxRetryCount int,
 // Return:          Client pair for secure and insecure HTTP use.
 //                  nil on success, non-nil error if something went wrong.
 
-func CreateHTTPClientPair(caURI string, timeoutSecs int) (*HTTPClientPair,error) {
-	var secClient,insecClient *retryablehttp.Client
+func CreateHTTPClientPair(caURI string, timeoutSecs int) (*HTTPClientPair, error) {
+	var secClient, insecClient *retryablehttp.Client
 	var err error
 
 	// No CA URI, create insecure transports and populate both with the same
 	// transport.
 
-	if (caURI == "") {
+	if caURI == "" {
 		logger.Warningf("CA URI is empty, creating non-cert validated HTTPS transport.")
-		secClient,err = CreateInsecureHTTPClient(timeoutSecs)
-		if (err != nil) {
-			return nil,err
+		secClient, err = CreateInsecureHTTPClient(timeoutSecs)
+		if err != nil {
+			return nil, err
 		}
 		insecClient = secClient
 	} else {
-		secClient,err = CreateSecureHTTPClient(timeoutSecs,caURI)
-		if (err != nil) {
-			return nil,err
+		secClient, err = CreateSecureHTTPClient(timeoutSecs, caURI)
+		if err != nil {
+			return nil, err
 		}
 
-		insecClient,err = CreateInsecureHTTPClient(timeoutSecs)
-		if (err != nil) {
-			return nil,err
+		insecClient, err = CreateInsecureHTTPClient(timeoutSecs)
+		if err != nil {
+			return nil, err
 		}
 	}
 
-	return &HTTPClientPair{SecureClient: secClient, InsecureClient: insecClient,}, nil
+	return &HTTPClientPair{SecureClient: secClient, InsecureClient: insecClient}, nil
 }
 
 func CreateRetryableHTTPClientPair(caURI string, timeoutSecs int,
-                                   maxRetryCount int, maxRetrySecs int) (*HTTPClientPair,error) {
-	var secClient,insecClient *retryablehttp.Client
+	maxRetryCount int, maxRetrySecs int) (*HTTPClientPair, error) {
+	var secClient, insecClient *retryablehttp.Client
 	var err error
 
 	// No CA URI, create insecure transports and populate both with the same
 	// transport.
 
-	if (caURI == "") {
+	if caURI == "" {
 		logger.Warningf("CA URI is empty, creating non-cert validated HTTPS transport.")
-		secClient,err = CreateRetryableInsecureHTTPClient(timeoutSecs,maxRetryCount,maxRetrySecs)
-		if (err != nil) {
-			return nil,err
+		secClient, err = CreateRetryableInsecureHTTPClient(timeoutSecs, maxRetryCount, maxRetrySecs)
+		if err != nil {
+			return nil, err
 		}
 		insecClient = secClient
 	} else {
-		secClient,err = CreateRetryableSecureHTTPClient(caURI,timeoutSecs,maxRetryCount,maxRetrySecs)
-		if (err != nil) {
-			return nil,err
+		secClient, err = CreateRetryableSecureHTTPClient(caURI, timeoutSecs, maxRetryCount, maxRetrySecs)
+		if err != nil {
+			return nil, err
 		}
 
-		insecClient,err = CreateRetryableInsecureHTTPClient(timeoutSecs,maxRetryCount,maxRetrySecs)
-		if (err != nil) {
-			return nil,err
+		insecClient, err = CreateRetryableInsecureHTTPClient(timeoutSecs, maxRetryCount, maxRetrySecs)
+		if err != nil {
+			return nil, err
 		}
 	}
 
-	return &HTTPClientPair{SecureClient: secClient, InsecureClient: insecClient,}, nil
+	return &HTTPClientPair{SecureClient: secClient, InsecureClient: insecClient}, nil
 }
 
 func (p *HTTPClientPair) CloseIdleConnections() {
-	if (p == nil) {
+	if p == nil {
 		return
 	}
 	p.FailedOver = false
-	if (p.SecureClient != nil) {
+	if p.SecureClient != nil {
 		p.SecureClient.HTTPClient.CloseIdleConnections()
 	}
-	if (p.InsecureClient != nil) {
+	if p.InsecureClient != nil {
 		p.InsecureClient.HTTPClient.CloseIdleConnections()
 	}
 }
 
-func (p *HTTPClientPair) Do(req *http.Request) (*http.Response,error) {
+func (p *HTTPClientPair) Do(req *http.Request) (*http.Response, error) {
 	funcName := "HTTPClientPair.Do()"
 	var rsp *http.Response
 	var err error
 
-	if (p == nil) {
-		return rsp,fmt.Errorf("%s: Client pair is nil.",funcName)
+	if p == nil {
+		return rsp, fmt.Errorf("%s: Client pair is nil.", funcName)
 	}
-	rtReq,rtErr := retryablehttp.FromRequest(req)
-	if (rtErr != nil) {
-		return rsp,fmt.Errorf("%s: Can't create retryable HTTP request: %v",
-					funcName,rtErr)
+	rtReq, rtErr := retryablehttp.FromRequest(req)
+	if rtErr != nil {
+		return rsp, fmt.Errorf("%s: Can't create retryable HTTP request: %v",
+			funcName, rtErr)
 	}
-	base.SetHTTPUserAgent(rtReq.Request,instName)
+	base.SetHTTPUserAgent(rtReq.Request, instName)
 	p.FailedOver = false
 	url := req.URL.Host + req.URL.Path
 
-	if ((p.SecureClient == nil) && (p.InsecureClient == nil)) {
-		return rsp,fmt.Errorf("%s: Client pair is uninitialized, not usable.",
-					funcName)
+	if (p.SecureClient == nil) && (p.InsecureClient == nil) {
+		return rsp, fmt.Errorf("%s: Client pair is uninitialized, not usable.",
+			funcName)
 	}
 
-	if (p.SecureClient != nil) {
-		rsp,err = p.SecureClient.Do(rtReq)
-		if (err != nil) {
-			if (p.InsecureClient != p.SecureClient) {
+	if p.SecureClient != nil {
+		rsp, err = p.SecureClient.Do(rtReq)
+		if err != nil {
+			if p.InsecureClient != p.SecureClient {
 				seclog_Errorf("%s: TLS-secure transport failed for '%s': %v -- trying insecure client.",
-						funcName,url,err)
-				if (p.InsecureClient == nil) {
-					emsg := fmt.Sprintf("%s: Failover to insecure transport failed: insecure client is nil.",funcName)
+					funcName, url, err)
+				if p.InsecureClient == nil {
+					emsg := fmt.Sprintf("%s: Failover to insecure transport failed: insecure client is nil.", funcName)
 					seclog_Errorf(emsg)
-					return rsp,fmt.Errorf(emsg)
+					return rsp, fmt.Errorf(emsg)
 				}
 
 				p.FailedOver = true
-				rsp,err = p.InsecureClient.Do(rtReq)
-				if (err != nil) {
+				rsp, err = p.InsecureClient.Do(rtReq)
+				if err != nil {
 					seclog_Errorf("%s: TLS-insecure transport failed for '%s': %v",
-						funcName,url,err)
-					return rsp,err
+						funcName, url, err)
+					return rsp, err
 				}
 			} else {
-				return rsp,err
-			}
-		}
-	} else {
-		seclog_Warnf("%s: TLS-secure transport not available, using insecure.",
-				funcName)
-		rsp,err = p.InsecureClient.Do(rtReq)
-		if (err != nil) {
-			seclog_Errorf("%s: TLS-insecure transport failed for '%s': %v",
-				funcName,url,err)
-			return rsp,err
-		}
-	}
-
-	return rsp,nil
-}
-
-func (p *HTTPClientPair) Get(url string) (*http.Response,error) {
-	funcName := "HTTPClientPair.Get()"
-	var rsp *http.Response
-
-	if (p == nil) {
-		return rsp,fmt.Errorf("%s: Client pair is nil.",funcName)
-	}
-
-	req,_ := http.NewRequest("GET",url,nil)
-	base.SetHTTPUserAgent(req,instName)
-	return p.Do(req)
-}
-
-func (p *HTTPClientPair) Head(url string) (*http.Response,error) {
-	funcName := "HTTPClientPair.Head()"
-	var rsp *http.Response
-	var err error
-
-	if (p == nil) {
-		return rsp,fmt.Errorf("%s: Client pair is nil.",funcName)
-	}
-	p.FailedOver = false
-
-	if ((p.SecureClient == nil) && (p.InsecureClient == nil)) {
-		return rsp,fmt.Errorf("%s: Client pair is uninitialized, not usable.",
-					funcName)
-	}
-
-	if (p.SecureClient != nil) {
-		rsp,err = p.SecureClient.Head(url)
-		if (err != nil) {
-			if (p.InsecureClient != p.SecureClient) {
-				seclog_Errorf("%s: TLS-secure transport failed for '%s': %v -- trying insecure client.",
-					funcName,url,err)
-				if (p.InsecureClient == nil) {
-					emsg := fmt.Sprintf("%s: Failover to insecure transport failed: insecure client is nil.",funcName)
-					seclog_Errorf(emsg)
-					return rsp,fmt.Errorf(emsg)
-				}
-				p.FailedOver = true
-				rsp,err = p.InsecureClient.Head(url)
-				if (err != nil) {
-					seclog_Errorf("%s: TLS-insecure transport failed for '%s': %v",
-						funcName,url,err)
-					return rsp,err
-				}
-			} else {
-				return rsp,err
+				return rsp, err
 			}
 		}
 	} else {
 		seclog_Warnf("%s: TLS-secure transport not available, using insecure.",
 			funcName)
-		rsp,err = p.InsecureClient.Head(url)
-		if (err != nil) {
+		rsp, err = p.InsecureClient.Do(rtReq)
+		if err != nil {
 			seclog_Errorf("%s: TLS-insecure transport failed for '%s': %v",
-				funcName,url,err)
-			return rsp,err
+				funcName, url, err)
+			return rsp, err
 		}
 	}
 
-	return rsp,nil
+	return rsp, nil
 }
 
-func (p *HTTPClientPair) Post(url, contentType string, body io.Reader) (*http.Response,error) {
-	funcName := "HTTPClientPair.Post()"
+func (p *HTTPClientPair) Get(url string) (*http.Response, error) {
+	funcName := "HTTPClientPair.Get()"
 	var rsp *http.Response
 
-	if (p == nil) {
-		return rsp,fmt.Errorf("%s: Client pair is nil.",funcName)
+	if p == nil {
+		return rsp, fmt.Errorf("%s: Client pair is nil.", funcName)
 	}
 
-	req,_ := http.NewRequest("POST",url,body)
-	req.Header.Add("Content-Type",contentType)
-	base.SetHTTPUserAgent(req,instName)
+	req, _ := http.NewRequest("GET", url, nil)
+	base.SetHTTPUserAgent(req, instName)
 	return p.Do(req)
 }
 
-func (p *HTTPClientPair) PostForm(url string, data url.Values) (*http.Response,error) {
+func (p *HTTPClientPair) Head(url string) (*http.Response, error) {
+	funcName := "HTTPClientPair.Head()"
+	var rsp *http.Response
+	var err error
+
+	if p == nil {
+		return rsp, fmt.Errorf("%s: Client pair is nil.", funcName)
+	}
+	p.FailedOver = false
+
+	if (p.SecureClient == nil) && (p.InsecureClient == nil) {
+		return rsp, fmt.Errorf("%s: Client pair is uninitialized, not usable.",
+			funcName)
+	}
+
+	if p.SecureClient != nil {
+		rsp, err = p.SecureClient.Head(url)
+		if err != nil {
+			if p.InsecureClient != p.SecureClient {
+				seclog_Errorf("%s: TLS-secure transport failed for '%s': %v -- trying insecure client.",
+					funcName, url, err)
+				if p.InsecureClient == nil {
+					emsg := fmt.Sprintf("%s: Failover to insecure transport failed: insecure client is nil.", funcName)
+					seclog_Errorf(emsg)
+					return rsp, fmt.Errorf(emsg)
+				}
+				p.FailedOver = true
+				rsp, err = p.InsecureClient.Head(url)
+				if err != nil {
+					seclog_Errorf("%s: TLS-insecure transport failed for '%s': %v",
+						funcName, url, err)
+					return rsp, err
+				}
+			} else {
+				return rsp, err
+			}
+		}
+	} else {
+		seclog_Warnf("%s: TLS-secure transport not available, using insecure.",
+			funcName)
+		rsp, err = p.InsecureClient.Head(url)
+		if err != nil {
+			seclog_Errorf("%s: TLS-insecure transport failed for '%s': %v",
+				funcName, url, err)
+			return rsp, err
+		}
+	}
+
+	return rsp, nil
+}
+
+func (p *HTTPClientPair) Post(url, contentType string, body io.Reader) (*http.Response, error) {
+	funcName := "HTTPClientPair.Post()"
+	var rsp *http.Response
+
+	if p == nil {
+		return rsp, fmt.Errorf("%s: Client pair is nil.", funcName)
+	}
+
+	req, _ := http.NewRequest("POST", url, body)
+	req.Header.Add("Content-Type", contentType)
+	base.SetHTTPUserAgent(req, instName)
+	return p.Do(req)
+}
+
+func (p *HTTPClientPair) PostForm(url string, data url.Values) (*http.Response, error) {
 	funcName := "HTTPClientPair.PostForm()"
 	var rsp *http.Response
 
-	if (p == nil) {
-		return rsp,fmt.Errorf("%s: Client pair is nil.",funcName)
+	if p == nil {
+		return rsp, fmt.Errorf("%s: Client pair is nil.", funcName)
 	}
 
 	//Gotta emulate this, then call Do()
 	vals := data.Encode()
-	req,_ := http.NewRequest("POST",url,bytes.NewBuffer([]byte(vals)))
-	base.SetHTTPUserAgent(req,instName)
-	req.Header.Add("Content-Type","application/x-www-form-urlencoded")
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(vals)))
+	base.SetHTTPUserAgent(req, instName)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	return p.Do(req)
 }
-
 
 //TODO: Need funcs:
 // o SetTargetInfo(compList []HsmComponent, replace bool) error
 //   Keep a map of which components will use TLS (HPE, Cray Mt.) and which won't
 //   'replace' means make a new map, else just add to map
-//   o /Inventory/HardwareByFRU Specify fruid, type, manufacturer? 
+//   o /Inventory/HardwareByFRU Specify fruid, type, manufacturer?
 //   o Can use results to figure out which are Cray Mt and HPE iLO.
 //
 // o TargetHTTPClient(xname string) *http.Client
 //   Given a client, return an HTTP client relevant (secure vs. non-secure)
-

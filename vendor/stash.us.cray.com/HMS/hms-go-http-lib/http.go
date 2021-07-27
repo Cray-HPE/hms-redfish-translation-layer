@@ -31,8 +31,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/Cray-HPE/hms-certs/pkg/hms_certs"
 	"github.com/hashicorp/go-retryablehttp"
-	"stash.us.cray.com/HMS/hms-certs/pkg/hms_certs"
 )
 
 // Package to slightly abstract some of the most mundane of HTTP interactions. Primary intention is as a JSON
