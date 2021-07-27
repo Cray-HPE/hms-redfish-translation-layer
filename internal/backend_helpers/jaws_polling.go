@@ -32,10 +32,10 @@ import (
 	"strings"
 	"time"
 
+	hmshttp "github.com/Cray-HPE/hms-go-http-lib"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
 	log "github.com/sirupsen/logrus"
-	hmshttp "stash.us.cray.com/HMS/hms-go-http-lib"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
 )
 
 func (helper JAWSBackedHelper) doPolling(ctx context.Context) {

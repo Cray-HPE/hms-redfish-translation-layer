@@ -41,8 +41,9 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/hooks"
 	"strings"
+
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/hooks"
 
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"

@@ -36,9 +36,9 @@ import (
 	"strconv"
 	"strings"
 
+	compcredentials "github.com/Cray-HPE/hms-compcredentials"
 	"github.com/hashicorp/go-retryablehttp"
 	log "github.com/sirupsen/logrus"
-	compcredentials "stash.us.cray.com/HMS/hms-compcredentials"
 )
 
 var (

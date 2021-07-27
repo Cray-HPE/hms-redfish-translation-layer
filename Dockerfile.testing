@@ -70,12 +70,12 @@ COPY scripts /scripts
 COPY .version /
 
 # Copy source code into the image.
-COPY cmd $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/cmd
-COPY internal $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/internal
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/vendor
+COPY cmd $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/cmd
+COPY internal $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/internal
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/vendor
 
 # Run unit tests...
 RUN set -ex \
-    && go test -v stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/accountservice \
-    && go test -v stash.us.cray.com/HMS/hms-redfish-translation-service/internal/backend_helpers \
-    && go test -v stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfschema
+    && go test -v github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/accountservice \
+    && go test -v github.com/Cray-HPE/hms-redfish-translation-service/internal/backend_helpers \
+    && go test -v github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema

@@ -27,13 +27,13 @@ FROM arti.dev.cray.com/baseos-docker-master-local/golang:1.16-alpine3.13 AS buil
 RUN go env -w GO111MODULE=auto
 
 # Copy all the necessary files to the image.
-COPY cmd $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/cmd
-COPY internal $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/internal
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-redfish-translation-service/vendor
+COPY cmd $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/cmd
+COPY internal $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/internal
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/vendor
 
 RUN set -ex \
-    && go build -v -i stash.us.cray.com/HMS/hms-redfish-translation-service/cmd/rfdispatcher \
-    && go build -v -i stash.us.cray.com/HMS/hms-redfish-translation-service/cmd/vault_loader
+    && go build -v -i github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
+    && go build -v -i github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader
 
 ### Final Stage ###
 
