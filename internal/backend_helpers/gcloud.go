@@ -33,15 +33,16 @@ import (
 	"reflect"
 	"regexp"
 	"runtime"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
 	"strings"
 	"time"
 
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
+
 	"cloud.google.com/go/compute/metadata"
+	compcredentials "github.com/Cray-HPE/hms-compcredentials"
 	"github.com/hashicorp/go-retryablehttp"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/api/compute/v1"
-	compcredentials "stash.us.cray.com/HMS/hms-compcredentials"
 )
 
 // Generic helper functions
@@ -323,10 +324,10 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 		// Add the credentials to talk to RTS to Vault so HSM
 		// knows how to handle it.
 		cred := compcredentials.CompCredentials{
-			Xname:        xname,
-			URL:          xname + ":8083",
-			Username:     creds.Username,
-			Password:     creds.Password,
+			Xname:    xname,
+			URL:      xname + ":8083",
+			Username: creds.Username,
+			Password: creds.Password,
 		}
 
 		compErr := compCredStore.StoreCompCred(cred)
@@ -445,10 +446,10 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 					// Add the credentials to talk to RTS to Vault so HSM
 					// knows how to handle it.
 					cred := compcredentials.CompCredentials{
-						Xname:        xname,
-						URL:          xname + ":8083",
-						Username:     creds.Username,
-						Password:     creds.Password,
+						Xname:    xname,
+						URL:      xname + ":8083",
+						Username: creds.Username,
+						Password: creds.Password,
 					}
 
 					compErr := compCredStore.StoreCompCred(cred)
@@ -458,7 +459,6 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 					} else {
 						log.WithField("xname", xname).Debug("Added credentials to Vault")
 					}
-
 
 					// Check to see if the status has changed.
 					if knownInstance.Status != instance.Status {

@@ -25,7 +25,7 @@ package pdu_credential_store
 import (
 	"fmt"
 
-	securestorage "stash.us.cray.com/HMS/hms-securestorage"
+	securestorage "github.com/Cray-HPE/hms-securestorage"
 )
 
 type PDUCredentialStore struct {

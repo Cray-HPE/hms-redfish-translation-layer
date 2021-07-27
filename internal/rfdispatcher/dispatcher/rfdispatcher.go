@@ -38,11 +38,11 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/backend_helpers"
+	_ "github.com/Cray-HPE/hms-redfish-translation-service/internal/logger"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 	"google.golang.org/api/compute/v1"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/backend_helpers"
-	_ "stash.us.cray.com/HMS/hms-redfish-translation-service/internal/logger"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfschema"
 
 	"github.com/go-redis/redis"
 	"github.com/google/uuid"

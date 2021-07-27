@@ -26,9 +26,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/suite"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
 )
 
 type JAWS_TS struct {

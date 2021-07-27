@@ -32,11 +32,12 @@ import (
 	"encoding/hex"
 	"errors"
 	"reflect"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/dispatcher"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfschema"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/dispatcher"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"

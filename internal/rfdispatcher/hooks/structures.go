@@ -28,7 +28,8 @@ package hooks
 
 import (
 	"regexp"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfschema"
+
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 )
 
 // Event is used to help notify hook callbacks of the current http operation in rdserver

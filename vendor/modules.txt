@@ -1,6 +1,22 @@
 # cloud.google.com/go v0.64.0
 ## explicit
 cloud.google.com/go/compute/metadata
+# github.com/Cray-HPE/hms-base v1.15.0
+github.com/Cray-HPE/hms-base
+# github.com/Cray-HPE/hms-certs v1.3.2
+github.com/Cray-HPE/hms-certs/pkg/hms_certs
+# github.com/Cray-HPE/hms-compcredentials v1.11.2
+## explicit
+github.com/Cray-HPE/hms-compcredentials
+# github.com/Cray-HPE/hms-go-http-lib v1.5.3
+## explicit
+github.com/Cray-HPE/hms-go-http-lib
+# github.com/Cray-HPE/hms-securestorage v1.12.2
+## explicit
+github.com/Cray-HPE/hms-securestorage
+# github.com/Cray-HPE/hms-smd v1.29.10
+## explicit
+github.com/Cray-HPE/hms-smd/pkg/redfish
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/fsnotify/fsnotify v1.4.9
@@ -44,7 +60,7 @@ github.com/hashicorp/errwrap
 github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-multierror v1.1.0
 github.com/hashicorp/go-multierror
-# github.com/hashicorp/go-retryablehttp v0.6.7
+# github.com/hashicorp/go-retryablehttp v0.7.0
 ## explicit
 github.com/hashicorp/go-retryablehttp
 # github.com/hashicorp/go-rootcerts v1.0.1
@@ -75,8 +91,6 @@ github.com/hashicorp/vault/sdk/helper/parseutil
 github.com/hashicorp/vault/sdk/helper/strutil
 # github.com/json-iterator/go v1.1.8
 github.com/json-iterator/go
-# github.com/konsorten/go-windows-terminal-sequences v1.0.3
-github.com/konsorten/go-windows-terminal-sequences
 # github.com/mitchellh/go-homedir v1.1.0
 github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.3.0
@@ -93,7 +107,7 @@ github.com/pierrec/lz4/internal/xxh32
 github.com/pmezard/go-difflib/difflib
 # github.com/ryanuber/go-glob v1.0.0
 github.com/ryanuber/go-glob
-# github.com/sirupsen/logrus v1.6.0
+# github.com/sirupsen/logrus v1.8.1
 ## explicit
 github.com/sirupsen/logrus
 # github.com/spf13/pflag v1.0.5
@@ -415,17 +429,3 @@ sigs.k8s.io/yaml
 # stash.us.cray.com/HMS/hms-base v1.13.0
 ## explicit
 stash.us.cray.com/HMS/hms-base
-# stash.us.cray.com/HMS/hms-certs v1.3.0
-stash.us.cray.com/HMS/hms-certs/pkg/hms_certs
-# stash.us.cray.com/HMS/hms-compcredentials v1.11.0
-## explicit
-stash.us.cray.com/HMS/hms-compcredentials
-# stash.us.cray.com/HMS/hms-go-http-lib v1.5.0
-## explicit
-stash.us.cray.com/HMS/hms-go-http-lib
-# stash.us.cray.com/HMS/hms-securestorage v1.12.0
-## explicit
-stash.us.cray.com/HMS/hms-securestorage
-# stash.us.cray.com/HMS/hms-smd v1.29.5
-## explicit
-stash.us.cray.com/HMS/hms-smd/pkg/redfish

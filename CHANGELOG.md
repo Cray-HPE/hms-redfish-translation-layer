@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.12.4] - 2021-07-27
+
+### Changed
+
+- GH migration phase 3 changes.
+
 ## [1.12.3] - 2021-07-20
 
 ### Changed
