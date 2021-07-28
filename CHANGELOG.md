@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.12.5] - 2021-07-28
+
+### Changed
+
+- Added a publish step to the Jenkins pipeline for the vault-kv-enabler image.
+
 ## [1.12.4] - 2021-07-27
 
 ### Changed
