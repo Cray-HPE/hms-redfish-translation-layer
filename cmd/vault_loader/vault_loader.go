@@ -28,9 +28,9 @@ import (
 	"os"
 	"time"
 
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
-	securestorage "stash.us.cray.com/HMS/hms-securestorage"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
+	securestorage "github.com/Cray-HPE/hms-securestorage"
 )
 
 func main() {

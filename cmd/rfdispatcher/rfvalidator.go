@@ -26,7 +26,8 @@ import (
 	"fmt"
 	"regexp"
 	"sort"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfschema"
+
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 
 	log "github.com/sirupsen/logrus"
 )

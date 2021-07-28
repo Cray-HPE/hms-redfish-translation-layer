@@ -32,9 +32,10 @@ import (
 	"net/http"
 	"regexp"
 	"sort"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/hooks"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfschema"
 	"strings"
+
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/hooks"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 
 	log "github.com/sirupsen/logrus"
 )

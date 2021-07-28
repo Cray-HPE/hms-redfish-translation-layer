@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.13.3] - 2021-07-27
+
+### Changed
+
+- GH phase 3 changes for 1.2.
+
 ## [1.13.2] - 2021-07-20
 
 ### Changed

@@ -45,12 +45,12 @@ import (
 	"syscall"
 	"time"
 
-	_ "stash.us.cray.com/HMS/hms-redfish-translation-service/internal/logger"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/accountservice"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/dispatcher"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/hooks"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/jsonschemas"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfschema"
+	_ "github.com/Cray-HPE/hms-redfish-translation-service/internal/logger"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/accountservice"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/dispatcher"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/hooks"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/jsonschemas"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 
 	// Used for Profiling using the go pprof tool
 	_ "net/http/pprof"

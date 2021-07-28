@@ -37,6 +37,11 @@ import (
 	"sync"
 	"time"
 
+	compcredentials "github.com/Cray-HPE/hms-compcredentials"
+	hmshttp "github.com/Cray-HPE/hms-go-http-lib"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
+	securestorage "github.com/Cray-HPE/hms-securestorage"
+	rf "github.com/Cray-HPE/hms-smd/pkg/redfish"
 	"github.com/go-redis/redis"
 	"github.com/hashicorp/go-retryablehttp"
 	log "github.com/sirupsen/logrus"
@@ -46,12 +51,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"stash.us.cray.com/HMS/hms-base"
-	compcredentials "stash.us.cray.com/HMS/hms-compcredentials"
-	hmshttp "stash.us.cray.com/HMS/hms-go-http-lib"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
-	securestorage "stash.us.cray.com/HMS/hms-securestorage"
-	rf "stash.us.cray.com/HMS/hms-smd/pkg/redfish"
+	base "stash.us.cray.com/HMS/hms-base"
 )
 
 // Generic variables
@@ -70,8 +70,8 @@ var RFEventID uint64 = 1
 // Get the service/instance name, create UserAgent headers.
 
 func getSvcInstName() map[string]string {
-	sn,err := base.GetServiceInstanceName()
-	if (err != nil) {
+	sn, err := base.GetServiceInstanceName()
+	if err != nil {
 		sn = "RTS_BE"
 	}
 	hdr := make(map[string]string)

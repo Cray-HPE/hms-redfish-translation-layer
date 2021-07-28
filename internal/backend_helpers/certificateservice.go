@@ -39,10 +39,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/certificate_store"
 	"github.com/go-redis/redis"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
-	"stash.us.cray.com/HMS/hms-redfish-translation-service/internal/rfdispatcher/certificate_store"
 )
 
 const CertificateServiceKeyspace = ServiceRootKeyspace + "/CertificateService"

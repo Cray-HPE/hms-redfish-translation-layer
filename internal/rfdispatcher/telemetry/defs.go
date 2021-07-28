@@ -22,7 +22,7 @@
 
 package telemetry
 
-import rf "stash.us.cray.com/HMS/hms-smd/pkg/redfish"
+import rf "github.com/Cray-HPE/hms-smd/pkg/redfish"
 
 type CrayTelemetryType string
 
