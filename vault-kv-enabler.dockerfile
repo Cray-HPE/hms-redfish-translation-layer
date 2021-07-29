@@ -22,7 +22,7 @@
 
 FROM arti.dev.cray.com/third-party-docker-stable-local/vault:1.5.5
 
-LABEL maintainer="Cray, Inc."
+LABEL maintainer="Hewlett Packard Enterprise"
 
 RUN set -ex \
     && apk update \
