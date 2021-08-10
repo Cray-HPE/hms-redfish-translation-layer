@@ -63,7 +63,7 @@ services:
     networks:
       - rts
   cray-hms-hmcollector:
-    image: arti.dev.cray.com/csm-docker-master-local/hms-hmcollector:latest
+    image: artifactory.algol60.net/csm-docker/stable/hms-hmcollector:2.11.3
     environment:
       - LOG_LEVEL=TRACE
       - SM_URL=http://cray-smd:27779
@@ -140,7 +140,7 @@ services:
     networks:
       - rts
   cray-smd-init:
-    image: arti.dev.cray.com/csm-docker-master-local/cray-smd:latest
+    image: artifactory.algol60.net/csm-docker/stable/cray-smd:1.29.10
     environment:
       - SMD_DBHOST=hmsds-postgres
       - SMD_DBPORT=5432
@@ -150,7 +150,7 @@ services:
       - rts
     command: /entrypoint.sh smd-init
   cray-smd:
-    image: arti.dev.cray.com/csm-docker-master-local/cray-smd:latest
+    image: artifactory.algol60.net/csm-docker/stable/cray-smd:1.29.10
     environment:
       - POSTGRES_HOST=hmsds-postgres
       - POSTGRES_PORT=5432
@@ -176,7 +176,7 @@ services:
   # CAPMC
   #
   capmc:
-    image: arti.dev.cray.com/csm-docker-master-local/cray-capmc:latest
+    image: artifactory.algol60.net/csm-docker/stable/cray-capmc:1.24.4
     environment:
       - CRAY_VAULT_AUTH_PATH=auth/token/create
       - CRAY_VAULT_ROLE_FILE=/configs/namespace
