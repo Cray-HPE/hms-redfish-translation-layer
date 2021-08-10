@@ -26,7 +26,7 @@ NAME_VAULT ?= vault-kv-enabler
 # Helm Chart
 CHART_PATH ?= kubernetes
 CHART_NAME ?= cray-hms-rts
-CHART_VERSION ?= local
+CHART_VERSION ?= $(shell cat .version)
 
 all: image chart unittest image-vault-kv-enabler
 

@@ -28,7 +28,7 @@ ENV REDIS_HOSTNAME localhost
 ENV REDIS_PORT 6379
 
 RUN set -ex \
-    && apk update \
+    && apk -U upgrade \
     && apk add \
         redis \
         curl
