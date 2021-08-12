@@ -38,7 +38,7 @@ services:
     ports:
       - "5432:5432"
   cray-smd-init:
-    image: arti.dev.cray.com/csm-docker-master-local/cray-smd:latest
+    image: artifactory.algol60.net/csm-docker/stable/cray-smd:1.30.9
     environment:
       - SMD_DBHOST=hmsds-postgres
       - SMD_DBPORT=5432
@@ -46,7 +46,7 @@ services:
       - hmsds-postgres
     command: /entrypoint.sh smd-init
   cray-smd:
-    image: arti.dev.cray.com/csm-docker-master-local/cray-smd:latest
+    image: artifactory.algol60.net/csm-docker/stable/cray-smd:1.30.9
     environment:
       - POSTGRES_HOST=localhost
       - POSTGRES_PORT=5432
