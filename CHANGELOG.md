@@ -24,6 +24,14 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.12.6] - 2021-08-10
+
+### Changed
+
+- Added GitHub configuration files.
+- Fixed snyk warning.
+- Changed arti.dev.cray.com to artifactory.algol60.net for HMS artifacts.
+
 ## [1.12.5] - 2021-07-28
 
 ### Changed

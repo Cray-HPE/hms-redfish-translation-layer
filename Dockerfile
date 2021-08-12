@@ -73,7 +73,7 @@ ENV JAWS_POLLING_INTERVAL 10
 ENV JAWS_POLLING_WORKERS 30
 
 RUN set -ex \
-    && apk update \
+    && apk -U upgrade \
     && apk add redis curl
 
 COPY --from=builder /go/rfdispatcher /usr/local/bin
