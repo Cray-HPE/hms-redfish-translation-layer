@@ -1,7 +1,8 @@
 # cloud.google.com/go v0.64.0
 ## explicit
 cloud.google.com/go/compute/metadata
-# github.com/Cray-HPE/hms-base v1.15.0
+# github.com/Cray-HPE/hms-base v1.15.1
+## explicit
 github.com/Cray-HPE/hms-base
 # github.com/Cray-HPE/hms-certs v1.3.2
 github.com/Cray-HPE/hms-certs/pkg/hms_certs
@@ -426,6 +427,3 @@ k8s.io/klog
 k8s.io/utils/integer
 # sigs.k8s.io/yaml v1.1.0
 sigs.k8s.io/yaml
-# stash.us.cray.com/HMS/hms-base v1.13.0
-## explicit
-stash.us.cray.com/HMS/hms-base

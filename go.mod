@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	cloud.google.com/go v0.64.0
+	github.com/Cray-HPE/hms-base v1.15.1
 	github.com/Cray-HPE/hms-compcredentials v1.11.2
 	github.com/Cray-HPE/hms-go-http-lib v1.5.3
 	github.com/Cray-HPE/hms-securestorage v1.12.2
@@ -23,5 +24,4 @@ require (
 	k8s.io/api v0.17.2
 	k8s.io/apimachinery v0.17.2
 	k8s.io/client-go v0.17.2
-	stash.us.cray.com/HMS/hms-base v1.13.0
 )
