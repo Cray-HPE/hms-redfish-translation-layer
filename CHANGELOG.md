@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.12.7] - 2021-08-19
+
+### Changed
+
+- Updated hms-base version to v1.15.1
+
 ## [1.12.6] - 2021-08-10
 
 ### Changed
