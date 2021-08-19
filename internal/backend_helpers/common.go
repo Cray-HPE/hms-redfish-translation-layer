@@ -37,6 +37,7 @@ import (
 	"sync"
 	"time"
 
+	base "github.com/Cray-HPE/hms-base"
 	compcredentials "github.com/Cray-HPE/hms-compcredentials"
 	hmshttp "github.com/Cray-HPE/hms-go-http-lib"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
@@ -51,7 +52,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	base "stash.us.cray.com/HMS/hms-base"
 )
 
 // Generic variables
