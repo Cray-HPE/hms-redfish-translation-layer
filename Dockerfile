@@ -86,6 +86,9 @@ COPY configs ${CONFIGS_DIR_PREFIX}configs
 COPY scripts /scripts
 COPY .version /
 
+# nobody 65534:65534
+USER 65534:65534
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["rfdispatcher"]
