@@ -1,0 +1,62 @@
+@Library('csm-shared-library') _
+
+pipeline {
+    agent {
+        label "metal-gcp-builder"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+        timestamps()
+    }
+
+    environment {
+        NAME = "hms-redfish-translation-service"
+        DESCRIPTION = "Redfish Translation Service"
+        IS_STABLE = getBuildIsStable()
+        VERSION = getDockerBuildVersion(isStable: env.IS_STABLE)
+        DOCKER_ARGS = getDockerBuildArgs(name: env.NAME, description: env.DESCRIPTION, version: env.VERSION)
+        CHART_NAME = "cray-hms-rts"
+        CHART_VERSION = getChartVersion(version: env.VERSION)
+
+        NAME_VAULT = "vault-kv-enabler"
+        DOCKER_ARGS_VALUT = getDockerBuildArgs(name: env.NAME_VAULT, description: "Vault KV Enabler", version: env.VERSION)
+    }
+
+    stages {
+        stage("Image") {
+            steps {
+                sh "make image"
+            }
+        }
+
+        stage("Chart") {
+            steps {
+                updateCsmHelmChartAppVersion(chartPath: "${WORKSPACE}/kubernetes/${CHART_NAME}", appVersion:  env.VERSION)
+                sh "make chart"
+            }
+        }
+
+        stage("Run Unit Tests") {
+            steps {
+                sh "make unittest"
+            }
+        }
+
+        stage("Image Vault KV Enabler") {
+            steps {
+                sh "make image-vault-kv-enabler"
+            }
+        }
+
+        stage("Publish") {
+            steps {
+                script {
+                    publishCsmDockerImage(image: env.NAME, tag: env.VERSION, isStable: env.IS_STABLE)
+                    publishCsmDockerImage(image: env.NAME_VAULT, tag: env.VERSION, isStable: env.IS_STABLE)
+                    publishCsmHelmCharts(component: env.CHART_NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
+                }
+            }
+        }
+    }
+}

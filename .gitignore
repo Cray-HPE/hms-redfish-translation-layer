@@ -4,3 +4,4 @@ go/pkg/
 *.pem
 output.file
 iPDUs.json
+kubernetes/.packaged/
