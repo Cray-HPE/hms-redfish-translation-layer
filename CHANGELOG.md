@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.8.8] - 2021-09-09
+
+### Security
+
+- CASMHMS-5090: Updated RTS container image to resolve CVE-2021-3711.
+
 ## [1.8.7] - 2021-06-23
 
 ### Changed
