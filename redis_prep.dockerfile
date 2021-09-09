@@ -31,7 +31,8 @@ RUN set -ex \
     && apk -U upgrade \
     && apk add \
         redis \
-        curl
+        curl \
+    && mkdir /rts-logs
 
 COPY scripts/wait-for.sh /
 COPY docker-entrypoint.sh /

@@ -28,7 +28,7 @@ if ! [[ -x "$REDIS_CLI" ]]; then
     exit 1
 fi
 
-REDIS_LOG="./schema_load.out"
+REDIS_LOG="/rts-logs/schema_load.out"
 root_uri="/redfish/v1"
 
 service_root_keyspace="/redfish/v1"
