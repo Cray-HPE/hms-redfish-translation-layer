@@ -74,7 +74,9 @@ ENV JAWS_POLLING_WORKERS 30
 
 RUN set -ex \
     && apk -U upgrade \
-    && apk add redis curl
+    && apk add redis curl \
+    && mkdir /rts-logs \
+    && chown 65534:65534 /rts-logs
 
 COPY --from=builder /go/rfdispatcher /usr/local/bin
 COPY --from=builder /go/vault_loader /usr/local/bin
@@ -85,6 +87,9 @@ COPY contrib ${CONTRIB_DIR_PREFIX}contrib
 COPY configs ${CONFIGS_DIR_PREFIX}configs
 COPY scripts /scripts
 COPY .version /
+
+# nobody 65534:65534
+USER 65534:65534
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 

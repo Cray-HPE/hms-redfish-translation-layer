@@ -76,6 +76,6 @@ COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/vend
 
 # Run unit tests...
 RUN set -ex \
-    && go test -v github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/accountservice \
-    && go test -v github.com/Cray-HPE/hms-redfish-translation-service/internal/backend_helpers \
-    && go test -v github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema
+    && go test -cover -v github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/accountservice \
+    && go test -cover -v github.com/Cray-HPE/hms-redfish-translation-service/internal/backend_helpers \
+    && go test -cover -v github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema

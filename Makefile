@@ -31,7 +31,7 @@ CHART_VERSION ?= $(shell cat .version)
 all: image chart unittest image-vault-kv-enabler
 
 image:
-	docker build --pull ${DOCKER_ARGS} --tag '${NAME}:${VERSION}' .
+	docker build ${NO_CACHE} --pull ${DOCKER_ARGS} --tag '${NAME}:${VERSION}' .
 
 chart:
 	helm repo add cray-algol60 https://artifactory.algol60.net/artifactory/csm-helm-charts
@@ -42,5 +42,5 @@ unittest:
 	./runUnitTest.sh
 
 image-vault-kv-enabler:
-	docker build --pull ${DOCKER_ARGS_VAULT} --tag '${NAME_VAULT}:${VERSION}' -f vault-kv-enabler.dockerfile .
+	docker build ${NO_CACHE} --pull ${DOCKER_ARGS_VAULT} --tag '${NAME_VAULT}:${VERSION}' -f vault-kv-enabler.dockerfile .
 
