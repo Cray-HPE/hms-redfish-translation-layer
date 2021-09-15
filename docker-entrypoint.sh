@@ -38,7 +38,7 @@ setup_redis() {
   redis_keys="$(${REDIS_CMD} --no-raw KEYS "*")"
   if [ "$redis_keys" = "(empty array)" ]; then
     echo "Redis database empty...populating..."
-    /scripts/redfish-pdu-schema-load.sh 2>&1 | tee schema_load.log
+    /scripts/redfish-pdu-schema-load.sh 2>&1 | tee /rts-logs/schema_load.log
     result=$?
 
     if [ $result -ne 0 ]; then
