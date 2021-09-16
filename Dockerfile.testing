@@ -25,7 +25,7 @@
 FROM arti.dev.cray.com/baseos-docker-master-local/golang:1.14-alpine3.12 AS builder-base
 
 RUN set -ex \
-    && apk update \
+    && apk -U upgrade \
     && apk add build-base
 
 FROM builder-base AS builder

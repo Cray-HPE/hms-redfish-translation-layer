@@ -1,6 +1,4 @@
-# MIT License
-#
-# (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -14,29 +12,33 @@
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
 # THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-FROM arti.dev.cray.com/third-party-docker-stable-local/vault:1.5.5
+NAME ?= hms-redfish-translation-service
+VERSION ?= $(shell cat .version)
 
-LABEL maintainer="Cray, Inc."
+NAME_VAULT ?= vault-kv-enabler
 
-RUN set -ex \
-    && apk upgrade -U \
-    && apk add --no-cache \
-        bash
+# Helm Chart
+CHART_PATH ?= kubernetes
+CHART_NAME ?= cray-hms-rts
+CHART_VERSION ?= $(shell cat .version)
 
-# Vault
-ENV VAULT_ADDR http://localhost:8200
+all: image chart unittest image-vault-kv-enabler
 
-# Default KV Store
-ENV KV_STORES hms-creds
+image:
+	docker build --pull ${DOCKER_ARGS} --tag '${NAME}:${VERSION}' .
 
-COPY scripts/wait-for.sh /
-COPY scripts /scripts
-COPY .version /
+chart:
+	helm dep up ${CHART_PATH}/${CHART_NAME}
+	helm package ${CHART_PATH}/${CHART_NAME} -d ${CHART_PATH}/.packaged --version ${CHART_VERSION}
 
-ENTRYPOINT ["/scripts/vault-kv-enable.sh"]
+unittest:
+	./runUnitTest.sh
+
+image-vault-kv-enabler:
+	docker build --pull ${DOCKER_ARGS_VAULT} --tag '${NAME_VAULT}:${VERSION}' -f vault-kv-enabler.dockerfile .
