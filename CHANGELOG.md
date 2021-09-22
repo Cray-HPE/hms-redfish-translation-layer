@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.13.8] - 2021-09-22
+
+### Changed
+
+- Changed cray-service version to ~6.0.0
+
 ## [1.13.7] - 2021-09-08
 
 ### Changed
