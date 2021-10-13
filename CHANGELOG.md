@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.13.9] - 2021-10-11
+
+### Added
+
+- CASMHMS-5055 - Added RTS CT test RPM.
+
 ## [1.13.8] - 2021-09-22
 
 ### Changed
