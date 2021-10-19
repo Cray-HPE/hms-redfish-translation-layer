@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.13.9] - 2021-10-11
+
+### Changed
+
+- Changed the init job to make a finite number attempts to connect with vault
+
 ## [1.13.8] - 2021-09-22
 
 ### Changed
