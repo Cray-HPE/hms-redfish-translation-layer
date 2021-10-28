@@ -47,6 +47,8 @@ spec:
               value: "http://cray-vault.vault:8200"
             - name:  VAULT_SKIP_VERIFY
               value: "true"
+            - name:  VAULT_RTS_MAX_CONNECTION_ATTEMPTS
+              value: "120"
             - name: VAULT_RTS_DEFAULT_CREDENTIALS
               valueFrom:
                 secretKeyRef:
