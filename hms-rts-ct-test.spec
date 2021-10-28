@@ -28,7 +28,7 @@ Version: %(cat .version)
 Release: %(echo ${BUILD_METADATA})
 Source: %{name}-%{version}.tar.bz2
 Vendor: Hewlett Packard Enterprise
-Requires: hms-ct-testi-base >= 1.9.0
+Requires: hms-ct-test-base >= 1.9.0
 
 # name of this repository
 %define REPO hms-redfish-translation-layer
