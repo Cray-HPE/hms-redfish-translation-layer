@@ -19,6 +19,9 @@ pipeline {
         NO_CACHE = "--no-cache"
         CHART_NAME = "cray-hms-rts"
         CHART_VERSION = getChartVersion(version: env.VERSION)
+        TEST_NAME = "hms-rts-ct-test"
+        TEST_SPEC_FILE = "hms-rts-ct-test.spec"
+        BUILD_METADATA = getRpmRevision(isStable: env.IS_STABLE)
 
         NAME_VAULT = "vault-kv-enabler"
         DOCKER_ARGS_VALUT = getDockerBuildArgs(name: env.NAME_VAULT, description: "Vault KV Enabler", version: env.VERSION)
@@ -50,12 +53,22 @@ pipeline {
             }
         }
 
+        stage("Test Rpm") {
+            steps {
+                echo "RPM build metadata is: ${env.BUILD_METADATA}"
+                runLibraryScript("addRpmMetaData.sh", env.TEST_SPEC_FILE)
+                sh "make test_rpm"
+            }
+        }
+
         stage("Publish") {
             steps {
                 script {
                     publishCsmDockerImage(image: env.NAME, tag: env.VERSION, isStable: env.IS_STABLE)
                     publishCsmDockerImage(image: env.NAME_VAULT, tag: env.VERSION, isStable: env.IS_STABLE)
                     publishCsmHelmCharts(component: env.CHART_NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
+                    publishCsmRpms(component: env.TEST_NAME, pattern: "dist/rts-ct-test-rpmbuild/RPMS/x86_64/*.rpm", arch: "x86_64", isStable: env.IS_STABLE)
+                    publishCsmRpms(component: env.TEST_NAME, pattern: "dist/rts-ct-test-rpmbuild/SRPMS/*.rpm", arch: "src", isStable: env.IS_STABLE)
                 }
             }
         }
