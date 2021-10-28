@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
@@ -44,6 +45,19 @@ func main() {
 		log.Fatal("Value not set for VAULT_PDU_DEFAULT_CREDENTIALS")
 	}
 
+	maxConnectionAttempts := 120
+	maxConnectionAttemptsStr, ok := os.LookupEnv("VAULT_RTS_MAX_CONNECTION_ATTEMPTS")
+	if !ok {
+		log.Println("VAULT_RTS_MAX_CONNECTION_ATTEMPS was not set. Using 120 as the default.")
+	} else {
+		var err error
+		maxConnectionAttempts, err = strconv.Atoi(maxConnectionAttemptsStr)
+		if err != nil {
+			log.Printf("VAULT_RTS_MAX_CONNECTION_ATTEMPS=%s was not a valid integer. Using 120 as the default.", maxConnectionAttemptsStr)
+			maxConnectionAttempts = 120
+		}
+	}
+
 	// Setup Vault. It's kind of a big deal, so we'll wait forever for this to work.
 	var secureStorage securestorage.SecureStorage
 	vaultKeypath, ok := os.LookupEnv("JAWS_VAULT_KEYPATH")
@@ -51,16 +65,21 @@ func main() {
 		log.Fatal("Value not set for JAWS_VAULT_KEYPATH")
 	}
 
-	for {
+	vaultConnected := false
+	for i := 0; i < maxConnectionAttempts; i++ {
 		var err error
 		// Start a connection to Vault
 		if secureStorage, err = securestorage.NewVaultAdapter(vaultKeypath); err == nil {
+			vaultConnected = true
 			log.Println("Connected to Vault. vaultKeypath:", vaultKeypath)
 			break
 		}
 
 		log.Println("Unable to connect to Vault ...trying again in 5 seconds. Err:", err)
 		time.Sleep(5 * time.Second)
+	}
+	if !vaultConnected {
+		log.Fatalf("Unable to connect to Vault after %d tries", maxConnectionAttempts)
 	}
 
 	// Setup Credential stores
