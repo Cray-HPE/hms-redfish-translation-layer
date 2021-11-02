@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.15.0] - 2021-11-02
+
+### Changed
+
+- CASMHMS-5245 - Changed the redis container to run as the user redis.
+
 ## [1.14.0] - 2021-10-27
 
 ### Added

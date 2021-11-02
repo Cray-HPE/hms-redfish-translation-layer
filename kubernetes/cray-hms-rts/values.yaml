@@ -150,6 +150,10 @@ cray-service:
             - redis-cli PING
         initialDelaySeconds: 1
         periodSeconds: 5
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 1000
+        runAsNonRoot: true
   service:
     type: ClusterIP
     ports:
