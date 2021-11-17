@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.16.0] - 2021-11-17
+
+### Changed
+
+- Changed helm image refs to artifactory.algol60.net
+
 ## [1.15.0] - 2021-11-02
 
 ### Changed

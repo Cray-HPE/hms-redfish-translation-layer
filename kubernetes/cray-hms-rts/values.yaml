@@ -1,6 +1,10 @@
 ---
+image:
+  repository: artifactory.algol60.net/csm-docker/stable/hms-redfish-translation-service
+  pullPolicy: IfNotPresent
 
-dockerKubectlTag: 0.2.0
+dockerKubectlRepository: &dockerKubectlRepository artifactory.algol60.net/csm-docker/stable/docker-kubectl
+dockerKubectlTag: &dockerKubectlTag 1.19.15
 
 cray-service:
   type: "Deployment"
@@ -11,7 +15,8 @@ cray-service:
     cray-hms-rts:
       name: "cray-hms-rts"
       image:
-        repository: "cray/hms-redfish-translation-service"
+        repository: "artifactory.algol60.net/csm-docker/stable/hms-redfish-translation-service"
+        tag: 1.16.0
       env:
         # The following ENV variable settings are taken from
         # 'templates/env_configmap.yaml' which, in turn takes
@@ -132,7 +137,7 @@ cray-service:
     cray-hms-rts-redis:
       name: "cray-hms-rts-redis"
       image:
-        repository: "library/redis"
+        repository: "artifactory.algol60.net/csm-docker/stable/docker.io/library/redis"
         tag: 5.0-alpine3.12
       livenessProbe:
         exec:
@@ -182,8 +187,8 @@ cray-service:
               name: cray-rts-config
               key: wait-for-cray-hms-rts-init.dont_wait
       image:
-        repository: "loftsman/docker-kubectl"
-        tag: 0.2.0
+        repository: *dockerKubectlRepository
+        tag: *dockerKubectlTag
       command:
         - /bin/sh
         - -c
@@ -194,28 +199,28 @@ cray-service:
 # example, you can can say `values.environment.cray_hms_rts.backend_helper: GCloud`
 # in a value override to enable the 'GCloud' backend helper.
 environment:
-   cray_hms_rts:
-      log_level: "INFO"
-      rf_msg_host: "cray-shared-kafka-kafka-bootstrap.services.svc.cluster.local:9092"
-      vault_addr: "http://cray-vault.vault:8200"
-      vault_skip_verify: "true"
-      hms_vault_keypath: "secret/hms-creds"
-      hsm_url: "http://cray-smd"
-      https_cert: "configs/rts.crt"
-      https_key: "configs/rts.key"
-      collector_url: "http://cray-hms-hmcollector"
-      backend_helper: "JAWS"
-      rts_dns_provider: "k8s_service"
-      certificate_vault_keypath: "secret/pdu-creds/certificates"
+  cray_hms_rts:
+    log_level: "INFO"
+    rf_msg_host: "cray-shared-kafka-kafka-bootstrap.services.svc.cluster.local:9092"
+    vault_addr: "http://cray-vault.vault:8200"
+    vault_skip_verify: "true"
+    hms_vault_keypath: "secret/hms-creds"
+    hsm_url: "http://cray-smd"
+    https_cert: "configs/rts.crt"
+    https_key: "configs/rts.key"
+    collector_url: "http://cray-hms-hmcollector"
+    backend_helper: "JAWS"
+    rts_dns_provider: "k8s_service"
+    certificate_vault_keypath: "secret/pdu-creds/certificates"
 
-      # JAWs Backend Helper Configuration
-      jaws_vault_keypath: "secret/pdu-creds"
-      jaws_polling_enabled: true
-      jaws_polling_interval: 10 # Seconds
-      jaws_polling_temperature_interval: 30 # Seconds
-      jaws_polling_humidity_interval: 30 # Seconds
-      jaws_polling_workers: 30
-   wait_for_cray_hms_rts_init:
-     # a non-empty string in the following causes the initContainer to
-     # simply exit successfully and immediately.
-     dont_wait: ""
+    # JAWs Backend Helper Configuration
+    jaws_vault_keypath: "secret/pdu-creds"
+    jaws_polling_enabled: true
+    jaws_polling_interval: 10  # Seconds
+    jaws_polling_temperature_interval: 30  # Seconds
+    jaws_polling_humidity_interval: 30  # Seconds
+    jaws_polling_workers: 30
+  wait_for_cray_hms_rts_init:
+    # a non-empty string in the following causes the initContainer to
+    # simply exit successfully and immediately.
+    dont_wait: ""

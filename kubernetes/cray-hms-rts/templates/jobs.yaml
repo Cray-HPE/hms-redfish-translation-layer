@@ -17,7 +17,7 @@ spec:
       serviceAccountName: "cray-hms-rts"
       containers:
         - name: job-deleter
-          image: "{{ include "cray-hms-redfish-translation-layer.image-prefix" .Values }}loftsman/docker-kubectl:{{ .Values.dockerKubectlTag }}"
+          image: {{ .Values.dockerKubectlRepository }}:{{ .Values.dockerKubectlTag }}
           command:
           - /bin/sh
           - -c
@@ -64,5 +64,5 @@ spec:
                 configMapKeyRef:
                   name: cray-rts-config
                   key: cray-hms-rts.jaws_vault_keypath
-          image: {{ include "cray-hms-redfish-translation-layer.image-prefix" .Values }}cray/hms-redfish-translation-service:{{ include "cray-hms-redfish-translation-layer.imageTag" . }}
+          image: {{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}
           command: ["vault_loader"]
