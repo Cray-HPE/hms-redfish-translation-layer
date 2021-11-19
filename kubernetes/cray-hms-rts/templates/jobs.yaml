@@ -17,7 +17,8 @@ spec:
       serviceAccountName: "cray-hms-rts"
       containers:
         - name: job-deleter
-          image: {{ .Values.dockerKubectlRepository }}:{{ .Values.dockerKubectlTag }}
+          image: "{{ .Values.kubectl.image.repository }}:{{ .Values.kubectl.image.tag }}"
+          imagePullPolicy: "{{ .Values.kubectl.image.pullPolicy }}"
           command:
           - /bin/sh
           - -c

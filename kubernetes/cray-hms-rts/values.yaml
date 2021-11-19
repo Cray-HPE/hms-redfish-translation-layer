@@ -1,10 +1,16 @@
 ---
+global:
+  appVersion: 1.16.0
+
 image:
   repository: artifactory.algol60.net/csm-docker/stable/hms-redfish-translation-service
   pullPolicy: IfNotPresent
 
-dockerKubectlRepository: &dockerKubectlRepository artifactory.algol60.net/csm-docker/stable/docker-kubectl
-dockerKubectlTag: &dockerKubectlTag 1.19.15
+kubectl:
+  image:
+    repository: &kubectlRepository artifactory.algol60.net/csm-docker/stable/docker-kubectl
+    tag: &kubectlTag 1.19.15
+    pullPolicy: &kubectlPullPolicy IfNotPresent
 
 cray-service:
   type: "Deployment"
@@ -16,7 +22,6 @@ cray-service:
       name: "cray-hms-rts"
       image:
         repository: "artifactory.algol60.net/csm-docker/stable/hms-redfish-translation-service"
-        tag: 1.16.0
       env:
         # The following ENV variable settings are taken from
         # 'templates/env_configmap.yaml' which, in turn takes
@@ -187,8 +192,9 @@ cray-service:
               name: cray-rts-config
               key: wait-for-cray-hms-rts-init.dont_wait
       image:
-        repository: *dockerKubectlRepository
-        tag: *dockerKubectlTag
+        repository: *kubectlRepository
+        tag: *kubectlTag
+        pullPolicy: *kubectlPullPolicy
       command:
         - /bin/sh
         - -c
