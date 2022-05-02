@@ -24,6 +24,13 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.16.0] - 2022-05-02
+
+### Changed
+
+- Updated hms-rts to build using GitHub Actions instead of Jenkins.
+- Pull images from artifactory.algol60.net instead of arti.dev.cray.com.
+
 ## [1.15.0] - 2021-11-02
 
 ### Changed
