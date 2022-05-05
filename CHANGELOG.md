@@ -30,6 +30,7 @@ Security - in case of vulnerabilities
 
 - Updated hms-rts to build using GitHub Actions instead of Jenkins.
 - Pull images from artifactory.algol60.net instead of arti.dev.cray.com.
+- Stop building CT test RPMs as part of the migration to Helm test.
 
 ## [1.15.0] - 2021-11-02
 

@@ -88,6 +88,13 @@ services:
   #
   # PMDB
   #
+  # Note: This is used to verify that PDU telemetry is being stored
+  # in the PMDB as expected. hms-postgresql, hms-postgresql-util,
+  # and hms-pmdbd are now owned by the SMA team and have not been
+  # migrated to Algol60 Artifactory. Keeping this for posterity and
+  # future testing but should not be used in the CI build pipeline
+  # since it still references arti.dev.cray.com.
+  #
   hms-postgresql:
     image: arti.dev.cray.com/csm-docker-master-local/hms-postgresql:latest
     hostname: hms-postgresql
