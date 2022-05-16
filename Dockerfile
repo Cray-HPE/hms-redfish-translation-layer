@@ -1,6 +1,6 @@
 # MIT License
 #
-# (C) Copyright [2019-2021] Hewlett Packard Enterprise Development LP
+# (C) Copyright [2019-2022] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 
 # Dockerfile for building the HMS Redfish Translation Service (RTS).
 
-FROM arti.dev.cray.com/baseos-docker-master-local/golang:1.16-alpine3.13 AS builder
+FROM artifactory.algol60.net/docker.io/library/golang:1.16-alpine AS builder
 
 RUN go env -w GO111MODULE=auto
 
@@ -37,7 +37,7 @@ RUN set -ex \
 
 ### Final Stage ###
 
-FROM arti.dev.cray.com/baseos-docker-master-local/alpine:3.13
+FROM artifactory.algol60.net/docker.io/alpine:3.15
 LABEL maintainer="Hewlett Packard Enterprise"
 EXPOSE 8082
 STOPSIGNAL SIGTERM
