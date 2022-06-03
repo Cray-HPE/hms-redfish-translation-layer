@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.17.0] - 2022-06-03
+
+### Changed
+
+- CASMHMS-5578: Only create a RedfishEndpoint in HSM if it does not exist
+
 ## [1.16.0] - 2022-05-02
 
 ### Changed
