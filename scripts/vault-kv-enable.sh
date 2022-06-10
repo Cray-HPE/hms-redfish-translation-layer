@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # MIT License
 #
-# (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+# (C) Copyright [2020-2022] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -26,6 +26,7 @@ IFS=','
 vault_host_port=$(echo "$VAULT_ADDR" | awk -F[/] '{print $3}')
 vault_host=$(echo "$vault_host_port" | cut -d ':' -f 1)
 vault_port=$(echo "$vault_host_port" | cut -d ':' -f 2)
+vault_pki_enable=$VAULT_PKI_ENABLE
 
 echo "Waiting for Vault ($vault_host:$vault_port) to become ready..."
 
@@ -43,3 +44,16 @@ for store in "${STORE[@]}"; do
   echo "Enabling $store..."
   vault secrets enable -path="$store" kv
 done
+
+if [ "$vault_pki_enable" = true ]; then
+	echo "Enabling PKI interface..."
+	# Set up similar to cray-vault
+	vault secrets enable -path=pki_common pki
+	vault secrets tune -max-lease-ttl=87600h -default-lease-ttl=13140h pki_common
+	# Generate internal cert
+	vault write pki_common/root/generate/internal common_name=hms-vault ttl=87600h
+	# Set up issuing URLs
+	vault write pki_common/config/urls issuing_certificates="${VAULT_ADDR}/v1/pki_common/ca" crl_distribution_points="${VAULT_ADDR}/v1/pki_common/crl"
+	# Create pki-common role
+	vault write pki_common/roles/pki-common allow_subdomains=true max_ttl=8760h allow_any_name=true enforce_hostnames=false
+fi

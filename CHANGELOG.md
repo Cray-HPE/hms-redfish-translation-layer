@@ -24,6 +24,13 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.18.0] - 2022-06-10
+
+### Added
+
+- Added a git workflow for building the vault-kv-enabler image.
+- Added the ability to enable the Vault PKI interface with the vault-kv-enabler.
+
 ## [1.17.0] - 2022-06-03
 
 ### Changed
