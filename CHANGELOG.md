@@ -24,11 +24,24 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
-## [1.17.0] - 2022-05-23
+## [1.19.0] - 2022-06-30
 
 ### Changed
 
 - updated HSM v1 to HSM v2
+
+## [1.18.0] - 2022-06-10
+
+### Added
+
+- Added a git workflow for building the vault-kv-enabler image.
+- Added the ability to enable the Vault PKI interface with the vault-kv-enabler.
+
+## [1.17.0] - 2022-06-03
+
+### Changed
+
+- CASMHMS-5578: Only create a RedfishEndpoint in HSM if it does not exist
 
 ## [1.16.0] - 2022-05-02
 

@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2020-2022] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -365,30 +365,106 @@ func informHSM(ctx context.Context, xname string) (err error) {
 	return informHSMWithFQDN(ctx, xname, xname+":8083")
 }
 
-func informHSMWithFQDN(ctx context.Context, xname, fqdn string) (err error) {
+func informHSMWithFQDN(ctx context.Context, xname, fqdn string) error {
 	// We'll use the existence of the HSM_URL environment variable to determine whether we should inform.
 	hsmURL, exists := os.LookupEnv("HSM_URL")
 	if !exists || hsmURL == "" {
 		log.Warning("Unable to inform HSM because HSM_URL isn't set.")
+		return nil
+	}
+
+	log.WithField("xname", xname).Info("Checking to see if RedfishEndpoint exists in HSM")
+	rfEndpoint, _, getErr := getRedfishEndpointFromHSM(ctx, xname)
+	if getErr != nil {
+		return getErr
+	}
+
+	if rfEndpoint == nil {
+		log.WithField("xname", xname).Info("RedfishEndpoint does not exist in HSM, will attempt to create one")
+
+		// Build up the Redfish Endpoint structure.
+		rediscoverOnUpdate := true
+		rfEndpoint := rf.RawRedfishEP{
+			ID:             xname,
+			FQDN:           fqdn,
+			RediscOnUpdate: &rediscoverOnUpdate,
+		}
+
+		// Create the Redfish Endpoint in HSM
+		_, createErr := createRedfishEndpointInHSM(ctx, rfEndpoint)
+		if createErr != nil {
+			log.WithField("xname", xname).Error(createErr)
+			return createErr
+		}
+
+		// Endpoint was created successfully
+		log.WithField("xname", xname).Info("RedfishEndpoint created successfully in HSM")
+
+		return nil
+	}
+
+	// If the RedfishEndpoint is already present there is nothing to do, as the redfish endpoint currently exists in HSM.
+	// TODO in the future think about patching HSM if any of the fields have changed.
+	log.WithField("xname", xname).Info("RedfishEndpoint currently exists in HSM")
+	return nil
+}
+
+func getRedfishEndpointFromHSM(ctx context.Context, xname string) (rfEndpointPtr *rf.RawRedfishEP, statusCode int, err error) {
+	// We'll use the existence of the HSM_URL environment variable to determine whether we should get the redfish endpoint.
+	hsmURL, exists := os.LookupEnv("HSM_URL")
+	if !exists || hsmURL == "" {
+		log.Warning("Unable to get RedfishEndpoint in HSM because HSM_URL isn't set.")
 		return
 	}
 
-	// Build the structure.
-	var redfishEndpoints rf.RawRedfishEPs
-	true := true
-	thisEndpoint := rf.RawRedfishEP{
-		ID:             xname,
-		FQDN:           fqdn,
-		RediscOnUpdate: &true,
+	request := hmshttp.HTTPRequest{
+		Client:              httpClient,
+		Context:             ctx,
+		ExpectedStatusCodes: []int{http.StatusOK, http.StatusNotFound},
+		FullURL:             hsmURL + "/hsm/v2/Inventory/RedfishEndpoints/" + xname,
+		Method:              "GET",
+		CustomHeaders:       getSvcInstName(),
 	}
-	redfishEndpoints.RedfishEndpoints = append(redfishEndpoints.RedfishEndpoints, thisEndpoint)
-	payload, marshalErr := json.Marshal(redfishEndpoints)
+
+	responsePayload, statusCode, err := request.DoHTTPAction()
+	if err != nil {
+		err = fmt.Errorf("attempted to retrieve redfish endpoint from HSM received unexpected status code: %s", err)
+		log.WithField("xname", xname).Warning(err.Error())
+		return
+	}
+
+	if statusCode == http.StatusNotFound {
+		// The Endpoint was not found, give back a nil.
+		return nil, statusCode, nil
+	}
+
+	rfEndpoint := rf.RawRedfishEP{}
+	marshalErr := json.Unmarshal(responsePayload, &rfEndpoint)
 	if marshalErr != nil {
-		err = fmt.Errorf("attemtped to marshal JSON payload but failed: %s", marshalErr)
-		log.WithField("redfishEndpoints", redfishEndpoints).Error(err.Error())
+		marshalErr = fmt.Errorf("attempted to marshal JSON response but failed: %s", marshalErr)
+		log.WithField("string(responsePayload)", string(responsePayload)).Error(marshalErr.Error())
 		return
 	}
 
+	return &rfEndpoint, statusCode, nil
+}
+
+func createRedfishEndpointInHSM(ctx context.Context, rfEndpoint rf.RawRedfishEP) (statusCode int, err error) {
+	// We'll use the existence of the HSM_URL environment variable to determine whether we should create the redfish endpoint.
+	hsmURL, exists := os.LookupEnv("HSM_URL")
+	if !exists || hsmURL == "" {
+		log.Warning("Unable to create RedfishEndpoint in HSM because HSM_URL isn't set.")
+		return
+	}
+
+	payload, marshalErr := json.Marshal(rfEndpoint)
+	if marshalErr != nil {
+		err = fmt.Errorf("attempted to marshal JSON payload but failed: %s", marshalErr)
+		log.WithField("rfEndpoint", rfEndpoint).Error(err.Error())
+		return
+	}
+
+	// Create the RedfishEndpoint as it does not already exist
 	informRequest := hmshttp.HTTPRequest{
 		Client:              httpClient,
 		Context:             ctx,
@@ -399,17 +475,16 @@ func informHSMWithFQDN(ctx context.Context, xname, fqdn string) (err error) {
 		Payload:             payload,
 	}
 
-	_, _, informErr := informRequest.DoHTTPAction()
-	if informErr != nil {
-		// TODO: Make this handle conflict better.
-		if strings.Contains(informErr.Error(), "409") {
-			log.WithField("xname", xname).Info("xname already registered with HSM")
+	_, statusCode, err = informRequest.DoHTTPAction()
+	if err != nil {
+		if statusCode == http.StatusConflict {
+			log.WithField("xname", rfEndpoint.ID).Info("xname already registered with HSM")
 		} else {
-			err = fmt.Errorf("attempted to inform HSM about xname but failed: %s", informErr)
+			err = fmt.Errorf("attempted to inform HSM about xname but failed: %s", err)
 			log.WithField("string(payload)", string(payload)).Error(err.Error())
 		}
 	} else {
-		log.WithField("xname", xname).Info("Registered xname with HSM")
+		log.WithField("xname", rfEndpoint.ID).Info("Registered xname with HSM")
 	}
 
 	return
