@@ -504,7 +504,7 @@ func deleteFromHSM(ctx context.Context, xname string) (err error) {
 		Client:              httpClient,
 		Context:             ctx,
 		ExpectedStatusCodes: []int{http.StatusOK},
-		FullURL:             hsmURL + "/hsm/v1/Inventory/RedfishEndpoints/" + xname,
+		FullURL:             hsmURL + "/hsm/v2/Inventory/RedfishEndpoints/" + xname,
 		Method:              "DELETE",
 		CustomHeaders:       getSvcInstName(),
 	}

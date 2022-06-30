@@ -84,7 +84,7 @@ f1a0a82cd18f        dtr.dev.cray.com/cray/cray-smd                      "sh -c '
 You can even query HSM to see all of the endpoints that RTS is simulating discovered as you would expect:
 
 ```text
-$ curl -L -X GET 'http://localhost:27779/hsm/v1/Inventory/RedfishEndpoints' | jq
+$ curl -L -X GET 'http://localhost:27779/hsm/v2/Inventory/RedfishEndpoints' | jq
 {
   "RedfishEndpoints": [
     {
