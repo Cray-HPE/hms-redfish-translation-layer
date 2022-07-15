@@ -223,8 +223,17 @@ func doRest() {
 				}).Fatal("Unable to load Default HTTPS Cert")
 			}
 
+			err = server.rfd.CertificateService.WatchDefaultCertificate(httpsCert, httpsKey)
+			if err != nil {
+				log.WithFields(log.Fields{
+					"httpsCert": httpsCert,
+					"httpsKey":  httpsKey,
+					"err":       err,
+				}).Fatal("Unable to start the default HTTPS Cert watcher")
+			}
+
 			// When a HTTPS connection is established we want to select the correct cert based off of the
-			// hostname of the request. This This is called SNI
+			// hostname of the request. This is called SNI
 			tlsConfig := &tls.Config{
 				GetCertificate: server.rfd.CertificateService.ReturnCert,
 			}

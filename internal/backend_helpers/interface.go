@@ -31,6 +31,7 @@ import (
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/certificate_store"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
+	"github.com/fsnotify/fsnotify"
 	"google.golang.org/api/compute/v1"
 )
 
@@ -43,9 +44,10 @@ type CertificateService struct {
 
 	CertificateStore *certificate_store.CertificateStore
 
-	DefaultCertificate *CertificateTuple
-	Certificates       map[string]*CertificateTuple
-	CertificatesLock   sync.Mutex
+	DefaultCertificate        *CertificateTuple
+	defaultCertificateWatcher *fsnotify.Watcher
+	Certificates              map[string]*CertificateTuple
+	CertificatesLock          sync.Mutex
 
 	KnownDevices map[string]bool
 }
@@ -53,6 +55,8 @@ type CertificateService struct {
 // This is just a generic no-op interface
 type MockBackendHelper struct {
 	CertificateService *CertificateService
+
+	RedisHelper RedisHelper
 }
 
 // ServerTech iPDU API called JAWS.
