@@ -4,4 +4,5 @@ go/pkg/
 *.pem
 output.file
 iPDUs.json
+vault_loader.env
 kubernetes/.packaged/

@@ -87,6 +87,6 @@ services:
   redis-prep:
     build:
       context: .
-      dockerfile: redis_prep.dockerfile
     environment:
       - REDIS_HOSTNAME=redis
+    command: setup_redis
