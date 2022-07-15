@@ -2,7 +2,10 @@
 schema_load.out
 go/pkg/
 *.pem
+*.crt
+*.key
 output.file
-iPDUs.json
-vault_loader.env
-kubernetes/.packaged/
+configs/iPDUs.json
+configs/vault_loader.env
+configs/rts.crt
+configs/rts.key
