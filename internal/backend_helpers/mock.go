@@ -24,6 +24,8 @@ package backend_helpers
 
 import (
 	"context"
+	"errors"
+	"os"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -33,13 +35,21 @@ func (cs *MockBackendHelper) RunPeriodic(ctx context.Context, env map[string]int
 }
 
 // If an interface has some amount of prep work it needs to do before it is ready.
-func (cs *MockBackendHelper) SetupBackendHelper(ctx context.Context, env map[string]interface{}) (err error) {
-	err = cs.CertificateService.InitForXName("localhost")
+func (cs *MockBackendHelper) SetupBackendHelper(ctx context.Context, env map[string]interface{}) error {
+	err := cs.CertificateService.InitForXName("localhost")
 	if err != nil {
-		log.WithFields(log.Fields{
-			"err": err,
-		}).Error("Failed to initialize Certificate Service for localhost")
-		return
+		log.WithError(err).Error("Failed to initialize Certificate Service for localhost")
+		return err
+	}
+
+	password, passwordExists := os.LookupEnv("MOCKBACKEND_ROOT_PASSWORD")
+	if !passwordExists {
+		return errors.New("environment variable MOCKBACKEND_ROOT_PASSWORD is not defined")
+
+	}
+	err = cs.RedisHelper.initAccount("root", "Administrator", password)
+	if err != nil {
+		return err
 	}
 	return nil
 }
