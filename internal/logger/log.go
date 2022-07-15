@@ -30,8 +30,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const projectPath = "hms-redfish-translation-layer/"
-const moduleName = "hms-redfish-translation-service/"
+const projectPath = "hms-redfish-translation-service/"
 
 func SetupLogging() {
 	log.WithFields(log.Fields{"LogLevel": log.GetLevel()}).Info("Logging Initialized")
@@ -42,7 +41,6 @@ func init() {
 	logLevel = strings.ToUpper(logLevel)
 
 	projectPathLength := len(projectPath)
-	moduleNameLength := len(moduleName)
 
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp: true,
@@ -50,12 +48,12 @@ func init() {
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
 			// We know both the function and the file are going to have "redfish-translation-layer/" and then something,
 			// so whack off everything up to and including that and call it a day! Pretty!
-			functionIndexStart := strings.LastIndex(f.Function, moduleName)
+			functionIndexStart := strings.LastIndex(f.Function, projectPath)
 			fileIndexStart := strings.LastIndex(f.File, projectPath)
 
 			var funcname string
 			if functionIndexStart > 0 {
-				funcname = f.Function[functionIndexStart+moduleNameLength:]
+				funcname = f.Function[functionIndexStart+projectPathLength:]
 			} else {
 				funcname = f.Function
 			}

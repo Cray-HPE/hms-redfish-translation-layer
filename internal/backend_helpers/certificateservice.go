@@ -656,12 +656,13 @@ func (cs *CertificateService) WatchDefaultCertificate(certFile, keyFile string) 
 		for {
 			select {
 			case events := <-cs.defaultCertificateWatcher.Events:
-				logger.WithField("events", events).Info("Detected changed in directories containing the default HTTPs certificate")
+				logger.WithField("events", events).Debug("Detected changed in directories containing the default HTTPs certificate")
 
-				// TODO lets see if we need to be more selective in the events that we reload the default certificate for.
-
-				// Received an event
-				cs.LoadDefaultCert(certFile, keyFile)
+				// When a certificate is updated Kubernetes will have a REMOVE event occur
+				if events.Op == fsnotify.Remove {
+					// Received an event
+					cs.LoadDefaultCert(certFile, keyFile)
+				}
 			case err := <-cs.defaultCertificateWatcher.Errors:
 				logger.WithError(err).Error("Error in default HTTPs certificate file watcher")
 			case <-done:
@@ -672,7 +673,7 @@ func (cs *CertificateService) WatchDefaultCertificate(certFile, keyFile string) 
 		}
 	}()
 
-	// Mounting a configmap makes the configfile a symlink which will
+	// Mounting a secret makes the secret a symlink which will
 	// not trigger change events. Watch the directory instead for changes.
 	certFileDir := path.Dir(certFile)
 	keyFileDir := path.Dir(keyFile)
