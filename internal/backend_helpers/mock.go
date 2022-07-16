@@ -36,19 +36,42 @@ func (cs *MockBackendHelper) RunPeriodic(ctx context.Context, env map[string]int
 
 // If an interface has some amount of prep work it needs to do before it is ready.
 func (cs *MockBackendHelper) SetupBackendHelper(ctx context.Context, env map[string]interface{}) error {
-	err := cs.CertificateService.InitForXName("localhost")
-	if err != nil {
-		log.WithError(err).Error("Failed to initialize Certificate Service for localhost")
-		return err
-	}
+	xname := "localhost"
 
+	// Setup root user
 	password, passwordExists := os.LookupEnv("MOCKBACKEND_ROOT_PASSWORD")
 	if !passwordExists {
 		return errors.New("environment variable MOCKBACKEND_ROOT_PASSWORD is not defined")
 
 	}
-	err = cs.RedisHelper.initAccount("root", "Administrator", password)
+	err := cs.RedisHelper.initAccount("root", "Administrator", password)
 	if err != nil {
+		return err
+	}
+
+	// Setup Manager collection
+	err = cs.RedisHelper.initManagerCollection(xname)
+	if err != nil {
+		log.WithError(err).Error("Failed to initialize Manager Collection for device")
+		return err
+	}
+
+	err = cs.RedisHelper.initManager(xname, GenericBmcID, "Mock")
+	if err != nil {
+		log.WithError(err).Error("Failed to initialize Manager for device")
+		return err
+	}
+
+	// Certificate Service
+	err = cs.CertificateService.SetupCertificateService(GenericBmcID, GenericCertificateID)
+	if err != nil {
+		log.WithError(err).Error("Failed to setup Certificate service")
+		return err
+	}
+
+	err = cs.CertificateService.InitForXName(xname)
+	if err != nil {
+		log.WithError(err).Error("Failed to initialize Certificate Service for localhost")
 		return err
 	}
 	return nil
