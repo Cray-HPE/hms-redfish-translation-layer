@@ -39,3 +39,22 @@
     ```bash
     ./scripts/runPDULoader.sh
     ```
+
+## Mock backend testing
+This will run RTS locally instead of within a docker container.
+
+1. Generate HTTPs Certificate:
+    ```bash
+    openssl req -x509 -nodes -newkey rsa:4096 -keyout configs/rts.key -out configs/rts.crt -sha256 -days 1 \
+        -subj "/C=US/O=RTS/OU=TEST_CERTIFICATE/CN=localhost"
+    ```
+
+2. Stand up dependencies:
+    ```bash
+    docker-compose -f docker-compose.devel.yaml up --build 
+    ```
+
+3. Start RTS:
+    ```bash
+    ./scripts/runRTS.sh
+    ```

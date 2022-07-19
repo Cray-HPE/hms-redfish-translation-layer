@@ -48,13 +48,13 @@ services:
   cray-smd:
     image: artifactory.algol60.net/csm-docker/stable/cray-smd:1.48.0
     environment:
-      - POSTGRES_HOST=localhost
+      - POSTGRES_HOST=hmsds-postgres
       - POSTGRES_PORT=5432
       - RF_MSG_HOST
       - CRAY_VAULT_AUTH_PATH=auth/token/create
       - CRAY_VAULT_ROLE_FILE=configs/namespace
       - CRAY_VAULT_JWT_FILE=configs/token
-      - VAULT_ADDR=http://localhost:8200
+      - VAULT_ADDR=http://vault:8200
       - VAULT_TOKEN=hms
       - VAULT_KEYPATH=hms-creds
       - SMD_WVAULT=true
@@ -65,7 +65,6 @@ services:
       - vault
     ports:
       - "27779:27779"
-    network_mode: "host"
     extra_hosts:
       - "x0c0s21b0:127.0.0.1"
       - "x0c0s22b0:127.0.0.1"

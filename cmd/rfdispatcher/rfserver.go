@@ -295,12 +295,12 @@ func main() {
 		cancel()
 
 		if restSrvHTTP != nil {
-			if err := restSrvHTTP.Shutdown(nil); err != nil {
+			if err := restSrvHTTP.Shutdown(ctx); err != nil {
 				log.WithField("err", err).Panic("Unable to stop HTTP REST server!")
 			}
 		}
 		if restSrvHTTPS != nil {
-			if err := restSrvHTTPS.Shutdown(nil); err != nil {
+			if err := restSrvHTTPS.Shutdown(ctx); err != nil {
 				log.WithField("err", err).Panic("Unable to stop HTTPS REST server!")
 			}
 		}
