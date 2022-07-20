@@ -20,6 +20,9 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+// NOTE: This program is only intended for use with local testing, and not to be used
+// in production.
+
 package main
 
 import (

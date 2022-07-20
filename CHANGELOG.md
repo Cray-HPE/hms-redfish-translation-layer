@@ -24,6 +24,15 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.20.0] - 2022-07-20
+
+### Security
+- Removed hardcoded certificate from RTS container image.
+- Added a file watcher for a provided HTTPs certificate key pair so RTS can automatically reload the certificate.
+### Changed
+- The Mock backend now properly stands up the Certificate Service.
+- Updated and added documentation and tooling to perform local testing of RTS.
+
 ## [1.19.0] - 2022-06-30
 
 ### Changed
