@@ -1,11 +1,16 @@
 .idea
 schema_load.out
 go/pkg/
-*.pem
-*.crt
-*.key
 output.file
 configs/iPDUs.json
 configs/vault_loader.env
 configs/rts.crt
 configs/rts.key
+
+# Prevent certificates from getting checked in
+*.ca
+*.cer
+*.crt
+*.csr
+*.key
+*.pem
