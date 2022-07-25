@@ -206,6 +206,9 @@ func NewDispatcher(ctx context.Context) *RedfishDispatcher {
 		case "Mock":
 			deviceBackendHelper = &backend_helpers.MockBackendHelper{
 				CertificateService: rfd.CertificateService,
+				RedisHelper: backend_helpers.RedisHelper{
+					Redis: rfd.redis,
+				},
 			}
 		default:
 			log.WithField("backendHelperName", backendHelperName).Panic("Unknown backend helper provided via BACKEND_HELPER env variable")

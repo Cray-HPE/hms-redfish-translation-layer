@@ -191,6 +191,12 @@ func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
 		panic(err)
 	}
 
+	if raw["Members"] == nil {
+		// TODO CASMHMS-5510: How AccountService works in RTS will need to change in the future.
+		// For now if there are no account defined in REDIS, then we should fail.
+		log.Fatal("Account Collection is empty. Did the backend helpers not create an account? ")
+	}
+
 	members := raw["Members"].([]interface{})
 
 	for _, memberRaw := range members {

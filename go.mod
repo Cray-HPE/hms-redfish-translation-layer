@@ -9,6 +9,7 @@ require (
 	github.com/Cray-HPE/hms-go-http-lib v1.5.3
 	github.com/Cray-HPE/hms-securestorage v1.12.2
 	github.com/Cray-HPE/hms-smd v1.30.9
+	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/google/uuid v1.1.1
 	github.com/hashicorp/go-retryablehttp v0.7.0

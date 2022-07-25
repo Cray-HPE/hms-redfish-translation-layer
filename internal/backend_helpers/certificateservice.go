@@ -32,6 +32,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -40,6 +41,7 @@ import (
 	"time"
 
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/certificate_store"
+	"github.com/fsnotify/fsnotify"
 	"github.com/go-redis/redis"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
@@ -597,6 +599,11 @@ func (cs *CertificateService) LoadCertificateFromPair(xname string, pair certifi
 }
 
 func (cs *CertificateService) LoadDefaultCert(certFile, keyFile string) error {
+	log.WithFields(log.Fields{
+		"certFile": certFile,
+		"keyFile":  keyFile,
+	}).Info("Loading default HTTPs certificate")
+
 	// Load TLS Cert and Key
 	tlsCert, err := tls.LoadX509KeyPair(certFile, keyFile)
 	if err != nil {
@@ -616,11 +623,73 @@ func (cs *CertificateService) LoadDefaultCert(certFile, keyFile string) error {
 		return err
 	}
 
+	cs.CertificatesLock.Lock()
 	cs.DefaultCertificate = &CertificateTuple{
 		TLS:               &tlsCert,
 		X509:              x509Cert,
 		PublicCertificate: string(certRaw),
 	}
+	cs.CertificatesLock.Unlock()
+	return nil
+}
+
+func (cs *CertificateService) WatchDefaultCertificate(certFile, keyFile string) error {
+	if cs.defaultCertificateWatcher != nil {
+		// The file watcher has already been started
+		return nil
+	}
+
+	logger := log.WithFields(log.Fields{
+		"certFile": certFile,
+		"keyFile":  keyFile,
+	})
+
+	var err error
+	cs.defaultCertificateWatcher, err = fsnotify.NewWatcher()
+	if err != nil {
+		return err
+	}
+
+	done := make(chan bool)
+	go func() {
+		logger.Info("Starting file watcher for default HTTPs certificate")
+		for {
+			select {
+			case events := <-cs.defaultCertificateWatcher.Events:
+				logger.WithField("events", events).Debug("Detected changed in directories containing the default HTTPs certificate")
+
+				// When a certificate is updated Kubernetes will have a REMOVE event occur
+				if events.Op == fsnotify.Remove {
+					// Received an event
+					cs.LoadDefaultCert(certFile, keyFile)
+				}
+			case err := <-cs.defaultCertificateWatcher.Errors:
+				logger.WithError(err).Error("Error in default HTTPs certificate file watcher")
+			case <-done:
+				logger.Info("Stopping file watcher for default HTTPs certificate")
+				cs.defaultCertificateWatcher = nil
+				return
+			}
+		}
+	}()
+
+	// Mounting a secret makes the secret a symlink which will
+	// not trigger change events. Watch the directory instead for changes.
+	certFileDir := path.Dir(certFile)
+	keyFileDir := path.Dir(keyFile)
+
+	logger.WithFields(log.Fields{
+		"keyFileDir":  keyFileDir,
+		"certFileDir": certFileDir}).Info("Watching default HTTPs certificate file directory")
+
+	if err = cs.defaultCertificateWatcher.Add(certFileDir); err != nil {
+		return err
+	}
+
+	if err = cs.defaultCertificateWatcher.Add(keyFileDir); err != nil {
+		return err
+	}
+
 	return nil
 }
 

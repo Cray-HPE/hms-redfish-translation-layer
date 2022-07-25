@@ -1,6 +1,8 @@
+#! /usr/bin/env bash
+#
 # MIT License
 #
-# (C) Copyright [2020-2022] Hewlett Packard Enterprise Development LP
+# (C) Copyright 2022 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -19,26 +21,16 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
+#
 
-FROM artifactory.algol60.net/docker.io/alpine:3.15
-LABEL maintainer="Hewlett Packard Enterprise"
+set -xe
 
-# Redis
-ENV REDIS_HOSTNAME localhost
-ENV REDIS_PORT 6379
 
-RUN set -ex \
-    && apk -U upgrade \
-    && apk add \
-        redis \
-        curl \
-    && mkdir /rts-logs
+export VAULT_TOKEN=hms
+export VAULT_ADDR=http://localhost:8200
+export CRAY_VAULT_JWT_FILE=configs/token
+export CRAY_VAULT_ROLE_FILE=configs/namespace
+export CRAY_VAULT_AUTH_PATH=auth/token/create
+export JAWS_VAULT_KEYPATH=pdu-creds
 
-COPY scripts/wait-for.sh /
-COPY docker-entrypoint.sh /
-COPY scripts /scripts
-COPY .version /
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
-
-CMD ["setup_redis"]
+go run github.com/Cray-HPE/hms-redfish-translation-service/cmd/pdu_loader

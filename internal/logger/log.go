@@ -23,10 +23,11 @@
 package logger
 
 import (
-	log "github.com/sirupsen/logrus"
 	"os"
 	"runtime"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const projectPath = "hms-redfish-translation-service/"
@@ -43,7 +44,7 @@ func init() {
 
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp: true,
-		ForceColors: true,
+		ForceColors:   true,
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
 			// We know both the function and the file are going to have "redfish-translation-layer/" and then something,
 			// so whack off everything up to and including that and call it a day! Pretty!
@@ -52,14 +53,14 @@ func init() {
 
 			var funcname string
 			if functionIndexStart > 0 {
-				funcname = f.Function[functionIndexStart + projectPathLength:]
+				funcname = f.Function[functionIndexStart+projectPathLength:]
 			} else {
 				funcname = f.Function
 			}
 
 			var filename string
 			if fileIndexStart > 0 {
-				filename = f.File[fileIndexStart + projectPathLength:]
+				filename = f.File[fileIndexStart+projectPathLength:]
 			} else {
 				filename = f.File
 			}
