@@ -20,7 +20,7 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415
-	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
+	golang.org/x/crypto v0.1.0
 	google.golang.org/api v0.30.0
 	k8s.io/api v0.17.2
 	k8s.io/apimachinery v0.17.2
