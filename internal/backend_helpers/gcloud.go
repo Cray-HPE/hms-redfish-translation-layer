@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright 2020-2023 Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -386,7 +386,9 @@ func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, xname strin
 	err error) {
 	instance, err = helper.findInstanceByXname(ctx, xname)
 	if err == nil {
+		helper.KnownInstancesLock.Lock()
 		helper.KnownInstances[xname] = instance
+		helper.KnownInstancesLock.Unlock()
 	}
 
 	return
@@ -425,17 +427,19 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 				seen[xname] = true
 
 				// Process the instance...
+				helper.KnownInstancesLock.Lock()
 				knownInstance, instanceExists := helper.KnownInstances[xname]
+				helper.KnownInstancesLock.Unlock()
 				_, waitReady := helper.waitReady[xname]
 				_, informHSM := helper.informHSM[xname]
 
 				if !instanceExists || waitReady || informHSM {
-					// Add this instance to the list of known.
+					// Add this instance to the list of known. We will do that unconditionally after the
+					// else clause, but do the stuff we need to set that up here...
 					log.WithFields(log.Fields{
 						"xname": xname,
 					}).Info("Initializing new instance")
 					helper.initInstance(ctx, instance)
-					helper.KnownInstances[xname] = instance
 				} else {
 
 					creds, err := helper.RTSCredentialStore.GetGlobalCredentials()
@@ -476,7 +480,9 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 					}
 				}
 				// Regardless, update the instance to this version so to capture the new state of all the fields.
+				helper.KnownInstancesLock.Lock()
 				helper.KnownInstances[xname] = instance
+				helper.KnownInstancesLock.Unlock()
 			}
 		}
 		return nil
@@ -485,6 +491,12 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 		return err
 	}
 	// Search for nodes that have gone away since the last time we looked.
+	//
+	// Holding the lock over the whole loop to make sure we don't collide with
+	// another instance of ourself. Defer the unlock to keep the logic contiguous
+	// and harder to break
+	helper.KnownInstancesLock.Lock()
+	defer helper.KnownInstancesLock.Unlock()
 	for k, _ := range helper.KnownInstances {
 		if _, found := seen[k]; !found {
 			// This instance has disappeared, remove it
@@ -595,9 +607,10 @@ func (helper *GCloudHelper) SetupBackendHelper(ctx context.Context, env map[stri
 func (helper *GCloudHelper) GetEnvForXname(xname string) (env map[string]string, err error) {
 	env = map[string]string{}
 
+	helper.KnownInstancesLock.Lock()
+	defer helper.KnownInstancesLock.Unlock()
 	if device, ok := helper.KnownInstances[xname]; ok {
 		env["RTS_XNAME"] = device.Labels["xname"]
-
 		return
 	}
 
@@ -617,7 +630,9 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 
 	// Check to make sure we actually know about this device and
 	// get the instance for use later.
+	helper.KnownInstancesLock.Lock()
 	instance, deviceIsKnown := helper.KnownInstances[xname]
+	helper.KnownInstancesLock.Unlock()
 	if !deviceIsKnown {
 		err = fmt.Errorf("unknown xname: %s", xname)
 		log.Error(err.Error())
