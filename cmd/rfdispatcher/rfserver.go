@@ -344,6 +344,7 @@ func main() {
 			for range ticker.C {
 				log.Trace("Running ticker")
 				server.rfd.RunPeriodic()
+				log.Trace("Finished ticker")
 			}
 		}()
 	}

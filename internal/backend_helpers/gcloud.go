@@ -382,15 +382,28 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 	return
 }
 
+func copyInstance(instance *compute.Instance) (newInstance *compute.Instance) {
+	// Make a minimal copy of instance data to support the uses here. If
+	// more is needed from KnownInstances, add code to copy it here.
+	newInstance = new(compute.Instance)
+	newInstance.Status = instance.Status
+	newInstance.Name = instance.Name
+	newInstance.Zone = instance.Zone
+	newInstance.Labels = make(map[string]string)
+	for k, v := range instance.Labels {
+		newInstance.Labels[k] = v
+	}
+	return
+}
+
 func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, xname string) (instance *compute.Instance,
 	err error) {
 	instance, err = helper.findInstanceByXname(ctx, xname)
 	if err == nil {
 		helper.KnownInstancesLock.Lock()
-		helper.KnownInstances[xname] = instance
+		helper.KnownInstances[xname] = copyInstance(instance)
 		helper.KnownInstancesLock.Unlock()
 	}
-
 	return
 }
 
@@ -481,7 +494,7 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 				}
 				// Regardless, update the instance to this version so to capture the new state of all the fields.
 				helper.KnownInstancesLock.Lock()
-				helper.KnownInstances[xname] = instance
+				helper.KnownInstances[xname] = copyInstance(instance)
 				helper.KnownInstancesLock.Unlock()
 			}
 		}
@@ -668,7 +681,7 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 		return
 	}
 
-	log.Debug("serving request '" + fullKey + "' from gcloud backend")
+	log.Debug("serving request '" + fullKey + "' from gcloud backend, xname = '" + xname + "'")
 	// There are better ways to do this, but for now I'm just hard coding all the possible keys to their desired thing.
 	if strippedKey == "/Systems/Self/Actions/ComputerSystem.Reset" {
 		// Extract the zone and name from the known instance
