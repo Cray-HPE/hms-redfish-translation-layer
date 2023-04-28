@@ -24,6 +24,14 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.21.0] - 2023-04-28
+
+### Added
+- SNMP backend for management switches
+
+### Changed
+- Changed the AccountService to pick up account changes made via redis to allow device initialization to add accounts.
+
 ## [1.20.0] - 2022-07-20
 
 ### Security

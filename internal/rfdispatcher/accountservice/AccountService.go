@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2018, 2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2018-2023] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -130,14 +130,18 @@ func (as *AccountService) isAccountLockoutEnabled() bool {
 }
 
 // RunPeriodic will execute the AccountService's updatePeriodic routine every second
+// and updateAccountsPeriodic routine every minute.
 // Please note this should be ran as a go routine, as this function will never return
 func (as *AccountService) RunPeriodic() {
 	log.Info("Starting account service periodic task")
 	ticker := time.NewTicker(1 * time.Second)
+	accountTicker := time.NewTicker(1 * time.Minute)
 	for {
 		select {
 		case <-ticker.C:
 			as.updatePeriodic()
+		case <-accountTicker.C:
+			as.updateAccountsPeriodic()
 		}
 	}
 }
@@ -153,6 +157,14 @@ func (as *AccountService) updatePeriodic() {
 			log.Error(err)
 		}
 	}
+
+}
+
+// updateAccountsPeriodic will the run periodic updates to pick up account changes in redis.
+func (as *AccountService) updateAccountsPeriodic() {
+
+	// Check for changes to the accounts collection
+	as.Accounts.initFromRedis()
 
 }
 
@@ -207,7 +219,7 @@ func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
 		// Add it to the collection
 		mac.Members[account.UserName] = account
 	}
-	log.Info("Loaded Accounts collection")
+	log.Debug("Loaded Accounts collection")
 	// Return itself
 	return mac
 }

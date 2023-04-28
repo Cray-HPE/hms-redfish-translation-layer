@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2018-2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2018-2023] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -209,6 +209,14 @@ func NewDispatcher(ctx context.Context) *RedfishDispatcher {
 				RedisHelper: backend_helpers.RedisHelper{
 					Redis: rfd.redis,
 				},
+			}
+		case "SNMPSwitch":
+			deviceBackendHelper = &backend_helpers.SNMPSwitchHelper{
+				CertificateService: rfd.CertificateService,
+				RedisHelper: backend_helpers.RedisHelper{
+					Redis: rfd.redis,
+				},
+				KnownDevices: make(map[string]backend_helpers.SNMPDevice),
 			}
 		default:
 			log.WithField("backendHelperName", backendHelperName).Panic("Unknown backend helper provided via BACKEND_HELPER env variable")
