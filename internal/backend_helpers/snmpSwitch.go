@@ -356,7 +356,9 @@ func (helper *SNMPSwitchHelper) RunPeriodic(ctx context.Context, env map[string]
 			if initErr != nil {
 				err = fmt.Errorf("unable to initialize device: %s", initErr)
 			} else {
+				helper.deviceMux.Lock()
 				helper.KnownDevices[xname] = snmpDevice
+				helper.deviceMux.Unlock()
 
 				elapsed := time.Since(start)
 				log.WithFields(log.Fields{
