@@ -149,7 +149,24 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 
 	cred.URL = xname + "-rts:8083"
 
-	snmp, snmpErr := snmp_utilities.NewSNMPInterface(device.ExtraProperties.IP4Addr, cred.Username, cred.SNMPAuthPass, device.ExtraProperties.SNMPAuthProtocol, cred.SNMPPrivPass, device.ExtraProperties.SNMPPrivProtocol)
+	// Use either the alias or IP address from SLS. Prefer alias because it is usually there.
+	addr := ""
+	if len(device.ExtraProperties.Aliases) < 1 {
+		if device.ExtraProperties.IP4Addr == "" {
+			log.WithFields(logFields).Info("Failed to create device. No address or alias in SLS")
+			return
+		} else {
+			addr = device.ExtraProperties.IP4Addr
+		}
+	} else {
+		addr = device.ExtraProperties.Aliases[0]
+		// Need the Hardware Management Network address
+		if !strings.HasSuffix(addr, ".hmn") {
+			addr = addr + ".hmn"
+		}
+	}
+
+	snmp, snmpErr := snmp_utilities.NewSNMPInterface(addr, cred.Username, cred.SNMPAuthPass, device.ExtraProperties.SNMPAuthProtocol, cred.SNMPPrivPass, device.ExtraProperties.SNMPPrivProtocol)
 	if snmpErr != nil {
 		err = snmpErr
 		logFields["err"] = err
@@ -267,6 +284,15 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	}
 
 	log.WithField("xname", xname).Debug("Added credentials to Vault")
+
+	// Wait until the accountService has refreshed (happens every 30 seconds)
+	for i := 0; i < 30; i++ {
+		rdyErr := checkReady(ctx, xname)
+		if rdyErr == nil {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
 
 	// Now that all the necessary data is in Redis tell HSM we exist and have it discover us.
 	hsmErr := informHSMWithFQDN(ctx, xname, cred.URL)

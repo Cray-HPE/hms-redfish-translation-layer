@@ -135,7 +135,7 @@ func (as *AccountService) isAccountLockoutEnabled() bool {
 func (as *AccountService) RunPeriodic() {
 	log.Info("Starting account service periodic task")
 	ticker := time.NewTicker(1 * time.Second)
-	accountTicker := time.NewTicker(1 * time.Minute)
+	accountTicker := time.NewTicker(30 * time.Second)
 	for {
 		select {
 		case <-ticker.C:
@@ -149,6 +149,8 @@ func (as *AccountService) RunPeriodic() {
 // updatePeriodic will the run periodic updates required by the account service.
 // Such as updating the state of locked accounts.
 func (as *AccountService) updatePeriodic() {
+	as.Accounts.updateMux.Lock()
+	defer as.Accounts.updateMux.Unlock()
 	//log.Trace("Update periodic running")
 
 	// Account lockout check
@@ -173,6 +175,7 @@ type ManagerAccountCollection struct {
 	Members map[string]*ManagerAccount
 
 	as *AccountService
+	updateMux sync.Mutex
 }
 
 func NewManagerAccountCollection(as *AccountService) *ManagerAccountCollection {
@@ -184,6 +187,8 @@ func NewManagerAccountCollection(as *AccountService) *ManagerAccountCollection {
 
 // initFromRedis will initialize this collection (and its member accounts) from data in redis
 func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
+	mac.updateMux.Lock()
+	defer mac.updateMux.Unlock()
 	uri := "/redfish/v1/AccountService/Accounts"
 	resource, property := mac.as.rfd.GetResource(uri, "")
 	if resource == nil {
@@ -214,10 +219,16 @@ func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
 	for _, memberRaw := range members {
 		member := memberRaw.(map[string]interface{})
 		accountURI := member["@odata.id"].(string)
-		account := NewManagerAccount(mac.as).initFromRedis(accountURI)
+		newAccount := NewManagerAccount(mac.as).initFromRedis(accountURI)
 
-		// Add it to the collection
-		mac.Members[account.UserName] = account
+		account, ok := mac.Members[newAccount.UserName]
+		if !ok {
+			// Add it to the collection
+			mac.Members[newAccount.UserName] = newAccount
+		} else {
+			// Only update the password from redis
+			account.passwordHash = newAccount.passwordHash
+		}
 	}
 	log.Debug("Loaded Accounts collection")
 	// Return itself
@@ -226,6 +237,8 @@ func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
 
 // get will return the account with the provided username
 func (mac *ManagerAccountCollection) get(username string) (*ManagerAccount, bool) {
+	mac.updateMux.Lock()
+	defer mac.updateMux.Unlock()
 	// TODO: Add a username2account lookup table for something if we expect there to a lot of accounts and
 	// account lookups
 	for _, account := range mac.Members {

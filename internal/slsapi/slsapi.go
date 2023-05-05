@@ -122,7 +122,7 @@ func (sls *SLS) IsReady() (bool, error) {
 }
 
 // Query SLS for all of the management switches it has.
-func (sls *SLS) GetAllSwitchInfo() (switchHardware []ManagementSwitch, err error) {
+func (sls *SLS) GetSwitchInfo(switchType string) (switchHardware []ManagementSwitch, err error) {
 	// Validate inputs
 	if sls.Url == nil {
 		err = fmt.Errorf("SLS struct has no URL")
@@ -131,7 +131,7 @@ func (sls *SLS) GetAllSwitchInfo() (switchHardware []ManagementSwitch, err error
 
 	// Construct a GET to '/search/hardware?type=comptype_mgmt_switch'
 	// for SLS to get all of the management switches in SLS.
-	uri := sls.Url.String() + "/search/hardware?type=" + sls_common.MgmtSwitch.String()
+	uri := sls.Url.String() + "/search/hardware?type=" + switchType
 	req, reqErr := http.NewRequest(http.MethodGet, uri, nil)
 	if reqErr != nil {
 		err = reqErr
@@ -152,6 +152,34 @@ func (sls *SLS) GetAllSwitchInfo() (switchHardware []ManagementSwitch, err error
 	if reqErr != nil {
 		err = reqErr
 	}
+	return
+}
+
+// Query SLS for all of the management switches it has.
+func (sls *SLS) GetAllSwitchInfo() (switchHardware []ManagementSwitch, err error) {
+	// Validate inputs
+	if sls.Url == nil {
+		err = fmt.Errorf("SLS struct has no URL")
+		return
+	}
+
+	switchTypes := []string{
+		sls_common.MgmtSwitch.String(),
+		sls_common.MgmtHLSwitch.String(),
+		sls_common.CDUMgmtSwitch.String(),
+	}
+
+	for _, switchType := range switchTypes {
+		mgmtSwitches, slsErr := sls.GetSwitchInfo(switchType)
+		if slsErr != nil {
+			err = slsErr
+			return
+		}
+		if len(mgmtSwitches) > 0 {
+			switchHardware = append(switchHardware, mgmtSwitches...)
+		}
+	}
+
 	return
 }
 

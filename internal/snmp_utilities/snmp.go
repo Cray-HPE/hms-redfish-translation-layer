@@ -31,17 +31,20 @@ import (
 )
 
 const (
-	OIDEntPhysicalDescr          string = "1.3.6.1.2.1.47.1.1.1.1.2"
-	OIDEntPhysicalName           string = "1.3.6.1.2.1.47.1.1.1.1.7"
-	OIDEntPhysicalHardwareRev    string = "1.3.6.1.2.1.47.1.1.1.1.8"
-	OIDEntPhysicalFirmwareRev    string = "1.3.6.1.2.1.47.1.1.1.1.9"
-	OIDEntPhysicalSoftwareRev    string = "1.3.6.1.2.1.47.1.1.1.1.10"
-	OIDEntPhysicalSerialNum      string = "1.3.6.1.2.1.47.1.1.1.1.11"
-	OIDEntPhysicalMfgName        string = "1.3.6.1.2.1.47.1.1.1.1.12"
-	OIDEntPhysicalModelName      string = "1.3.6.1.2.1.47.1.1.1.1.13"
-	OIDEntPhysicalAlias          string = "1.3.6.1.2.1.47.1.1.1.1.14"
-	OIDEntPhysicalAssetID        string = "1.3.6.1.2.1.47.1.1.1.1.15"
-	OIDEntPhysicalUUID           string = "1.3.6.1.2.1.47.1.1.1.1.19"
+	OIDEntPhysicalDescr       string = "1.3.6.1.2.1.47.1.1.1.1.2"
+	OIDEntPhysicalClass       string = "1.3.6.1.2.1.47.1.1.1.1.5"
+	OIDEntPhysicalName        string = "1.3.6.1.2.1.47.1.1.1.1.7"
+	OIDEntPhysicalHardwareRev string = "1.3.6.1.2.1.47.1.1.1.1.8"
+	OIDEntPhysicalFirmwareRev string = "1.3.6.1.2.1.47.1.1.1.1.9"
+	OIDEntPhysicalSoftwareRev string = "1.3.6.1.2.1.47.1.1.1.1.10"
+	OIDEntPhysicalSerialNum   string = "1.3.6.1.2.1.47.1.1.1.1.11"
+	OIDEntPhysicalMfgName     string = "1.3.6.1.2.1.47.1.1.1.1.12"
+	OIDEntPhysicalModelName   string = "1.3.6.1.2.1.47.1.1.1.1.13"
+	OIDEntPhysicalAlias       string = "1.3.6.1.2.1.47.1.1.1.1.14"
+	OIDEntPhysicalAssetID     string = "1.3.6.1.2.1.47.1.1.1.1.15"
+	OIDEntPhysicalUUID        string = "1.3.6.1.2.1.47.1.1.1.1.19"
+
+	IANAPhysicalClassChassis string = "3"
 )
 
 var OIDEntPhysicalEntryTable = []string{
@@ -88,16 +91,17 @@ type EntityPhysicalTable struct {
 }
 
 func NewSNMPInterface(address string, user string, authPassword string, authProtocol string, privPassword string, privProtocol string) (SNMPInterface, error) {
-	var snmpInterface SNMPInterface
+	var (
+		snmpInterface SNMPInterface
+		securityLevel snmpgo.SecurityLevel
+		authType snmpgo.AuthProtocol
+		privType snmpgo.PrivProtocol
+	)
 
 	// Check that the address ends in a port number (required by goSNMP).
 	if !strings.Contains(address, ":") {
 		address = fmt.Sprintf("%s:161", address)
 	}
-
-	var securityLevel snmpgo.SecurityLevel
-	var authType snmpgo.AuthProtocol
-	var privType snmpgo.PrivProtocol
 
 	if strings.ToLower(authProtocol) == "none" {
 		securityLevel = snmpgo.NoAuthNoPriv
@@ -112,6 +116,9 @@ func NewSNMPInterface(address string, user string, authPassword string, authProt
 			authType = snmpgo.Md5
 		} else if strings.ToLower(authProtocol) == "sha" {
 			authType = snmpgo.Sha
+		} else {
+			// default to MD5
+			authType = snmpgo.Md5
 		}
 	}
 
@@ -119,6 +126,9 @@ func NewSNMPInterface(address string, user string, authPassword string, authProt
 		if strings.ToLower(privProtocol) == "aes" {
 			privType = snmpgo.Aes
 		} else if strings.ToLower(privProtocol) == "des" {
+			privType = snmpgo.Des
+		} else {
+			// default to DES
 			privType = snmpgo.Des
 		}
 	}
@@ -174,31 +184,40 @@ func snmpGet(snmp *snmpgo.SNMP, oids []string, walk bool) (snmpgo.Pdu, error) {
 
 // Get the SNMP index of the switch chassis component.
 //
-// As far as I can tell, the chassis is always the 2nd available component
-// index (might not be contiguous). At least, that is what I observed for
-// Aruba (index = 101001) and Dell/Mellenox (index = 2).
+// As far as I can tell, the chassis is always the only component with the
+// chassis class. We can use the class to find the correct index for the rest
+// of the inventory information.
 func snmpGetIndex(snmp *snmpgo.SNMP) (string, error) {
-	// Use OIDEntPhysicalDescr because it is always there and easiest to
-	// tell what component we're looking at.
-	result, err := snmpGet(snmp, []string{OIDEntPhysicalDescr}, true)
+	// Use OIDEntPhysicalClass because it is always 3 (chassis) for the
+	// component we're looking for and there is only one chassis.
+	result, err := snmpGet(snmp, []string{OIDEntPhysicalClass}, true)
 	if err != nil {
 		// Failed to request
 		return "", err
 	}
 
-	oid, _ := snmpgo.NewOid(OIDEntPhysicalDescr)
+	oid, _ := snmpgo.NewOid(OIDEntPhysicalClass)
 	// Make sure we only have OIDs in the EntPhysicalDescr tree
 	vbs := result.VarBinds().MatchBaseOids(oid)
 
-	if len(vbs) < 2 {
-		// There must be at least 2
+	idx := 0
+	found := false
+	for i, vb := range vbs {
+		if vb.Variable.String() == IANAPhysicalClassChassis {
+			idx = i
+			found = true
+			break
+		}
+	}
+
+	if !found {
 		return "", errors.New("Unable to determine switch chassis index")
 	}
 
 	// As far as I can tell, the chassis is always the 2nd available component index (might not be contiguous).
 	// At least that is what I observed for Aruba (index = 101001) and Dell/Mellenox (index = 2).
 	// Get the index from the last part of the returned OIDs
-	switchDescOID := vbs[1].Oid.String()
+	switchDescOID := vbs[idx].Oid.String()
 	parts := strings.Split(switchDescOID, ".")
 	switchIndex := parts[len(parts)-1]
 
