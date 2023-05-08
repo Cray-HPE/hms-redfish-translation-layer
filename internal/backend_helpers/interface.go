@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2020-2023] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -31,6 +31,7 @@ import (
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/certificate_store"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/pdu_credential_store"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
+	"github.com/Cray-HPE/hms-redfish-translation-service/internal/slsapi"
 	"github.com/fsnotify/fsnotify"
 	"google.golang.org/api/compute/v1"
 )
@@ -117,6 +118,20 @@ type RFSimulatorHelper struct {
 	RedisHelper        RedisHelper
 	CertificateService *CertificateService
 	KnownInstances     map[string]interface{}
+}
+
+// Management Switch SNMP Interface
+type SNMPSwitchHelper struct {
+	RTSCredentialStore *rts_credential_store.RTSCredentialStore
+
+	CertificateService *CertificateService
+
+	SLS *slsapi.SLS
+
+	RedisHelper  RedisHelper
+	KnownDevices map[string]SNMPDevice
+
+	deviceMux sync.Mutex
 }
 
 type BackendHelper interface {

@@ -8,12 +8,15 @@ require (
 	github.com/Cray-HPE/hms-compcredentials v1.11.2
 	github.com/Cray-HPE/hms-go-http-lib v1.5.3
 	github.com/Cray-HPE/hms-securestorage v1.12.2
+	github.com/Cray-HPE/hms-sls v1.29.0
 	github.com/Cray-HPE/hms-smd v1.30.9
 	github.com/fsnotify/fsnotify v1.4.9
+	github.com/geoffgarside/ber v1.1.0 // indirect
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/google/uuid v1.1.1
-	github.com/hashicorp/go-retryablehttp v0.7.0
+	github.com/hashicorp/go-retryablehttp v0.7.1
 	github.com/hashicorp/go-version v1.1.0
+	github.com/k-sone/snmpgo v3.2.0+incompatible
 	github.com/mitchellh/mapstructure v1.3.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/pflag v1.0.5

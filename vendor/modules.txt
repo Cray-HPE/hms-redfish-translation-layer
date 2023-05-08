@@ -15,14 +15,22 @@ github.com/Cray-HPE/hms-go-http-lib
 # github.com/Cray-HPE/hms-securestorage v1.12.2
 ## explicit
 github.com/Cray-HPE/hms-securestorage
+# github.com/Cray-HPE/hms-sls v1.29.0
+## explicit
+github.com/Cray-HPE/hms-sls/pkg/sls-common
 # github.com/Cray-HPE/hms-smd v1.30.9
 ## explicit
 github.com/Cray-HPE/hms-smd/pkg/redfish
+# github.com/Cray-HPE/hms-xname v1.1.0
+github.com/Cray-HPE/hms-xname/xnametypes
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
 github.com/fsnotify/fsnotify
+# github.com/geoffgarside/ber v1.1.0
+## explicit
+github.com/geoffgarside/ber
 # github.com/go-redis/redis v6.15.2+incompatible
 ## explicit
 github.com/go-redis/redis
@@ -58,11 +66,11 @@ github.com/googleapis/gnostic/compiler
 github.com/googleapis/gnostic/extensions
 # github.com/hashicorp/errwrap v1.0.0
 github.com/hashicorp/errwrap
-# github.com/hashicorp/go-cleanhttp v0.5.1
+# github.com/hashicorp/go-cleanhttp v0.5.2
 github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-multierror v1.1.0
 github.com/hashicorp/go-multierror
-# github.com/hashicorp/go-retryablehttp v0.7.0
+# github.com/hashicorp/go-retryablehttp v0.7.1
 ## explicit
 github.com/hashicorp/go-retryablehttp
 # github.com/hashicorp/go-rootcerts v1.0.1
@@ -93,6 +101,9 @@ github.com/hashicorp/vault/sdk/helper/parseutil
 github.com/hashicorp/vault/sdk/helper/strutil
 # github.com/json-iterator/go v1.1.8
 github.com/json-iterator/go
+# github.com/k-sone/snmpgo v3.2.0+incompatible
+## explicit
+github.com/k-sone/snmpgo
 # github.com/mitchellh/go-homedir v1.1.0
 github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.3.0

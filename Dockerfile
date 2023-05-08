@@ -64,6 +64,9 @@ ENV JAWS_VAULT_KEYPATH pdu-creds
 # HSM
 ENV HSM_URL http://localhost:27779
 
+# HSM
+ENV SLS_URL http://localhost:8376
+
 # Refish Eventing
 ENV COLLECTOR_URL http://hms-hmcollector
 

@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2018, 2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2018-2023] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -130,14 +130,18 @@ func (as *AccountService) isAccountLockoutEnabled() bool {
 }
 
 // RunPeriodic will execute the AccountService's updatePeriodic routine every second
+// and updateAccountsPeriodic routine every minute.
 // Please note this should be ran as a go routine, as this function will never return
 func (as *AccountService) RunPeriodic() {
 	log.Info("Starting account service periodic task")
 	ticker := time.NewTicker(1 * time.Second)
+	accountTicker := time.NewTicker(30 * time.Second)
 	for {
 		select {
 		case <-ticker.C:
 			as.updatePeriodic()
+		case <-accountTicker.C:
+			as.updateAccountsPeriodic()
 		}
 	}
 }
@@ -145,6 +149,8 @@ func (as *AccountService) RunPeriodic() {
 // updatePeriodic will the run periodic updates required by the account service.
 // Such as updating the state of locked accounts.
 func (as *AccountService) updatePeriodic() {
+	as.Accounts.updateMux.Lock()
+	defer as.Accounts.updateMux.Unlock()
 	//log.Trace("Update periodic running")
 
 	// Account lockout check
@@ -156,11 +162,20 @@ func (as *AccountService) updatePeriodic() {
 
 }
 
+// updateAccountsPeriodic will the run periodic updates to pick up account changes in redis.
+func (as *AccountService) updateAccountsPeriodic() {
+
+	// Check for changes to the accounts collection
+	as.Accounts.initFromRedis()
+
+}
+
 // ManagerAccountCollection manages the creation, update, and removal of ManagerAccounts
 type ManagerAccountCollection struct {
 	Members map[string]*ManagerAccount
 
 	as *AccountService
+	updateMux sync.Mutex
 }
 
 func NewManagerAccountCollection(as *AccountService) *ManagerAccountCollection {
@@ -172,6 +187,8 @@ func NewManagerAccountCollection(as *AccountService) *ManagerAccountCollection {
 
 // initFromRedis will initialize this collection (and its member accounts) from data in redis
 func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
+	mac.updateMux.Lock()
+	defer mac.updateMux.Unlock()
 	uri := "/redfish/v1/AccountService/Accounts"
 	resource, property := mac.as.rfd.GetResource(uri, "")
 	if resource == nil {
@@ -202,18 +219,26 @@ func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
 	for _, memberRaw := range members {
 		member := memberRaw.(map[string]interface{})
 		accountURI := member["@odata.id"].(string)
-		account := NewManagerAccount(mac.as).initFromRedis(accountURI)
+		newAccount := NewManagerAccount(mac.as).initFromRedis(accountURI)
 
-		// Add it to the collection
-		mac.Members[account.UserName] = account
+		account, ok := mac.Members[newAccount.UserName]
+		if !ok {
+			// Add it to the collection
+			mac.Members[newAccount.UserName] = newAccount
+		} else {
+			// Only update the password from redis
+			account.passwordHash = newAccount.passwordHash
+		}
 	}
-	log.Info("Loaded Accounts collection")
+	log.Debug("Loaded Accounts collection")
 	// Return itself
 	return mac
 }
 
 // get will return the account with the provided username
 func (mac *ManagerAccountCollection) get(username string) (*ManagerAccount, bool) {
+	mac.updateMux.Lock()
+	defer mac.updateMux.Unlock()
 	// TODO: Add a username2account lookup table for something if we expect there to a lot of accounts and
 	// account lookups
 	for _, account := range mac.Members {

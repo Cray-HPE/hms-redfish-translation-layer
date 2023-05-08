@@ -125,6 +125,8 @@ func (mac *ManagerAccountCollection) AddAccountBefore(event hooks.Event, ctx, re
 // This hook should be ran after POST requests on the Accounts collection
 func (mac *ManagerAccountCollection) AddAccountAfter(event hooks.Event, ctx, response map[string]interface{}) ([]byte, int, error) {
 	log.Debug("Running Add account after")
+	mac.updateMux.Lock()
+	defer mac.updateMux.Unlock()
 	passwordHashRaw, ok := ctx["Password:hash"]
 	if !ok {
 		return nil, 0, errors.New("Password hash missing from context")
@@ -185,6 +187,8 @@ func (mac *ManagerAccountCollection) UpdateAccountAfter(event hooks.Event, ctx, 
 // account service keys.
 // This hook should be ran after DELETE requests on Accounts
 func (mac *ManagerAccountCollection) RemoveAccount(event hooks.Event, ctx, response map[string]interface{}) ([]byte, int, error) {
+	mac.updateMux.Lock()
+	defer mac.updateMux.Unlock()
 	// The response contains the old repsentation of the account being removed
 	// Id is a required propertyand should be present in the response
 	idRaw, ok := response["Id"]
