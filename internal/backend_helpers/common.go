@@ -695,6 +695,12 @@ func setupCompCredsVault(secureStorage securestorage.SecureStorage) bool {
 }
 
 func addXNameService(namespace string, xname string) (created bool, err error) {
+	podName, ok := os.LookupEnv("POD_NAME")
+	if !ok {
+		log.Warning("POD_NAME isn't set. Defaulting to cray-hms-rts")
+		podName = "cray-hms-rts"
+	}
+	
 	// Set up the in-cluster config...
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -715,11 +721,21 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 		return
 	}
 	// Try to get the service. If it already exists, we are done here...
-	_, err = clientset.CoreV1().Services(namespace).Get(xname, metav1.GetOptions{})
-	if err == nil {
-		log.WithFields(log.Fields{"namespace": namespace, "xname": xname}).Debug("service for xname already exists, no need to add it")
-		created = false
-		return
+	svc, svcErr := clientset.CoreV1().Services(namespace).Get(xname, metav1.GetOptions{})
+	if svcErr == nil {
+		svcPodName, ok := svc.Spec.Selector["app.kubernetes.io/name"]
+		if !ok || svcPodName != podName {
+			// Delete the previously created service if they don't match our pod name. 
+			err = clientset.CoreV1().Services(namespace).Delete(xname, &metav1.DeleteOptions{})
+			if err != nil {
+				log.WithFields(log.Fields{"xname": xname, "err": err}).Warning("failed to delete K8s service endpoint for xname")
+				return
+			}
+		} else {
+			log.WithFields(log.Fields{"namespace": namespace, "xname": xname}).Debug("service for xname already exists, no need to add it")
+			created = false
+			return
+		}
 	}
 	// Probably not there (log the error just in case), construct and add the service...
 	log.WithFields(log.Fields{"namespace": namespace, "xname": xname, "err": err}).Debug("service for probably doesn't exist (check error) adding it now")
@@ -734,8 +750,8 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 		},
 		Spec: corev1.ServiceSpec{
 			Selector: map[string]string{
-				"app.kubernetes.io/instance": "cray-hms-rts",
-				"app.kubernetes.io/name":     "cray-hms-rts",
+				"app.kubernetes.io/instance": podName,
+				"app.kubernetes.io/name":     podName,
 			},
 			Ports: []corev1.ServicePort{
 				corev1.ServicePort{

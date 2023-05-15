@@ -24,6 +24,11 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.22.0] - 2023-05-15
+
+### Fixed
+- RTS-created kubernetes DNS entries now point at the correct RTS instance.
+
 ## [1.21.0] - 2023-04-28
 
 ### Added
