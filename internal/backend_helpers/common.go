@@ -695,6 +695,12 @@ func setupCompCredsVault(secureStorage securestorage.SecureStorage) bool {
 }
 
 func addXNameService(namespace string, xname string) (created bool, err error) {
+	podName, ok := os.LookupEnv("POD_NAME")
+	if !ok {
+		log.Warning("POD_NAME isn't set. Defaulting to cray-hms-rts")
+		podName = "cray-hms-rts"
+	}
+	
 	// Set up the in-cluster config...
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -734,8 +740,8 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 		},
 		Spec: corev1.ServiceSpec{
 			Selector: map[string]string{
-				"app.kubernetes.io/instance": "cray-hms-rts",
-				"app.kubernetes.io/name":     "cray-hms-rts",
+				"app.kubernetes.io/instance": podName,
+				"app.kubernetes.io/name":     podName,
 			},
 			Ports: []corev1.ServicePort{
 				corev1.ServicePort{

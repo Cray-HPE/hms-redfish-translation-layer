@@ -136,16 +136,14 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 		return
 	}
 
-	if len(cred.Password) < 1 {
-		globCreds, credErr := helper.RTSCredentialStore.GetGlobalCredentials()
-		if credErr != nil {
-			err = credErr
-			log.WithField("err", err).Info("Unable to get default credentails for RTS")
-			return
-		}
-		// Use the global password if the entry doesn't already have a redfish password.
-		cred.Password = globCreds.Password
+	globCreds, credErr := helper.RTSCredentialStore.GetGlobalCredentials()
+	if credErr != nil {
+		err = credErr
+		log.WithField("err", err).Info("Unable to get default credentails for RTS")
+		return
 	}
+	// Use the global password if the entry doesn't already have a redfish password.
+	cred.Password = globCreds.Password
 
 	cred.URL = xname + "-rts:8083"
 
