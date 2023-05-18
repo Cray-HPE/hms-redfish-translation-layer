@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright 2020-2023 Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -382,14 +382,72 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 	return
 }
 
-func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, xname string) (instance *compute.Instance,
-	err error) {
-	instance, err = helper.findInstanceByXname(ctx, xname)
-	if err == nil {
-		helper.KnownInstances[xname] = instance
+func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, instance *compute.Instance) {
+	// Check to see if the status has changed.
+	xname, hasXname := instance.Labels["xname"]
+	if !hasXname {
+		// Looking at a node with no xname (generally the PIT on vShasta)
+		log.WithFields(log.Fields{
+			"instance.Name": instance.Name,
+		}).Debug("instance has no xname")
+		return
 	}
+	helper.KnownInstancesLock.Lock()
+	knownInstance, instanceKnown := helper.KnownInstances[xname]
+	_, waitReady := helper.waitReady[xname]
+	_, informHSM := helper.informHSM[xname]
+	if !instanceKnown || waitReady || informHSM {
+		// Add this instance to the list of known. We will do that unconditionally after the
+		// else clause, but do the stuff we need to set that up here...
+		log.WithFields(log.Fields{
+			"xname":           xname,
+			"instance.Status": instance.Status,
+		}).Info("Initializing new instance")
+		helper.initInstance(ctx, instance)
+	} else {
+		log.WithFields(log.Fields{
+			"xname":                xname,
+			"instance.Status":      instance.Status,
+			"knownInstance.status": knownInstance.Status,
+		}).Info("Updating known instance")
 
-	return
+		creds, err := helper.RTSCredentialStore.GetGlobalCredentials()
+		if err != nil {
+			log.WithField("err", err).Fatal("Unable to get default credentials for RTS")
+		}
+
+		// Add the credentials to talk to RTS to Vault so HSM
+		// knows how to handle it.
+		cred := compcredentials.CompCredentials{
+			Xname:    xname,
+			URL:      xname + ":8083",
+			Username: creds.Username,
+			Password: creds.Password,
+		}
+
+		compErr := compCredStore.StoreCompCred(cred)
+		if compErr != nil {
+			err = fmt.Errorf("unable to store credentials in Vault: %s", compErr)
+			log.Error(err)
+		} else {
+			log.WithField("xname", xname).Debug("Added credentials to Vault")
+		}
+		if knownInstance.Status != instance.Status {
+			// If the status has changed, send a RF event.
+			instanceStatusRedfish := translateGCloudStatusToRF(instance.Status)
+			_ = postRFPowerEvent(ctx, xname,
+				filepath.Join(SystemsKeyspace, "Self"),
+				instanceStatusRedfish)
+
+			log.WithFields(log.Fields{
+				"knownInstance.Status": knownInstance.Status,
+				"instance.Status":      instance.Status,
+				"xname":                xname,
+			}).Info("Known instance has changed status")
+		}
+	}
+	helper.KnownInstances[xname] = instance
+	helper.KnownInstancesLock.Unlock()
 }
 
 func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]interface{}) (err error) {
@@ -400,8 +458,8 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 	if err := req.Pages(ctx, func(page *compute.InstanceAggregatedList) error {
 		for _, instancesScopedList := range page.Items {
 			for _, instance := range instancesScopedList.Instances {
-				xname, found := instance.Labels["xname"]
-				if !found {
+				xname, hasXname := instance.Labels["xname"]
+				if !hasXname {
 					log.WithField("instanceName", instance.Name).Debug("Instance has no xname, skipped...")
 					continue
 				}
@@ -421,62 +479,10 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 					helper.informHSM[xname] = 0
 				}
 
-				// Note the discovery for later
+				// Note the discovery for later to prevent removal from known instances
 				seen[xname] = true
-
 				// Process the instance...
-				knownInstance, instanceExists := helper.KnownInstances[xname]
-				_, waitReady := helper.waitReady[xname]
-				_, informHSM := helper.informHSM[xname]
-
-				if !instanceExists || waitReady || informHSM {
-					// Add this instance to the list of known.
-					log.WithFields(log.Fields{
-						"xname": xname,
-					}).Info("Initializing new instance")
-					helper.initInstance(ctx, instance)
-					helper.KnownInstances[xname] = instance
-				} else {
-
-					creds, err := helper.RTSCredentialStore.GetGlobalCredentials()
-					if err != nil {
-						log.WithField("err", err).Fatal("Unable to get default credentials for RTS")
-					}
-
-					// Add the credentials to talk to RTS to Vault so HSM
-					// knows how to handle it.
-					cred := compcredentials.CompCredentials{
-						Xname:    xname,
-						URL:      xname + ":8083",
-						Username: creds.Username,
-						Password: creds.Password,
-					}
-
-					compErr := compCredStore.StoreCompCred(cred)
-					if compErr != nil {
-						err = fmt.Errorf("unable to store credentials in Vault: %s", compErr)
-						log.Error(err)
-					} else {
-						log.WithField("xname", xname).Debug("Added credentials to Vault")
-					}
-
-					// Check to see if the status has changed.
-					if knownInstance.Status != instance.Status {
-						// If the status has changed, send a RF event.
-						instanceStatusRedfish := translateGCloudStatusToRF(instance.Status)
-
-						_ = postRFPowerEvent(ctx, xname,
-							filepath.Join(SystemsKeyspace, "Self"),
-							instanceStatusRedfish)
-
-						log.WithFields(log.Fields{
-							"knownInstance.Status": knownInstance.Status,
-							"instance.Status":      instance.Status,
-						}).Info("Known instance has changed status")
-					}
-				}
-				// Regardless, update the instance to this version so to capture the new state of all the fields.
-				helper.KnownInstances[xname] = instance
+				helper.updateKnownInstance(ctx, instance)
 			}
 		}
 		return nil
@@ -485,6 +491,12 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 		return err
 	}
 	// Search for nodes that have gone away since the last time we looked.
+	//
+	// Holding the lock over the whole loop to make sure we don't collide with
+	// another instance of ourself. Defer the unlock to keep the logic contiguous
+	// and harder to break
+	helper.KnownInstancesLock.Lock()
+	defer helper.KnownInstancesLock.Unlock()
 	for k, _ := range helper.KnownInstances {
 		if _, found := seen[k]; !found {
 			// This instance has disappeared, remove it
@@ -595,9 +607,10 @@ func (helper *GCloudHelper) SetupBackendHelper(ctx context.Context, env map[stri
 func (helper *GCloudHelper) GetEnvForXname(xname string) (env map[string]string, err error) {
 	env = map[string]string{}
 
+	helper.KnownInstancesLock.Lock()
+	defer helper.KnownInstancesLock.Unlock()
 	if device, ok := helper.KnownInstances[xname]; ok {
 		env["RTS_XNAME"] = device.Labels["xname"]
-
 		return
 	}
 
@@ -617,7 +630,9 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 
 	// Check to make sure we actually know about this device and
 	// get the instance for use later.
+	helper.KnownInstancesLock.Lock()
 	instance, deviceIsKnown := helper.KnownInstances[xname]
+	helper.KnownInstancesLock.Unlock()
 	if !deviceIsKnown {
 		err = fmt.Errorf("unknown xname: %s", xname)
 		log.Error(err.Error())
@@ -653,7 +668,7 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 		return
 	}
 
-	log.Debug("serving request '" + fullKey + "' from gcloud backend")
+	log.Debug("serving request '" + fullKey + "' from gcloud backend, xname = '" + xname + "'")
 	// There are better ways to do this, but for now I'm just hard coding all the possible keys to their desired thing.
 	if strippedKey == "/Systems/Self/Actions/ComputerSystem.Reset" {
 		// Extract the zone and name from the known instance
@@ -688,7 +703,8 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 		return
 	} else if strippedKey == "/Systems/Self/PowerState" {
 		// Make sure the metadata is up to date for this instance.
-		instance, _ := helper.updateKnownInstance(ctx, xname)
+		instance, err = helper.findInstanceByXname(ctx, xname)
+		helper.updateKnownInstance(ctx, instance)
 
 		// The Gcloud states don't map perfectly to Redfish ones, do that translation here.
 		// The legal states are: On, Off, PoweringOn, and PoweringOff

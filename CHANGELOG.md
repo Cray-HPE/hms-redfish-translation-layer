@@ -24,6 +24,11 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.23.0] - 2023-05-16
+### Fixed
+- Fixed concurrency issues in the Google backend helper with respect to access to the KnownInstances map.
+- Fixed data propagation issues in the Google backend helper that allowed HSM to get out of sync with capmc.
+
 ## [1.22.0] - 2023-05-15
 
 ### Fixed
