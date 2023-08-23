@@ -188,7 +188,7 @@ func (r2s *Redis2Interface) getValueForKey(key string) (string, error) {
 		}
 
 		// Define a context with a timeout.
-		timeout := 30 * time.Second
+		timeout := 180 * time.Second
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
 

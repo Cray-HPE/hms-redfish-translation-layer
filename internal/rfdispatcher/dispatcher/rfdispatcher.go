@@ -689,7 +689,7 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 		}
 
 		// Define a context with a timeout.
-		timeout := 30 * time.Second
+		timeout := 180 * time.Second
 		if err != nil {
 			log.WithField("err", err).Fatal("Unable to parse timeout duration")
 		}
