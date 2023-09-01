@@ -194,7 +194,7 @@ func (r2s *Redis2Interface) getValueForKey(key string) (string, error) {
 
 		log.WithFields(log.Fields{"key": key, "xname": r2s.XName}).Debug("calling backendhelper")
 		simpleValue, err = backendHelper.RunBackendHelper(ctx, key, nil, env)
-		log.WithFields(log.Fields{"key": key, "xname": r2s.XName}).Debug("back from backendhelper")
+		log.WithFields(log.Fields{"key": key, "xname": r2s.XName, "value": simpleValue, "err": err}).Debug("back from backendhelper")
 		if err == nil {
 			logFields["simpleValue"] = simpleValue
 			log.WithFields(logFields).Trace("Got data from backend helper")

@@ -695,7 +695,6 @@ func setupCompCredsVault(secureStorage securestorage.SecureStorage) bool {
 }
 
 func addXNameService(namespace string, xname string) (created bool, err error) {
-	created = false
 	podName, ok := os.LookupEnv("POD_NAME")
 	if !ok {
 		log.Warning("POD_NAME isn't set. Defaulting to cray-hms-rts")

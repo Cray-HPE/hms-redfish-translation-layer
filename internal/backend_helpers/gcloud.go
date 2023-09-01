@@ -468,10 +468,9 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 				// added, this does nothing, if not it adds it.  If it fails for some reason, there is
 				// nothing we can do, but we we will try again next time through, so it should resolve
 				// eventually.
-				created, err := addXNameService(helper.namespace, xname)
-				if err != nil {
-					log.WithFields(log.Fields{"xname": xname, "namespace": helper.namespace, "err": err}).Warning("failed to add xname service")
-					continue
+				created, localErr := addXNameService(helper.namespace, xname)
+				if localErr != nil {
+					log.WithFields(log.Fields{"xname": xname, "namespace": helper.namespace, "err": localErr}).Warning("failed to add xname service")
 				}
 				if created {
 					// Set up to wait for the redfish endpoint for this xname to be ready and
@@ -626,7 +625,6 @@ func (helper *GCloudHelper) GetEnvForXname(xname string) (env map[string]string,
 
 func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, args []string,
 	env map[string]string) (value string, err error) {
-
 	xname, ok := env["RTS_XNAME"]
 	if !ok {
 		err = errors.New("RTS_XNAME not in environment variables")
