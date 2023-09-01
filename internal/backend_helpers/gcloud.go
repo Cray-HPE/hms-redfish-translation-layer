@@ -358,6 +358,7 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 			err = nil
 			return
 		}
+		log.WithFields(logFields).Debug("Redfish endpoint is ready")
 		delete(helper.waitReady, xname)
 	}
 
@@ -393,6 +394,7 @@ func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, instance *c
 		return
 	}
 	helper.KnownInstancesLock.Lock()
+	defer helper.KnownInstancesLock.Unlock()
 	knownInstance, instanceKnown := helper.KnownInstances[xname]
 	_, waitReady := helper.waitReady[xname]
 	_, informHSM := helper.informHSM[xname]
@@ -447,7 +449,6 @@ func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, instance *c
 		}
 	}
 	helper.KnownInstances[xname] = instance
-	helper.KnownInstancesLock.Unlock()
 }
 
 func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]interface{}) (err error) {
@@ -467,7 +468,11 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 				// added, this does nothing, if not it adds it.  If it fails for some reason, there is
 				// nothing we can do, but we we will try again next time through, so it should resolve
 				// eventually.
-				created, _ := addXNameService(helper.namespace, xname)
+				created, err := addXNameService(helper.namespace, xname)
+				if err != nil {
+					log.WithFields(log.Fields{"xname": xname, "namespace": helper.namespace, "err": err}).Warning("failed to add xname service")
+					continue
+				}
 				if created {
 					// Set up to wait for the redfish endpoint for this xname to be ready and
 					// responsive. The value is a retry counter to allow for warnings if it is

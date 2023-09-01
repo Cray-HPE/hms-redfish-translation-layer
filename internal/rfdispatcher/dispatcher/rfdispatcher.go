@@ -697,7 +697,9 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 		defer cancel()
 
 		var backendValue string
+		log.WithField("uri", uri).Debug("entering backend helper")
 		backendValue, err = backendHelper.RunBackendHelper(ctx, uri, nil, env)
+		log.WithFields(log.Fields{"uri": uri, "err": err}).Debug("back from backend helper")
 		if err == backend_helpers.ErrBackendContinue {
 			log.WithFields(logFields).Debug("Backend does not apply, going to next in line")
 			continue
