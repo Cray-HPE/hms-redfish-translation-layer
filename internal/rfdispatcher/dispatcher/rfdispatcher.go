@@ -646,7 +646,9 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 
 	// The other thing we will always do is call a BackendHelper which could either be a real function or just a mock
 	// no-op style call.
+	log.WithFields(logFields).Debug("dispatching request")
 	for _, backendHelper := range rfd.BackendHelpers {
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%+v", backendHelper)}).Debug("trying helper")
 		if host == "" {
 			log.WithFields(logFields).Panic("BackendHelper is set but there is no host set")
 		}
@@ -714,7 +716,7 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 				logFields["responseBody"] = string(responseBody)
 				log.WithFields(logFields).Debug("Response from backend helper")
 			}
-			log.Debug("Backend helper returned successful")
+			log.WithFields(logFields).Debug("Backend helper returned successful")
 
 			return nil, nil
 		} else {
