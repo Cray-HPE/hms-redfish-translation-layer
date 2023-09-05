@@ -628,33 +628,30 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 		log.Error(err.Error())
 		return
 	}
-	logFields := log.Fields{
+	log.WithFields(log.Fields{
 		"key":   key,
 		"xname": xname,
 		"args":  fmt.Sprintf("%+v", args),
 		"time":  time.Now().String(),
-	}
-	log.WithFields(logFields).Info("ERIC: entering RunBackGroundHelper")
+	}).Info("ERIC: entering RunBackGroundHelper")
 
 	// Check to make sure we actually know about this device and
 	// get the instance for use later.
-	logFields = log.Fields{
+	log.WithFields(log.Fields{
 		"key":   key,
 		"xname": xname,
 		"args":  fmt.Sprintf("%+v", args),
 		"time":  time.Now().String(),
-	}
-	log.WithFields(logFields).Info("ERIC: taking the instances lock")
+	}).Info("ERIC: taking the instances lock")
 	helper.KnownInstancesLock.Lock()
 	instance, deviceIsKnown := helper.KnownInstances[xname]
 	helper.KnownInstancesLock.Unlock()
-	logFields = log.Fields{
+	log.WithFields(log.Fields{
 		"key":   key,
 		"xname": xname,
 		"args":  fmt.Sprintf("%+v", args),
 		"time":  time.Now().String(),
-	}
-	log.WithFields(logFields).Info("ERIC: released the instances lock")
+	}).Info("ERIC: released the instances lock")
 	if !deviceIsKnown {
 		err = fmt.Errorf("unknown xname: %s", xname)
 		log.Error(err.Error())
@@ -706,14 +703,13 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 			return
 		}
 
-		logFields = log.Fields{
+		log.WithFields(log.Fields{
 			"key":               key,
 			"xname":             xname,
 			"desiredPowerState": desiredPowerState,
 			"args":              fmt.Sprintf("%+v", args),
 			"time":              time.Now().String(),
-		}
-		log.WithFields(logFields).Info("ERIC: reset operation")
+		}).Info("ERIC: reset operation")
 		switch desiredPowerState {
 		case "On":
 			_, err = helper.computeService.Instances.Start(helper.project, zone, name).Context(ctx).Do()
@@ -729,53 +725,48 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 		// Make sure to remove any cached keys relating to power state so the next query forces a fresh load.
 		invalidatedKey := filepath.Join(xname, SystemsKeyspace, "Self", "PowerState")
 		helper.RedisHelper.invalidateRedisKeys([]string{invalidatedKey})
-		logFields = log.Fields{
+		log.WithFields(log.Fields{
 			"key":               key,
 			"xname":             xname,
 			"desiredPowerState": desiredPowerState,
 			"args":              fmt.Sprintf("%+v", args),
 			"time":              time.Now().String(),
-		}
-		log.WithFields(logFields).Info("ERIC: reset operation completed")
-
+		}).Info("ERIC: reset operation completed")
 		return
 	} else if strippedKey == "/Systems/Self/PowerState" {
 		// Make sure the metadata is up to date for this instance.
 		instance, err = helper.findInstanceByXname(ctx, xname)
 		helper.updateKnownInstance(ctx, instance)
-		logFields = log.Fields{
+		log.WithFields(log.Fields{
 			"key":   key,
 			"xname": xname,
 			"args":  fmt.Sprintf("%+v", args),
 			"time":  time.Now().String(),
-		}
-		log.WithFields(logFields).Info("ERIC: status query")
+		}).Info("ERIC: status query")
 
 		// The Gcloud states don't map perfectly to Redfish ones, do that translation here.
 		// The legal states are: On, Off, PoweringOn, and PoweringOff
 		value = translateGCloudStatusToRF(instance.Status)
-		logFields = log.Fields{
+		log.WithFields(log.Fields{
 			"key":    key,
 			"xname":  xname,
 			"status": value,
 			"args":   fmt.Sprintf("%+v", args),
 			"time":   time.Now().String(),
-		}
-		log.WithFields(logFields).Info("ERIC: status query completed")
+		}).Info("ERIC: status query completed")
 
 		return
 	}
 
 	value, err = helper.RedisHelper.Redis.Get(key).Result()
-	logFields = log.Fields{
+	log.WithFields(log.Fields{
 		"key":    key,
 		"xname":  xname,
 		"status": value,
 		"args":   fmt.Sprintf("%+v", args),
 		"value":  value,
 		"time":   time.Now().String(),
-	}
-	log.WithFields(logFields).Info("ERIC: leaving RunBackgroundHelper")
-
+		"err":    err,
+	}).Info("ERIC: leaving RunBackgroundHelper")
 	return
 }
