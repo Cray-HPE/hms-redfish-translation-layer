@@ -653,12 +653,14 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 		if host == "" {
 			log.WithFields(logFields).Panic("BackendHelper is set but there is no host set")
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have host")
 		var env map[string]string
 		env, err = backendHelper.GetEnvForXname(host)
 		if err != nil {
 			logFields["err"] = err
 			log.WithFields(logFields).Panic("Failed to get ENV for host")
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have ENV")
 
 		// Need to include the body in the environment so the action can be known.
 		for k, v := range postBodyMap {
@@ -690,13 +692,16 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 				env[k] = fmt.Sprintf("%v", v)
 			}
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("finished adding body to ENV")
 
 		// Define a context with a timeout.
 		timeout := 180 * time.Second
 		if err != nil {
 			log.WithField("err", err).Fatal("Unable to parse timeout duration")
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have timeout value")
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have context with timeout")
 		defer cancel()
 
 		var backendValue string
