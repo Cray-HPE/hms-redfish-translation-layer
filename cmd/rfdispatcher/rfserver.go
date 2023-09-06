@@ -515,6 +515,9 @@ func (rs *redfishServer) internalServerError(uri string, err error) ([]byte, int
 
 /* Top-level handler for all HTTP request */
 func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
+	log.WithFields(log.Fields{
+		"request": fmt.Sprintf("%#v", r),
+	}).Debug("entering top-level handleRequest")
 	defer func() {
 		if err := recover(); err != nil {
 			log.Error("Error in handler:", err)
@@ -614,7 +617,11 @@ func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
 	for header, value := range headers {
 		w.Header().Set(header, value)
 	}
-
+	log.WithFields(log.Fields{
+		"request":      fmt.Sprintf("%#v", r),
+		"response":     fmt.Sprintf("%#v", responseBody),
+		"responseCode": responseHTTPCode,
+	}).Debug("leaving top-level handleRequest")
 	w.WriteHeader(responseHTTPCode)
 	w.Write(responseBody)
 }

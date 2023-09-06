@@ -181,6 +181,11 @@ func (r2s *Redis2Interface) getValueForKey(key string) (string, error) {
 	// The other thing we will always do is call a BackendHelper which could either be a real function or just a mock
 	// no-op style call.
 	for _, backendHelper := range r2s.RFD.BackendHelpers {
+		log.WithFields(log.Fields{
+			"key":    key,
+			"helper": fmt.Sprintf("%#v", backendHelper),
+			"xname":  r2s.XName,
+		}).Debug("redis trying backendhelper")
 		var env map[string]string
 		if r2s.XName != "" {
 			// If the Host is set let's build up the environment variables.

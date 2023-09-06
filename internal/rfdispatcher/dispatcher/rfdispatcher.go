@@ -552,6 +552,7 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 		"host": host,
 		"body": string(body),
 	}
+	log.WithFields(logFields).Debug("entering rfdispatcher handleEaction")
 
 	var postBodyMap map[string]interface{}
 	var args []string
@@ -648,7 +649,7 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 	// no-op style call.
 	log.WithFields(logFields).Debug("dispatching request")
 	for _, backendHelper := range rfd.BackendHelpers {
-		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%+v", backendHelper)}).Debug("trying helper")
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("rfdispatcher trying helper")
 		if host == "" {
 			log.WithFields(logFields).Panic("BackendHelper is set but there is no host set")
 		}
