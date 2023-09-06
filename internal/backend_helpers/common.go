@@ -725,6 +725,11 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 	if svcErr == nil {
 		svcPodName, ok := svc.Spec.Selector["app.kubernetes.io/name"]
 		if !ok || svcPodName != podName {
+			if ok {
+				log.WithFields(log.Fields{"xname": xname, "selector": svcPodName, "podname": podName}).Warning("service endpoint for xname has incorrect selector")
+			} else {
+				log.WithFields(log.Fields{"xname": xname, "podname": podName}).Warning("service endpoint for xname has missing selector")
+			}
 			// Delete the previously created service if they don't match our pod name. 
 			err = clientset.CoreV1().Services(namespace).Delete(xname, &metav1.DeleteOptions{})
 			if err != nil {
@@ -738,7 +743,7 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 		}
 	}
 	// Probably not there (log the error just in case), construct and add the service...
-	log.WithFields(log.Fields{"namespace": namespace, "xname": xname, "err": err}).Debug("service for probably doesn't exist (check error) adding it now")
+	log.WithFields(log.Fields{"namespace": namespace, "xname": xname, "err": err, "svcErr": svcErr}).Debug("service for xname probably doesn't exist (check error) adding it now")
 	service := &corev1.Service{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Service",
@@ -773,6 +778,7 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 	if err != nil {
 		log.WithFields(log.Fields{"xname": xname, "err": err}).Warning("failed to create K8s service endpoint for xname")
 		log.WithFields(log.Fields{"xname": xname, "err": err}).Info("It is safe to ignore warnings about K8s service endpoints (though odd you would get there) when not running under K8s...")
+		// Technically, since the create failed, nothing was created so leave 'created' false
 		return
 	}
 	created = true

@@ -358,6 +358,7 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 			err = nil
 			return
 		}
+		log.WithFields(logFields).Debug("Redfish endpoint is ready")
 		delete(helper.waitReady, xname)
 	}
 
@@ -393,6 +394,7 @@ func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, instance *c
 		return
 	}
 	helper.KnownInstancesLock.Lock()
+	defer helper.KnownInstancesLock.Unlock()
 	knownInstance, instanceKnown := helper.KnownInstances[xname]
 	_, waitReady := helper.waitReady[xname]
 	_, informHSM := helper.informHSM[xname]
@@ -447,7 +449,6 @@ func (helper *GCloudHelper) updateKnownInstance(ctx context.Context, instance *c
 		}
 	}
 	helper.KnownInstances[xname] = instance
-	helper.KnownInstancesLock.Unlock()
 }
 
 func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]interface{}) (err error) {
@@ -467,7 +468,10 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 				// added, this does nothing, if not it adds it.  If it fails for some reason, there is
 				// nothing we can do, but we we will try again next time through, so it should resolve
 				// eventually.
-				created, _ := addXNameService(helper.namespace, xname)
+				created, localErr := addXNameService(helper.namespace, xname)
+				if localErr != nil {
+					log.WithFields(log.Fields{"xname": xname, "namespace": helper.namespace, "err": localErr}).Warning("failed to add xname service")
+				}
 				if created {
 					// Set up to wait for the redfish endpoint for this xname to be ready and
 					// responsive. The value is a retry counter to allow for warnings if it is
@@ -627,12 +631,30 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 		log.Error(err.Error())
 		return
 	}
+	log.WithFields(log.Fields{
+		"key":   key,
+		"xname": xname,
+		"args":  fmt.Sprintf("%+v", args),
+		"time":  time.Now().String(),
+	}).Info("ERIC: entering RunBackGroundHelper")
 
 	// Check to make sure we actually know about this device and
 	// get the instance for use later.
+	log.WithFields(log.Fields{
+		"key":   key,
+		"xname": xname,
+		"args":  fmt.Sprintf("%+v", args),
+		"time":  time.Now().String(),
+	}).Info("ERIC: taking the instances lock")
 	helper.KnownInstancesLock.Lock()
 	instance, deviceIsKnown := helper.KnownInstances[xname]
 	helper.KnownInstancesLock.Unlock()
+	log.WithFields(log.Fields{
+		"key":   key,
+		"xname": xname,
+		"args":  fmt.Sprintf("%+v", args),
+		"time":  time.Now().String(),
+	}).Info("ERIC: released the instances lock")
 	if !deviceIsKnown {
 		err = fmt.Errorf("unknown xname: %s", xname)
 		log.Error(err.Error())
@@ -684,6 +706,13 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 			return
 		}
 
+		log.WithFields(log.Fields{
+			"key":               key,
+			"xname":             xname,
+			"desiredPowerState": desiredPowerState,
+			"args":              fmt.Sprintf("%+v", args),
+			"time":              time.Now().String(),
+		}).Info("ERIC: reset operation")
 		switch desiredPowerState {
 		case "On":
 			_, err = helper.computeService.Instances.Start(helper.project, zone, name).Context(ctx).Do()
@@ -699,21 +728,48 @@ func (helper *GCloudHelper) RunBackendHelper(ctx context.Context, key string, ar
 		// Make sure to remove any cached keys relating to power state so the next query forces a fresh load.
 		invalidatedKey := filepath.Join(xname, SystemsKeyspace, "Self", "PowerState")
 		helper.RedisHelper.invalidateRedisKeys([]string{invalidatedKey})
-
+		log.WithFields(log.Fields{
+			"key":               key,
+			"xname":             xname,
+			"desiredPowerState": desiredPowerState,
+			"args":              fmt.Sprintf("%+v", args),
+			"time":              time.Now().String(),
+		}).Info("ERIC: reset operation completed")
 		return
 	} else if strippedKey == "/Systems/Self/PowerState" {
 		// Make sure the metadata is up to date for this instance.
 		instance, err = helper.findInstanceByXname(ctx, xname)
 		helper.updateKnownInstance(ctx, instance)
+		log.WithFields(log.Fields{
+			"key":   key,
+			"xname": xname,
+			"args":  fmt.Sprintf("%+v", args),
+			"time":  time.Now().String(),
+		}).Info("ERIC: status query")
 
 		// The Gcloud states don't map perfectly to Redfish ones, do that translation here.
 		// The legal states are: On, Off, PoweringOn, and PoweringOff
 		value = translateGCloudStatusToRF(instance.Status)
+		log.WithFields(log.Fields{
+			"key":    key,
+			"xname":  xname,
+			"status": value,
+			"args":   fmt.Sprintf("%+v", args),
+			"time":   time.Now().String(),
+		}).Info("ERIC: status query completed")
 
 		return
 	}
 
 	value, err = helper.RedisHelper.Redis.Get(key).Result()
-
+	log.WithFields(log.Fields{
+		"key":    key,
+		"xname":  xname,
+		"status": value,
+		"args":   fmt.Sprintf("%+v", args),
+		"value":  value,
+		"time":   time.Now().String(),
+		"err":    err,
+	}).Info("ERIC: leaving RunBackgroundHelper")
 	return
 }
