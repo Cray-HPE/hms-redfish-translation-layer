@@ -211,7 +211,7 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	// Create a new pipeline
 
 	// The Redis pipeline is shared between Go threads so we need to protect this section of code with a mutex
-	helper.redisHelperMux.Lock()
+	helper.redisActivePipelineMux.Lock()
 
 	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 
@@ -228,7 +228,7 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 			logFields["err"] = err
 			log.WithFields(logFields).Error("Initialization function failed")
 
-			helper.redisHelperMux.Unlock()
+			helper.redisActivePipelineMux.Unlock()
 
 			return
 		} else {
@@ -240,7 +240,7 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	// Dump this pipeline.
 	_, err = helper.RedisHelper.RedisActivePipeline.Exec()
 	helper.RedisHelper.RedisActivePipeline = nil
-	helper.redisHelperMux.Unlock()
+	helper.redisActivePipelineMux.Unlock()
 	if err != nil {
 		logFields["err"] = err
 		log.WithFields(logFields).Error("Unable to Exec() initInstance pipeline")

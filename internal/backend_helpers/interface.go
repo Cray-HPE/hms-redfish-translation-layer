@@ -135,7 +135,7 @@ type SNMPSwitchHelper struct {
 	KnownDevices map[string]SNMPDevice
 
 	deviceMux sync.Mutex
-	redisHelperMux sync.Mutex
+	redisActivePipelineMux sync.Mutex
 }
 
 type BackendHelper interface {
