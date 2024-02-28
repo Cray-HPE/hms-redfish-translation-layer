@@ -208,13 +208,7 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	helper.RedisHelper.addMemberToSet(rootKeyspace, "Chassis")
 	helper.RedisHelper.addMemberToSet(rootKeyspace, "Managers")
 
-	// Create a new pipeline
-
-	// The Redis pipeline is shared between Go threads so we need to protect this section of code with a mutex
-	helper.redisActivePipelineMux.Lock()
-
-	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
-
+	// Call init functions
 	initFunctions := [...]func(string, snmp_utilities.EntityPhysicalTable) error{
 		helper.initChassis,
 		helper.initManagers,
@@ -228,14 +222,16 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 			logFields["err"] = err
 			log.WithFields(logFields).Error("Initialization function failed")
 
-			helper.redisActivePipelineMux.Unlock()
-
 			return
 		} else {
 			log.WithFields(logFields).Debug("Initialization function succeeded")
 		}
 	}
 	delete(logFields, "initFunction")
+
+	// Create a new pipeline
+	helper.redisActivePipelineMux.Lock()	// because pipeline shared amongst all Go routines
+	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 
 	// Dump this pipeline.
 	_, err = helper.RedisHelper.RedisActivePipeline.Exec()
