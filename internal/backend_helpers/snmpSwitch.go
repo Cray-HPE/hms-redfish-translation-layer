@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2023] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2023-2024] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -209,6 +209,10 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	helper.RedisHelper.addMemberToSet(rootKeyspace, "Managers")
 
 	// Create a new pipeline
+
+	// The Redis pipeline is shared between Go threads so we need to protect this section of code with a mutex
+	helper.redisActivePipelineMux.Lock()
+
 	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 
 	initFunctions := [...]func(string, snmp_utilities.EntityPhysicalTable) error{
@@ -224,6 +228,8 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 			logFields["err"] = err
 			log.WithFields(logFields).Error("Initialization function failed")
 
+			helper.redisActivePipelineMux.Unlock()
+
 			return
 		} else {
 			log.WithFields(logFields).Debug("Initialization function succeeded")
@@ -234,6 +240,7 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	// Dump this pipeline.
 	_, err = helper.RedisHelper.RedisActivePipeline.Exec()
 	helper.RedisHelper.RedisActivePipeline = nil
+	helper.redisActivePipelineMux.Unlock()
 	if err != nil {
 		logFields["err"] = err
 		log.WithFields(logFields).Error("Unable to Exec() initInstance pipeline")

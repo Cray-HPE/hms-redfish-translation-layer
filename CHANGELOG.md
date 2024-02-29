@@ -24,6 +24,10 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.24.0] - 2024-02-28
+### Fixed
+- Fixed concurrency issue associated with RedisActivePipeline
+
 ## [1.23.0] - 2023-05-16
 ### Fixed
 - Fixed concurrency issues in the Google backend helper with respect to access to the KnownInstances map.
