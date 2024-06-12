@@ -552,6 +552,7 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 		"host": host,
 		"body": string(body),
 	}
+	log.WithFields(logFields).Debug("entering rfdispatcher handleEaction")
 
 	var postBodyMap map[string]interface{}
 	var args []string
@@ -646,16 +647,20 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 
 	// The other thing we will always do is call a BackendHelper which could either be a real function or just a mock
 	// no-op style call.
+	log.WithFields(logFields).Debug("dispatching request")
 	for _, backendHelper := range rfd.BackendHelpers {
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("rfdispatcher trying helper")
 		if host == "" {
 			log.WithFields(logFields).Panic("BackendHelper is set but there is no host set")
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have host")
 		var env map[string]string
 		env, err = backendHelper.GetEnvForXname(host)
 		if err != nil {
 			logFields["err"] = err
 			log.WithFields(logFields).Panic("Failed to get ENV for host")
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have ENV")
 
 		// Need to include the body in the environment so the action can be known.
 		for k, v := range postBodyMap {
@@ -687,17 +692,22 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 				env[k] = fmt.Sprintf("%v", v)
 			}
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("finished adding body to ENV")
 
 		// Define a context with a timeout.
-		timeout := 30 * time.Second
+		timeout := 180 * time.Second
 		if err != nil {
 			log.WithField("err", err).Fatal("Unable to parse timeout duration")
 		}
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have timeout value")
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
+		log.WithFields(log.Fields{"uri": uri, "host": host, "body": string(body), "helper": fmt.Sprintf("%#v", backendHelper)}).Debug("have context with timeout")
 		defer cancel()
 
 		var backendValue string
+		log.WithField("uri", uri).Debug("entering backend helper")
 		backendValue, err = backendHelper.RunBackendHelper(ctx, uri, nil, env)
+		log.WithFields(log.Fields{"uri": uri, "err": err}).Debug("back from backend helper")
 		if err == backend_helpers.ErrBackendContinue {
 			log.WithFields(logFields).Debug("Backend does not apply, going to next in line")
 			continue
@@ -712,7 +722,7 @@ func (rfd *RedfishDispatcher) HandleAction(property *rfschema.Property, uri stri
 				logFields["responseBody"] = string(responseBody)
 				log.WithFields(logFields).Debug("Response from backend helper")
 			}
-			log.Debug("Backend helper returned successful")
+			log.WithFields(logFields).Debug("Backend helper returned successful")
 
 			return nil, nil
 		} else {
