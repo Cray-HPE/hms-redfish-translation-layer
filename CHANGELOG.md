@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.25.0] - 2024-12-04
+
+### Changed
+
+- Updated go to 1.23
+
 ## [1.24.0] - 2024-02-28
 ### Fixed
 - Fixed concurrency issue associated with RedisActivePipeline

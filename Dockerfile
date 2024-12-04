@@ -1,6 +1,6 @@
 # MIT License
 #
-# (C) Copyright [2019-2022] Hewlett Packard Enterprise Development LP
+# (C) Copyright [2019-2022,2024] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 
 # Dockerfile for building the HMS Redfish Translation Service (RTS).
 
-FROM artifactory.algol60.net/docker.io/library/golang:1.16-alpine AS builder
+FROM artifactory.algol60.net/docker.io/library/golang:1.23-alpine AS builder
 
 RUN go env -w GO111MODULE=auto
 
@@ -32,8 +32,8 @@ COPY internal $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/in
 COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/vendor
 
 RUN set -ex \
-    && go build -v -i github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
-    && go build -v -i github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader
+    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
+    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader
 
 ### Final Stage ###
 
