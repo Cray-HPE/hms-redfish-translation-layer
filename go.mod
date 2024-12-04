@@ -5,9 +5,9 @@ go 1.23
 require (
 	cloud.google.com/go v0.64.0
 	github.com/Cray-HPE/hms-base v1.15.1
-	github.com/Cray-HPE/hms-compcredentials v1.11.2
+	github.com/Cray-HPE/hms-compcredentials v1.12.0
 	github.com/Cray-HPE/hms-go-http-lib v1.5.3
-	github.com/Cray-HPE/hms-securestorage v1.12.2
+	github.com/Cray-HPE/hms-securestorage v1.14.0
 	github.com/Cray-HPE/hms-sls v1.29.0
 	github.com/Cray-HPE/hms-smd v1.30.9
 	github.com/fsnotify/fsnotify v1.4.9
