@@ -53,14 +53,17 @@ github.com/Cray-HPE/hms-base v1.15.1/go.mod h1:+G8KFLPtanLC5lQ602hrf3MDfLTmIXedT
 github.com/Cray-HPE/hms-base/v2 v2.0.1/go.mod h1:Mq+Ao3q4YtNZJZ1ly9wnEIKyvc3+QaA1B/xpiUpyhzQ=
 github.com/Cray-HPE/hms-certs v1.3.2 h1:Prd7PTwiSMULYuL8bhsvw7LSICx+pSvpWlA9fQKvW9s=
 github.com/Cray-HPE/hms-certs v1.3.2/go.mod h1:6DymilWScLtbQkaQRMuf55K1MzEi0kYCoXfT212yLjY=
-github.com/Cray-HPE/hms-compcredentials v1.11.2 h1:Ug7e7vMSx1STHKkniWY27ddD1X49pQAEljQmTcVkng4=
 github.com/Cray-HPE/hms-compcredentials v1.11.2/go.mod h1:tmurR+zsOtB61n6j3GlEfsl7wmNIAGJqErFymOUb0Hw=
-github.com/Cray-HPE/hms-go-http-lib v1.5.3 h1:lETXONiFQzZ8KwHOY+yGzkLjkTlYT9PfKgHxdiC+S/o=
+github.com/Cray-HPE/hms-compcredentials v1.12.0 h1:xlAgEvbFlhGeiYIbbelvVgcTFY3E7aFoX90DpMLrEoE=
+github.com/Cray-HPE/hms-compcredentials v1.12.0/go.mod h1:n97p0QnsVJTmzd3wl/hETIUdTS2IAerZ8NXxQ4t3Y2o=
 github.com/Cray-HPE/hms-go-http-lib v1.5.3/go.mod h1:BKlB4HKAGW5GgS3x01y7zxxYFLaJM2byACUunmes2z8=
+github.com/Cray-HPE/hms-go-http-lib v1.6.0 h1:TbSp569XKR1gCql/Gmf19aUT33b2IS29mWBQ2CtLUDs=
+github.com/Cray-HPE/hms-go-http-lib v1.6.0/go.mod h1:uQsZigtGxgNNLs17xWXMBMA/L2m83l2YnB0Qu1iPjUY=
 github.com/Cray-HPE/hms-msgbus v1.10.2/go.mod h1:DM5Iw58ejMxbCOX2KgmcBwDS5YWIlba3BOW9JsDQl4w=
 github.com/Cray-HPE/hms-s3 v1.9.2/go.mod h1:p5pVsMDeOdXKssd9qyFtXo4ztrn2lhD04nrO8+NOi7g=
-github.com/Cray-HPE/hms-securestorage v1.12.2 h1:H5n0i6ldzewd5p7PI2Hktr/+9cYfSCui+0367p2L6n8=
 github.com/Cray-HPE/hms-securestorage v1.12.2/go.mod h1:P4CMKqQVlx/lv+AdyEjNQubZw2FKNyo/IAtFNgQ3VuI=
+github.com/Cray-HPE/hms-securestorage v1.14.0 h1:9s9eoUM6HYwOms16CK9hHBxk9Sr1RM+MmYpIKvzsyR8=
+github.com/Cray-HPE/hms-securestorage v1.14.0/go.mod h1:izwfNP4T+AATt+XRfv4i9QjODL5Adpb/0nvby6YxBww=
 github.com/Cray-HPE/hms-sls v1.29.0 h1:HK4H1ooB86Zau0o6DDLUqnnMvt9H/bVht7BfQep3NcQ=
 github.com/Cray-HPE/hms-sls v1.29.0/go.mod h1:XKGw18eCGS3oJwsYpw8B+QzNUhgHXLnbr2kgNUNUYrg=
 github.com/Cray-HPE/hms-smd v1.30.9 h1:LbezlCG3r1znGZoWXH7rgTYgHuU8wH2jDLBmYuUHyx0=
@@ -249,7 +252,6 @@ github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed/go.mod h1:tMW
 github.com/hashicorp/errwrap v1.0.0 h1:hLrqtEDnRye3+sgx6z4qVLNuviH3MR5aQ0ykNJa/UYA=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
 github.com/hashicorp/go-cleanhttp v0.5.0/go.mod h1:JpRdi6/HCYpAwUzNwuwqhbovhLtngrth3wmdIIUrZ80=
-github.com/hashicorp/go-cleanhttp v0.5.1 h1:dH3aiDG9Jvb5r5+bYHsikaOUIpcM0xvgMXVoDkXMzJM=
 github.com/hashicorp/go-cleanhttp v0.5.1/go.mod h1:JpRdi6/HCYpAwUzNwuwqhbovhLtngrth3wmdIIUrZ80=
 github.com/hashicorp/go-cleanhttp v0.5.2 h1:035FKYIWjmULyFRBKPs8TBQoi0x6d9G4xc9neXJWAZQ=
 github.com/hashicorp/go-cleanhttp v0.5.2/go.mod h1:kO/YDlP8L1346E6Sodw+PrpBSV4/SoxCXGY6BqNFT48=
@@ -264,7 +266,6 @@ github.com/hashicorp/go-multierror v1.1.0 h1:B9UzwGQJehnUY1yNrnwREHc3fGbC2xefo8g
 github.com/hashicorp/go-multierror v1.1.0/go.mod h1:spPvp8C1qA32ftKqdAHm4hHTbPw+vmowP0z+KUhOZdA=
 github.com/hashicorp/go-plugin v1.0.1/go.mod h1:++UyYGoz3o5w9ZzAdZxtQKrWWP+iqPBn3cQptSMzBuY=
 github.com/hashicorp/go-retryablehttp v0.5.4/go.mod h1:9B5zBasrRhHXnJnui7y6sL7es7NDiJgTc6Er0maI1Xs=
-github.com/hashicorp/go-retryablehttp v0.7.0 h1:eu1EI/mbirUgP5C8hVsTNaGZreBDlYiwC1FZWkvQPQ4=
 github.com/hashicorp/go-retryablehttp v0.7.0/go.mod h1:vAew36LZh98gCBJNLH42IQ1ER/9wtLZZ8meHqQvEYWY=
 github.com/hashicorp/go-retryablehttp v0.7.1 h1:sUiuQAnLlbvmExtFQs72iFW/HXeUn8Z1aJLQ4LJJbTQ=
 github.com/hashicorp/go-retryablehttp v0.7.1/go.mod h1:vAew36LZh98gCBJNLH42IQ1ER/9wtLZZ8meHqQvEYWY=
@@ -795,8 +796,8 @@ google.golang.org/protobuf v1.25.0/go.mod h1:9JNX74DMeImyA3h4bdi1ymwjUzf21/xIlba
 gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=
 gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d/go.mod h1:cuepJuh7vyXfUyUwEgHQXw849cJrilpS5NeIjOWESAw=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
-gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 h1:YR8cESwS4TdDjEe65xsg0ogRM/Nc3DYOhEAlW+xobZo=
 gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/errgo.v2 v2.1.0/go.mod h1:hNsd1EY+bozCKY1Ytp96fpM3vjJbqLJn88ws8XvfDNI=
 gopkg.in/fsnotify.v1 v1.4.7 h1:xOHLXZwVvI9hhs+cLKq5+I5onOuwQLhQwiu63xxlHs4=
