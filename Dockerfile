@@ -1,6 +1,6 @@
 # MIT License
 #
-# (C) Copyright [2019-2022,2024] Hewlett Packard Enterprise Development LP
+# (C) Copyright [2019-2022,2024-2025] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,9 +31,19 @@ COPY cmd $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/cmd
 COPY internal $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/internal
 COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-redfish-translation-service/vendor
 
-RUN set -ex \
-    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
-    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader
+# Set profiling to disabled by default
+ARG ENABLE_PPROF=false
+
+# Conditionally build with the pprof tag if profiling is enabled
+RUN if [ "$ENABLE_PPROF" = "true" ]; then \
+	set -ex \
+	    && go build -v -tags pprof github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
+	    && go build -v -tags pprof github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader
+    else \
+	set -ex \
+	    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
+	    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader
+    fi
 
 ### Final Stage ###
 
