@@ -38,11 +38,11 @@ ARG ENABLE_PPROF=true
 RUN if [ "$ENABLE_PPROF" = "true" ]; then \
 	set -ex \
 	    && go build -v -tags pprof github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
-	    && go build -v -tags pprof github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader \
+	    && go build -v -tags pprof github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader; \
     else \
 	set -ex \
 	    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/rfdispatcher \
-	    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader \
+	    && go build -v github.com/Cray-HPE/hms-redfish-translation-service/cmd/vault_loader; \
     fi
 
 ### Final Stage ###
