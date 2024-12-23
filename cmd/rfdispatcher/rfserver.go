@@ -207,7 +207,7 @@ func doRest() {
 
 	// If the 'pprof' build tag is set, then this will register pprof handlers,
 	// otherwise this function is stubbed and will do nothing.
-	RegisterPProfHandlers(router)
+	RegisterPProfHandlers()
 
 	if httpsCertExists && httpsKeyExists {
 		// If we're going to serve HTTPs we need to add to the wait group.
