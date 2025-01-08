@@ -25,4 +25,4 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package hmcollector
+package main
