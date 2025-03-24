@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2022,2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,14 +21,13 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-version: '3'
 services:
   #
   # Vault
   #
   vault:
     hostname: vault
-    image: artifactory.algol60.net/docker.io/library/vault:1.5.5
+    image: artifactory.algol60.net/docker.io/library/vault:1.6.1
     environment:
       - VAULT_DEV_ROOT_TOKEN_ID=hms
       - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
@@ -61,7 +60,7 @@ services:
     ports:
       - "5432:5432"
   cray-smd-init:
-    image: artifactory.algol60.net/csm-docker/stable/cray-smd:1.48.0
+    image: artifactory.algol60.net/csm-docker/stable/cray-smd:2.35.0
     environment:
       - SMD_DBHOST=hmsds-postgres
       - SMD_DBPORT=5432
@@ -69,7 +68,7 @@ services:
       - hmsds-postgres
     command: /entrypoint.sh smd-init
   cray-smd:
-    image: artifactory.algol60.net/csm-docker/stable/cray-smd:1.48.0
+    image: artifactory.algol60.net/csm-docker/stable/cray-smd:2.35.0
     environment:
       - POSTGRES_HOST=hmsds-postgres
       - POSTGRES_PORT=5432
@@ -102,7 +101,7 @@ services:
   # RTS Dependencies
   #
   redis:
-    image: artifactory.algol60.net/docker.io/library/redis:5.0-alpine3.12
+    image: artifactory.algol60.net/docker.io/library/redis:5.0-alpine3.14
     hostname: hms-redfish-redis
     ports:
       - "6379:6379"

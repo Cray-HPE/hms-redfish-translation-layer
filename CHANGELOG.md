@@ -24,6 +24,15 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.26.0] - 2025-03-19
+
+### Security
+
+- Updated image and module dependencies for security updates
+- Various code changes to accomodate module updates
+- Resolved build warnings in Dockerfiles and docker compose files
+- Internal tracking ticket: CASMHMS-6415
+
 ## [1.25.0] - 2024-12-04
 
 ### Changed

@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2023-2024] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2023-2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -37,7 +37,7 @@ import (
 	"sync"
 	"time"
 
-	base "github.com/Cray-HPE/hms-base"
+	base "github.com/Cray-HPE/hms-base/v2"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/rts_credential_store"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/slsapi"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/snmp_utilities"

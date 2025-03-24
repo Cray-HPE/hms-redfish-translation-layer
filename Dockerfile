@@ -1,6 +1,6 @@
 # MIT License
 #
-# (C) Copyright [2019-2022,2024] Hewlett Packard Enterprise Development LP
+# (C) Copyright [2019-2022,2024-2025] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 
 # Dockerfile for building the HMS Redfish Translation Service (RTS).
 
-FROM artifactory.algol60.net/docker.io/library/golang:1.23-alpine AS builder
+FROM artifactory.algol60.net/docker.io/library/golang:1.24-alpine AS builder
 
 RUN go env -w GO111MODULE=auto
 
@@ -37,43 +37,44 @@ RUN set -ex \
 
 ### Final Stage ###
 
-FROM artifactory.algol60.net/docker.io/alpine:3.15
+FROM artifactory.algol60.net/docker.io/alpine:3.21
 LABEL maintainer="Hewlett Packard Enterprise"
 EXPOSE 8082
 STOPSIGNAL SIGTERM
 
 # DMTF
-ENV SCHEMA_VERSION 2019.1
-ENV PRIVILEGE_REGISTRY_VERSION 1.0.4
+ENV SCHEMA_VERSION=2019.1
+ENV PRIVILEGE_REGISTRY_VERSION=1.0.4
 
 # Runtime
-ENV LOG_LEVEL INFO
-ENV CONTRIB_DIR_PREFIX /
-ENV SCRIPT_DIR_PREFIX /scripts
-ENV RTS_DNS_PROVIDER none
+ENV LOG_LEVEL=INFO
+ENV CONTRIB_DIR_PREFIX=/
+ENV SCRIPT_DIR_PREFIX=/scripts
+ENV RTS_DNS_PROVIDER=none
+ENV CONFIGS_DIR_PREFIX=/
 
 # Redis
-ENV REDIS_HOSTNAME localhost
-ENV REDIS_PORT 6379
+ENV REDIS_HOSTNAME=localhost
+ENV REDIS_PORT=6379
 
 # Vault
-ENV VAULT_ADDR http://localhost:8200
-ENV HMS_VAULT_KEYPATH hms-creds
-ENV JAWS_VAULT_KEYPATH pdu-creds
+ENV VAULT_ADDR=http://localhost:8200
+ENV HMS_VAULT_KEYPATH=hms-creds
+ENV JAWS_VAULT_KEYPATH=pdu-creds
 
 # HSM
-ENV HSM_URL http://localhost:27779
+ENV HSM_URL=http://localhost:27779
 
 # HSM
-ENV SLS_URL http://localhost:8376
+ENV SLS_URL=http://localhost:8376
 
 # Refish Eventing
-ENV COLLECTOR_URL http://hms-hmcollector
+ENV COLLECTOR_URL=http://hms-hmcollector
 
 # JAWS Backend helper
-ENV JAWS_POLLING_ENABLED true
-ENV JAWS_POLLING_INTERVAL 10
-ENV JAWS_POLLING_WORKERS 30
+ENV JAWS_POLLING_ENABLED=true
+ENV JAWS_POLLING_INTERVAL=10
+ENV JAWS_POLLING_WORKERS=30
 
 RUN set -ex \
     && apk -U upgrade \
