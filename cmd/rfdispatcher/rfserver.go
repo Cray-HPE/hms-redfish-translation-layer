@@ -554,9 +554,10 @@ func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
 		log.Debug("Request is missing Basic Auth")
 	}
 
+	log.Errorf("JW_DEBUG: username: %s, password: %s, xname: %s", username, password, xname)
 	account, err := rs.accountService.AuthenticateAccount(username, password)
 	if err != nil {
-		log.WithFields(log.Fields{"username": username, "xname": xname}).Error("Could not authenticate account for username")
+		log.WithFields(log.Fields{"username": username, "xname": xname, "err": err}).Error("Could not authenticate account for username")
 		responseHTTPCode = http.StatusUnauthorized
 		// TODO this seems a little hacky
 		w.WriteHeader(responseHTTPCode)
