@@ -2,7 +2,7 @@
  *
  *  MIT License
  *
- *  (C) Copyright 2018-2022 Hewlett Packard Enterprise Development LP
+ *  (C) Copyright 2018-2022,2025 Hewlett Packard Enterprise Development LP
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -554,7 +554,6 @@ func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
 		log.Debug("Request is missing Basic Auth")
 	}
 
-	log.Errorf("JW_DEBUG: username: %s, password: %s, xname: %s", username, password, xname)
 	account, err := rs.accountService.AuthenticateAccount(username, password)
 	if err != nil {
 		log.WithFields(log.Fields{"username": username, "xname": xname, "err": err}).Error("Could not authenticate account for username")
