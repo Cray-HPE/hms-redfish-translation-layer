@@ -68,7 +68,8 @@ var (
 	restSrvHTTPS *http.Server = nil
 	ticker       *time.Ticker
 	waitGroup    sync.WaitGroup
-	doRestDelay	 time.Duration = 1
+
+	handleRestRequests	 chan	// Used to signal the REST server to start handling requests
 
 	running = true
 
@@ -266,8 +267,10 @@ func doRest() {
 
 		var err error
 
-		// Sleep to give initialization time to run before taking requests
-		time.Sleep(doRestDelay * time.Second)
+		// Wait until everything is initialized before processing requests
+		<-handleRestRequests
+
+		log.Info("Beginning to handle REST requests...")
 
 		// Always enable HTTP
 		err = restSrvHTTP.ListenAndServe()
@@ -290,6 +293,7 @@ func doRest() {
 func main() {
 	var cancel context.CancelFunc
 	ctx, cancel = context.WithCancel(context.Background())
+	handleRestRequests = make(chan struct{})
 
 	server = newRedfishServer(ctx)
 
@@ -329,6 +333,9 @@ func main() {
 
 		// Now run manually the first version of the periodic for any backend helper and setup the ticker.
 		server.rfd.RunPeriodic()
+
+		// Signal the rest server that it can start handling requests
+		close(handleRestRequests)
 
 		var periodSeconds int
 		periodSecondsString, ok := os.LookupEnv("PERIODIC_SLEEP")
