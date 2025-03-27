@@ -293,7 +293,7 @@ func doRest() {
 func main() {
 	var cancel context.CancelFunc
 	ctx, cancel = context.WithCancel(context.Background())
-	handleRestRequests = make(chan struct{})
+	handleRestRequests = make(chan bool)
 
 	server = newRedfishServer(ctx)
 
