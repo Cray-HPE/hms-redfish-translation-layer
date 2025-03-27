@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2018-2023] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2018-2023,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -134,6 +134,11 @@ func (as *AccountService) isAccountLockoutEnabled() bool {
 // Please note this should be ran as a go routine, as this function will never return
 func (as *AccountService) RunPeriodic() {
 	log.Info("Starting account service periodic task")
+
+	// Manually run the first updates so we can immediately handle requests
+	as.updatePeriodic()
+	as.updateAccountsPeriodic()
+
 	ticker := time.NewTicker(1 * time.Second)
 	accountTicker := time.NewTicker(30 * time.Second)
 	for {
