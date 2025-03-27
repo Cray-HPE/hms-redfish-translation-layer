@@ -69,7 +69,7 @@ var (
 	ticker       *time.Ticker
 	waitGroup    sync.WaitGroup
 
-	handleRestRequests	 chan	// Used to signal the REST server to start handling requests
+	handleRestRequests	 chan bool // Used to signal the REST server to start handling requests
 
 	running = true
 
