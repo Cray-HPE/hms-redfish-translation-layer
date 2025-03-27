@@ -268,8 +268,8 @@ func doRest() {
 		var err error
 
 		// Wait until everything is initialized before processing requests
+		log.Info("Waiting to begin handling REST requests...")
 		<-handleRestRequests
-
 		log.Info("Beginning to handle REST requests...")
 
 		// Always enable HTTP
