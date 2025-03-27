@@ -68,6 +68,7 @@ var (
 	restSrvHTTPS *http.Server = nil
 	ticker       *time.Ticker
 	waitGroup    sync.WaitGroup
+	doRestDelay	 time.Duration = 1
 
 	running = true
 
@@ -264,6 +265,9 @@ func doRest() {
 		defer waitGroup.Done()
 
 		var err error
+
+		// Sleep to give initialization time to run before taking requests
+		time.Sleep(doRestDelay * time.Second)
 
 		// Always enable HTTP
 		err = restSrvHTTP.ListenAndServe()
