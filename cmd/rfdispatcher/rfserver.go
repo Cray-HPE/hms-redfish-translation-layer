@@ -252,6 +252,11 @@ func doRest() {
 				}).Fatal("Unable to setup TLS Listener")
 			}
 
+			// Wait until everything is initialized before processing requests
+			log.Info("Waiting to begin handling Secure HTTPS requests...")
+			<-handleRestRequests
+			log.Info("Beginning to handle Secure HTTPS requests...")
+
 			err = restSrvHTTPS.Serve(tlsListener)
 			if err != nil {
 				if err.Error() == "http: Server closed" {
@@ -268,9 +273,9 @@ func doRest() {
 		var err error
 
 		// Wait until everything is initialized before processing requests
-		log.Info("Waiting to begin handling REST requests...")
+		log.Info("Waiting to begin handling HTTP requests...")
 		<-handleRestRequests
-		log.Info("Beginning to handle REST requests...")
+		log.Info("Beginning to handle HTTP requests...")
 
 		// Always enable HTTP
 		err = restSrvHTTP.ListenAndServe()
