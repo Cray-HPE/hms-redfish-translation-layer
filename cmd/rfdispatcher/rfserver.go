@@ -69,8 +69,6 @@ var (
 	ticker       *time.Ticker
 	waitGroup    sync.WaitGroup
 
-	handleRestRequests	 chan bool // Used to signal the REST server to start handling requests
-
 	running = true
 
 	ctx context.Context
@@ -253,8 +251,6 @@ func doRest() {
 			}
 
 			// Wait until everything is initialized before processing requests
-			log.Info("Waiting to begin handling Secure HTTPS requests...")
-			<-handleRestRequests
 			log.Info("Beginning to handle Secure HTTPS requests...")
 
 			err = restSrvHTTPS.Serve(tlsListener)
@@ -273,8 +269,6 @@ func doRest() {
 		var err error
 
 		// Wait until everything is initialized before processing requests
-		log.Info("Waiting to begin handling HTTP requests...")
-		<-handleRestRequests
 		log.Info("Beginning to handle HTTP requests...")
 
 		// Always enable HTTP
@@ -298,7 +292,6 @@ func doRest() {
 func main() {
 	var cancel context.CancelFunc
 	ctx, cancel = context.WithCancel(context.Background())
-	handleRestRequests = make(chan bool)
 
 	server = newRedfishServer(ctx)
 
@@ -335,15 +328,19 @@ func main() {
 
 	if len(server.rfd.BackendHelpers) > 0 {
 
-		// Now run manually the first version of the periodic for any backend helper and setup the ticker.
+		// Manually run the backend helpers for the first time so that we
+		// pull in all the initial data
 		server.rfd.RunPeriodic()
 
-		// Signal the rest server that it can start handling requests
+		// Now that the backend helpers have fully initialized, initialize
+		// the account service so that accounts based on this initial data
+		// get created
 		server.initAccountService()
-		server.initJSONSchemaService()
-		go doRest()
-		close(handleRestRequests)
 
+		// Start the REST server to start handling requests
+		go doRest()
+
+		// Create the ticker to run the backend helpers periodically
 		var periodSeconds int
 		periodSecondsString, ok := os.LookupEnv("PERIODIC_SLEEP")
 		if !ok {
@@ -355,9 +352,10 @@ func main() {
 				log.Fatal("PERIODIC_SLEEP value not integer")
 			}
 		}
-		log.WithField("periodSeconds", periodSeconds).Debug("Running backend helper period function")
-
 		ticker = time.NewTicker(time.Duration(periodSeconds) * time.Second)
+
+		// Start the ticker
+		log.WithField("periodSeconds", periodSeconds).Debug("Running backend helper period function")
 		go func() {
 			for range ticker.C {
 				server.rfd.RunPeriodic()
@@ -381,6 +379,7 @@ func newRedfishServer(ctx context.Context) *redfishServer {
 
 	// Note: See dispatcher.NewDispatcher() for other hard coded options
 	server.rfd = dispatcher.NewDispatcher(ctx)
+	server.initJSONSchemaService()
 
 	return server
 }
