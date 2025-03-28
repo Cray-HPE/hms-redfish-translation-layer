@@ -72,6 +72,8 @@ func NewAccountService(rfd *dispatcher.RedfishDispatcher) *AccountService {
 
 // InitFromRedis will initialize this account server instance with data in redis
 func (as *AccountService) InitFromRedis() {
+	log.Trace("Initializing Account Service")
+
 	uri := "/redfish/v1/AccountService"
 	resource, property := as.rfd.GetResource(uri, "")
 	if resource == nil {
@@ -103,6 +105,8 @@ func (as *AccountService) InitFromRedis() {
 
 	as.Accounts = NewManagerAccountCollection(as).initFromRedis()
 	as.Roles = NewRoleCollection(as).initFromRedis()
+
+	log.Trace("Account Service initialization complete")
 }
 
 // AuthenticateAccount will attempt to authenticate the given account username and password.
@@ -154,6 +158,8 @@ func (as *AccountService) RunPeriodic() {
 // updatePeriodic will the run periodic updates required by the account service.
 // Such as updating the state of locked accounts.
 func (as *AccountService) updatePeriodic() {
+	log.Trace("Account Service updatePeriodic running")
+
 	as.Accounts.updateMux.Lock()
 	defer as.Accounts.updateMux.Unlock()
 	//log.Trace("Update periodic running")
@@ -169,6 +175,7 @@ func (as *AccountService) updatePeriodic() {
 
 // updateAccountsPeriodic will the run periodic updates to pick up account changes in redis.
 func (as *AccountService) updateAccountsPeriodic() {
+	log.Trace("Account Service updateAccountsPeriodic running")
 
 	// Check for changes to the accounts collection
 	as.Accounts.initFromRedis()
@@ -192,6 +199,8 @@ func NewManagerAccountCollection(as *AccountService) *ManagerAccountCollection {
 
 // initFromRedis will initialize this collection (and its member accounts) from data in redis
 func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
+	log.Trace("Initializing Manager Account Collection")
+
 	mac.updateMux.Lock()
 	defer mac.updateMux.Unlock()
 	uri := "/redfish/v1/AccountService/Accounts"
@@ -235,7 +244,7 @@ func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
 			account.passwordHash = newAccount.passwordHash
 		}
 	}
-	log.Debug("Loaded Accounts collection")
+	log.Debug("Manager Account Collection initialization complete")
 	// Return itself
 	return mac
 }
@@ -282,6 +291,10 @@ func NewManagerAccount(as *AccountService) *ManagerAccount {
 
 // initFromRedis will initialize this account from data in redis
 func (ma *ManagerAccount) initFromRedis(uri string) *ManagerAccount {
+	log.WithFields(log.Fields{
+		"uri": uri,
+	}).Trace("Initializing Manager Account")
+
 	resource, property := ma.as.rfd.GetResource(uri, "")
 	if resource == nil {
 		log.Fatal("Manager Account resource is nil")
@@ -317,7 +330,7 @@ func (ma *ManagerAccount) initFromRedis(uri string) *ManagerAccount {
 	log.WithFields(log.Fields{
 		"account": ma.UserName,
 		"uri":     uri,
-	}).Debug("Loaded account")
+	}).Debug("Manager Account loaded")
 	// Return itself
 	return ma
 }
@@ -411,6 +424,17 @@ func (ma *ManagerAccount) setLockOut(value bool) error {
 
 // updatePeriodic will update the account's current lockout state.
 func (ma *ManagerAccount) updatePeriodic() error {
+	log.WithFields(log.Fields{
+		"ID":                  ma.Id,
+		"UserName":            ma.UserName,
+		"RoleId":              ma.RoleId,
+		"Locked":              ma.Locked,
+		"Enabled":             ma.Enabled,
+		"failedLoginAttempts": ma.failedLoginAttempts,
+		"lastFailedLogin":     ma.lastFailedLogin,
+		"lockOutStart":        ma.lockOutStart,
+	}).Trace("Manager Account updatePeriodic running")
+
 	ma.failedLoginMux.Lock()
 	defer ma.failedLoginMux.Unlock()
 
@@ -483,6 +507,8 @@ func (rc *RoleCollection) get(id string) (*Role, bool) {
 
 // initFromRedis will initialize this collection (and its member roles) from data in redis
 func (rc *RoleCollection) initFromRedis() *RoleCollection {
+	log.Trace("Initializing Roles Collection")
+
 	uri := "/redfish/v1/AccountService/Roles"
 	resource, property := rc.as.rfd.GetResource(uri, "")
 	if resource == nil {
@@ -535,6 +561,10 @@ func NewRole(as *AccountService) *Role {
 
 // initFromRedis will initialize this role from data in redis
 func (r *Role) initFromRedis(uri string) *Role {
+	log.WithFields(log.Fields{
+		"uri": uri,
+	}).Trace("Initializing Roll")
+
 	resource, property := r.as.rfd.GetResource(uri, "")
 	if resource == nil {
 		log.Fatal("Manager Account resource is nil")
