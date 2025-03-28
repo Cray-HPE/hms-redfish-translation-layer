@@ -158,11 +158,10 @@ func (as *AccountService) RunPeriodic() {
 // updatePeriodic will the run periodic updates required by the account service.
 // Such as updating the state of locked accounts.
 func (as *AccountService) updatePeriodic() {
-	log.Trace("Account Service updatePeriodic running")
+	//log.Trace("Account Service updatePeriodic started")
 
 	as.Accounts.updateMux.Lock()
 	defer as.Accounts.updateMux.Unlock()
-	//log.Trace("Update periodic running")
 
 	// Account lockout check
 	for _, account := range as.Accounts.Members {
@@ -170,16 +169,17 @@ func (as *AccountService) updatePeriodic() {
 			log.Error(err)
 		}
 	}
-
+	//log.Trace("Account Service updatePeriodic returning")
 }
 
 // updateAccountsPeriodic will the run periodic updates to pick up account changes in redis.
 func (as *AccountService) updateAccountsPeriodic() {
-	log.Trace("Account Service updateAccountsPeriodic running")
+	log.Trace("Account Service updateAccountsPeriodic started")
 
 	// Check for changes to the accounts collection
 	as.Accounts.initFromRedis()
 
+	log.Trace("Account Service updateAccountsPeriodic returning")
 }
 
 // ManagerAccountCollection manages the creation, update, and removal of ManagerAccounts
@@ -433,7 +433,7 @@ func (ma *ManagerAccount) updatePeriodic() error {
 		"failedLoginAttempts": ma.failedLoginAttempts,
 		"lastFailedLogin":     ma.lastFailedLogin,
 		"lockOutStart":        ma.lockOutStart,
-	}).Trace("Manager Account updatePeriodic running")
+	}).Trace("Manager Account updatePeriodic started")
 
 	ma.failedLoginMux.Lock()
 	defer ma.failedLoginMux.Unlock()
@@ -461,11 +461,13 @@ func (ma *ManagerAccount) updatePeriodic() error {
 			log.Debug("Clearing lockout for user: ", ma.UserName)
 			if err := ma.setLockOut(false); err != nil {
 				log.Error(err)
+				log.Debug("Failed to unlock account: ", err)
 				return err
 			}
 		}
 	}
 
+	log.Trace("Manager Account updatePeriodic returning")
 	return nil
 }
 
