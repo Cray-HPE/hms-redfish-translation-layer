@@ -332,7 +332,6 @@ func main() {
 	log.Info("Redfish Translation Service starting...")
 
 	waitGroup.Add(1)
-	go doRest()
 
 	if len(server.rfd.BackendHelpers) > 0 {
 
@@ -340,6 +339,9 @@ func main() {
 		server.rfd.RunPeriodic()
 
 		// Signal the rest server that it can start handling requests
+		server.initAccountService()
+		server.initJSONSchemaService()
+		go doRest()
 		close(handleRestRequests)
 
 		var periodSeconds int
@@ -358,9 +360,7 @@ func main() {
 		ticker = time.NewTicker(time.Duration(periodSeconds) * time.Second)
 		go func() {
 			for range ticker.C {
-				log.Trace("Running ticker")
 				server.rfd.RunPeriodic()
-				log.Trace("Finished ticker")
 			}
 		}()
 	}
@@ -381,8 +381,6 @@ func newRedfishServer(ctx context.Context) *redfishServer {
 
 	// Note: See dispatcher.NewDispatcher() for other hard coded options
 	server.rfd = dispatcher.NewDispatcher(ctx)
-	server.initAccountService()
-	server.initJSONSchemaService()
 
 	return server
 }

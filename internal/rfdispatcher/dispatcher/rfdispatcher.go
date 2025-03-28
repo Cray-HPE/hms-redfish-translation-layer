@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2018-2023] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2018-2023,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -237,6 +237,8 @@ func NewDispatcher(ctx context.Context) *RedfishDispatcher {
 }
 
 func (rfd *RedfishDispatcher) RunPeriodic() {
+	log.Trace("RF Dispatcher RunPeriodic started")
+
 	var err error
 	env := make(map[string]interface{})
 
@@ -247,7 +249,7 @@ func (rfd *RedfishDispatcher) RunPeriodic() {
 			log.WithField("err", err).Error("Backend helper setup function did not complete without error!")
 		}
 	}
-
+	log.Trace("RF Dispatcher RunPeriodic returning")
 }
 
 func (rfd *RedfishDispatcher) RegisterCollectionCB(cb rfschema.CollectionCB) {
