@@ -55,13 +55,13 @@ The easiest way to stand up this entire framework in simulator fashion along wit
 First generate the required HTTPS certificate:
 
 ```bash
-openssl req -x509 -nodes -newkey rsa:4096 -keyout configs/rts.key -out configs/rts.crt -sha256 -days 1 \
+$ openssl req -x509 -nodes -newkey rsa:4096 -keyout configs/rts.key -out configs/rts.crt -sha256 -days 1 \
         -subj "/C=US/O=RTS/OU=TEST_CERTIFICATE/CN=localhost"
 ```
 
 And set permissions so that rts.key can be referenced:
 ```bash
-chmod go+r configs/rts.key
+$ chmod go+r configs/rts.key
 ```
 
 Then stand up the everything:
