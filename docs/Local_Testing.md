@@ -2,7 +2,7 @@
 
 ## JAWS backend testing
 
-1. Copy `configs/vault_loader.template.env` and to `configs/vault_loader.env`.
+1. Copy `configs/vault_loader.template.env` to `configs/vault_loader.env`.
 2. Edit `configs/vault_loader.env` to contain PDU credentials.
 
     Example

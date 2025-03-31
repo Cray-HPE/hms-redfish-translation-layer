@@ -72,7 +72,7 @@ func NewAccountService(rfd *dispatcher.RedfishDispatcher) *AccountService {
 
 // InitFromRedis will initialize this account server instance with data in redis
 func (as *AccountService) InitFromRedis() {
-	log.Trace("Initializing Account Service")
+	log.Debug("Initializing Account Service")
 
 	uri := "/redfish/v1/AccountService"
 	resource, property := as.rfd.GetResource(uri, "")
@@ -106,7 +106,7 @@ func (as *AccountService) InitFromRedis() {
 	as.Accounts = NewManagerAccountCollection(as).initFromRedis()
 	as.Roles = NewRoleCollection(as).initFromRedis()
 
-	log.Trace("Account Service initialization complete")
+	log.Debug("Account Service initialization complete")
 }
 
 // AuthenticateAccount will attempt to authenticate the given account username and password.
@@ -158,7 +158,7 @@ func (as *AccountService) RunPeriodic() {
 // updatePeriodic will the run periodic updates required by the account service.
 // Such as updating the state of locked accounts.
 func (as *AccountService) updatePeriodic() {
-	//log.Trace("Account Service updatePeriodic started")
+	log.Trace("Account Service updatePeriodic started")
 
 	as.Accounts.updateMux.Lock()
 	defer as.Accounts.updateMux.Unlock()
@@ -169,7 +169,7 @@ func (as *AccountService) updatePeriodic() {
 			log.Error(err)
 		}
 	}
-	//log.Trace("Account Service updatePeriodic returning")
+	log.Trace("Account Service updatePeriodic returning")
 }
 
 // updateAccountsPeriodic will the run periodic updates to pick up account changes in redis.
