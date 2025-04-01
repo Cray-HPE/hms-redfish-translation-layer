@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2018-2023] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2018-2023,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -72,6 +72,8 @@ func NewAccountService(rfd *dispatcher.RedfishDispatcher) *AccountService {
 
 // InitFromRedis will initialize this account server instance with data in redis
 func (as *AccountService) InitFromRedis() {
+	log.Debug("Initializing Account Service")
+
 	uri := "/redfish/v1/AccountService"
 	resource, property := as.rfd.GetResource(uri, "")
 	if resource == nil {
@@ -103,6 +105,8 @@ func (as *AccountService) InitFromRedis() {
 
 	as.Accounts = NewManagerAccountCollection(as).initFromRedis()
 	as.Roles = NewRoleCollection(as).initFromRedis()
+
+	log.Debug("Account Service initialization complete")
 }
 
 // AuthenticateAccount will attempt to authenticate the given account username and password.
@@ -134,6 +138,11 @@ func (as *AccountService) isAccountLockoutEnabled() bool {
 // Please note this should be ran as a go routine, as this function will never return
 func (as *AccountService) RunPeriodic() {
 	log.Info("Starting account service periodic task")
+
+	// Manually run the first updates so we can immediately handle requests
+	as.updatePeriodic()
+	as.updateAccountsPeriodic()
+
 	ticker := time.NewTicker(1 * time.Second)
 	accountTicker := time.NewTicker(30 * time.Second)
 	for {
@@ -149,9 +158,10 @@ func (as *AccountService) RunPeriodic() {
 // updatePeriodic will the run periodic updates required by the account service.
 // Such as updating the state of locked accounts.
 func (as *AccountService) updatePeriodic() {
+	log.Trace("Account Service updatePeriodic started")
+
 	as.Accounts.updateMux.Lock()
 	defer as.Accounts.updateMux.Unlock()
-	//log.Trace("Update periodic running")
 
 	// Account lockout check
 	for _, account := range as.Accounts.Members {
@@ -159,15 +169,17 @@ func (as *AccountService) updatePeriodic() {
 			log.Error(err)
 		}
 	}
-
+	log.Trace("Account Service updatePeriodic returning")
 }
 
 // updateAccountsPeriodic will the run periodic updates to pick up account changes in redis.
 func (as *AccountService) updateAccountsPeriodic() {
+	log.Trace("Account Service updateAccountsPeriodic started")
 
 	// Check for changes to the accounts collection
 	as.Accounts.initFromRedis()
 
+	log.Trace("Account Service updateAccountsPeriodic returning")
 }
 
 // ManagerAccountCollection manages the creation, update, and removal of ManagerAccounts
@@ -187,6 +199,8 @@ func NewManagerAccountCollection(as *AccountService) *ManagerAccountCollection {
 
 // initFromRedis will initialize this collection (and its member accounts) from data in redis
 func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
+	log.Trace("Initializing Manager Account Collection")
+
 	mac.updateMux.Lock()
 	defer mac.updateMux.Unlock()
 	uri := "/redfish/v1/AccountService/Accounts"
@@ -230,7 +244,7 @@ func (mac *ManagerAccountCollection) initFromRedis() *ManagerAccountCollection {
 			account.passwordHash = newAccount.passwordHash
 		}
 	}
-	log.Debug("Loaded Accounts collection")
+	log.Debug("Manager Account Collection initialization complete")
 	// Return itself
 	return mac
 }
@@ -277,6 +291,10 @@ func NewManagerAccount(as *AccountService) *ManagerAccount {
 
 // initFromRedis will initialize this account from data in redis
 func (ma *ManagerAccount) initFromRedis(uri string) *ManagerAccount {
+	log.WithFields(log.Fields{
+		"uri": uri,
+	}).Trace("Initializing Manager Account")
+
 	resource, property := ma.as.rfd.GetResource(uri, "")
 	if resource == nil {
 		log.Fatal("Manager Account resource is nil")
@@ -312,7 +330,7 @@ func (ma *ManagerAccount) initFromRedis(uri string) *ManagerAccount {
 	log.WithFields(log.Fields{
 		"account": ma.UserName,
 		"uri":     uri,
-	}).Debug("Loaded account")
+	}).Debug("Manager Account loaded")
 	// Return itself
 	return ma
 }
@@ -406,6 +424,17 @@ func (ma *ManagerAccount) setLockOut(value bool) error {
 
 // updatePeriodic will update the account's current lockout state.
 func (ma *ManagerAccount) updatePeriodic() error {
+	log.WithFields(log.Fields{
+		"ID":                  ma.Id,
+		"UserName":            ma.UserName,
+		"RoleId":              ma.RoleId,
+		"Locked":              ma.Locked,
+		"Enabled":             ma.Enabled,
+		"failedLoginAttempts": ma.failedLoginAttempts,
+		"lastFailedLogin":     ma.lastFailedLogin,
+		"lockOutStart":        ma.lockOutStart,
+	}).Trace("Manager Account updatePeriodic started")
+
 	ma.failedLoginMux.Lock()
 	defer ma.failedLoginMux.Unlock()
 
@@ -432,11 +461,13 @@ func (ma *ManagerAccount) updatePeriodic() error {
 			log.Debug("Clearing lockout for user: ", ma.UserName)
 			if err := ma.setLockOut(false); err != nil {
 				log.Error(err)
+				log.Debug("Failed to unlock account: ", err)
 				return err
 			}
 		}
 	}
 
+	log.Trace("Manager Account updatePeriodic returning")
 	return nil
 }
 
@@ -478,6 +509,8 @@ func (rc *RoleCollection) get(id string) (*Role, bool) {
 
 // initFromRedis will initialize this collection (and its member roles) from data in redis
 func (rc *RoleCollection) initFromRedis() *RoleCollection {
+	log.Trace("Initializing Roles Collection")
+
 	uri := "/redfish/v1/AccountService/Roles"
 	resource, property := rc.as.rfd.GetResource(uri, "")
 	if resource == nil {
@@ -530,6 +563,10 @@ func NewRole(as *AccountService) *Role {
 
 // initFromRedis will initialize this role from data in redis
 func (r *Role) initFromRedis(uri string) *Role {
+	log.WithFields(log.Fields{
+		"uri": uri,
+	}).Trace("Initializing Roll")
+
 	resource, property := r.as.rfd.GetResource(uri, "")
 	if resource == nil {
 		log.Fatal("Manager Account resource is nil")

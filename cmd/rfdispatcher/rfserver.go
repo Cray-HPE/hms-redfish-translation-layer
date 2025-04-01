@@ -2,7 +2,7 @@
  *
  *  MIT License
  *
- *  (C) Copyright 2018-2022 Hewlett Packard Enterprise Development LP
+ *  (C) Copyright 2018-2022,2025 Hewlett Packard Enterprise Development LP
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -250,6 +250,9 @@ func doRest() {
 				}).Fatal("Unable to setup TLS Listener")
 			}
 
+			// Wait until everything is initialized before processing requests
+			log.Info("Beginning to handle Secure HTTPS requests...")
+
 			err = restSrvHTTPS.Serve(tlsListener)
 			if err != nil {
 				if err.Error() == "http: Server closed" {
@@ -265,6 +268,9 @@ func doRest() {
 
 		var err error
 
+		// Wait until everything is initialized before processing requests
+		log.Info("Beginning to handle HTTP requests...")
+
 		// Always enable HTTP
 		err = restSrvHTTP.ListenAndServe()
 
@@ -277,9 +283,9 @@ func doRest() {
 		}
 	}()
 
-	log.WithField("httpPort", httpPortStr).Info("Listing for incoming HTTP requests")
+	log.WithField("httpPort", httpPortStr).Info("Listening for incoming HTTP requests")
 	if httpsCertExists && httpsKeyExists {
-		log.WithField("httpsPort", httpsPortStr).Info("Listing for incoming HTTPS requests")
+		log.WithField("httpsPort", httpsPortStr).Info("Listening for incoming HTTPS requests")
 	}
 }
 
@@ -319,13 +325,22 @@ func main() {
 	log.Info("Redfish Translation Service starting...")
 
 	waitGroup.Add(1)
-	go doRest()
 
 	if len(server.rfd.BackendHelpers) > 0 {
 
-		// Now run manually the first version of the periodic for any backend helper and setup the ticker.
+		// Manually run the backend helpers for the first time so that we
+		// pull in all the initial data
 		server.rfd.RunPeriodic()
 
+		// Now that the backend helpers have fully initialized, initialize
+		// the account service so that accounts based on this initial data
+		// get created
+		server.initAccountService()
+
+		// Start the REST server to start handling requests
+		go doRest()
+
+		// Create the ticker to run the backend helpers periodically
 		var periodSeconds int
 		periodSecondsString, ok := os.LookupEnv("PERIODIC_SLEEP")
 		if !ok {
@@ -337,14 +352,13 @@ func main() {
 				log.Fatal("PERIODIC_SLEEP value not integer")
 			}
 		}
-		log.WithField("periodSeconds", periodSeconds).Debug("Running backend helper period function")
-
 		ticker = time.NewTicker(time.Duration(periodSeconds) * time.Second)
+
+		// Start the ticker
+		log.WithField("periodSeconds", periodSeconds).Debug("Running backend helper period function")
 		go func() {
 			for range ticker.C {
-				log.Trace("Running ticker")
 				server.rfd.RunPeriodic()
-				log.Trace("Finished ticker")
 			}
 		}()
 	}
@@ -365,7 +379,6 @@ func newRedfishServer(ctx context.Context) *redfishServer {
 
 	// Note: See dispatcher.NewDispatcher() for other hard coded options
 	server.rfd = dispatcher.NewDispatcher(ctx)
-	server.initAccountService()
 	server.initJSONSchemaService()
 
 	return server
@@ -556,7 +569,7 @@ func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	account, err := rs.accountService.AuthenticateAccount(username, password)
 	if err != nil {
-		log.WithFields(log.Fields{"username": username, "xname": xname}).Error("Could not authenticate account for username")
+		log.WithFields(log.Fields{"username": username, "xname": xname, "err": err}).Error("Could not authenticate account for username")
 		responseHTTPCode = http.StatusUnauthorized
 		// TODO this seems a little hacky
 		w.WriteHeader(responseHTTPCode)

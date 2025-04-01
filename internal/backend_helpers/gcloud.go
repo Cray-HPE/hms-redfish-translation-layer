@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright 2020-2023 Hewlett Packard Enterprise Development LP
+// (C) Copyright 2020-2023,2025 Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -467,7 +467,7 @@ func (helper *GCloudHelper) RunPeriodic(ctx context.Context, env map[string]inte
 				// added, this does nothing, if not it adds it.  If it fails for some reason, there is
 				// nothing we can do, but we we will try again next time through, so it should resolve
 				// eventually.
-				created, _ := addXNameService(helper.namespace, xname)
+				created, _ := addXNameService(ctx, helper.namespace, xname)
 				if created {
 					// Set up to wait for the redfish endpoint for this xname to be ready and
 					// responsive. The value is a retry counter to allow for warnings if it is

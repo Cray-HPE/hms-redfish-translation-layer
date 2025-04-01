@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2020-2022] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2020-2022,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -37,12 +37,12 @@ import (
 	"sync"
 	"time"
 
-	base "github.com/Cray-HPE/hms-base"
+	base "github.com/Cray-HPE/hms-base/v2"
 	compcredentials "github.com/Cray-HPE/hms-compcredentials"
 	hmshttp "github.com/Cray-HPE/hms-go-http-lib"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/telemetry"
 	securestorage "github.com/Cray-HPE/hms-securestorage"
-	rf "github.com/Cray-HPE/hms-smd/pkg/redfish"
+	rf "github.com/Cray-HPE/hms-smd/v2/pkg/redfish"
 	"github.com/go-redis/redis"
 	"github.com/hashicorp/go-retryablehttp"
 	log "github.com/sirupsen/logrus"
@@ -538,7 +538,7 @@ func informDNS(ctx context.Context, xname string) (err error) {
 		logCtx.Warning("Not informing DNS as RTS_DNS_PROVIDER is set to 'none'.")
 		return
 	case "k8s_service":
-		created, err := addXNameService("services", xname)
+		created, err := addXNameService(ctx, "services", xname)
 		if err != nil {
 			return err
 		}
@@ -694,7 +694,7 @@ func setupCompCredsVault(secureStorage securestorage.SecureStorage) bool {
 	return true
 }
 
-func addXNameService(namespace string, xname string) (created bool, err error) {
+func addXNameService(ctx context.Context, namespace string, xname string) (created bool, err error) {
 	podName, ok := os.LookupEnv("POD_NAME")
 	if !ok {
 		log.Warning("POD_NAME isn't set. Defaulting to cray-hms-rts")
@@ -721,12 +721,12 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 		return
 	}
 	// Try to get the service. If it already exists, we are done here...
-	svc, svcErr := clientset.CoreV1().Services(namespace).Get(xname, metav1.GetOptions{})
+	svc, svcErr := clientset.CoreV1().Services(namespace).Get(ctx, xname, metav1.GetOptions{})
 	if svcErr == nil {
 		svcPodName, ok := svc.Spec.Selector["app.kubernetes.io/name"]
 		if !ok || svcPodName != podName {
 			// Delete the previously created service if they don't match our pod name. 
-			err = clientset.CoreV1().Services(namespace).Delete(xname, &metav1.DeleteOptions{})
+			err = clientset.CoreV1().Services(namespace).Delete(ctx, xname, metav1.DeleteOptions{})
 			if err != nil {
 				log.WithFields(log.Fields{"xname": xname, "err": err}).Warning("failed to delete K8s service endpoint for xname")
 				return
@@ -769,7 +769,7 @@ func addXNameService(namespace string, xname string) (created bool, err error) {
 			},
 		},
 	}
-	_, err = clientset.CoreV1().Services(namespace).Create(service)
+	_, err = clientset.CoreV1().Services(namespace).Create(ctx, service, metav1.CreateOptions{})
 	if err != nil {
 		log.WithFields(log.Fields{"xname": xname, "err": err}).Warning("failed to create K8s service endpoint for xname")
 		log.WithFields(log.Fields{"xname": xname, "err": err}).Info("It is safe to ignore warnings about K8s service endpoints (though odd you would get there) when not running under K8s...")

@@ -50,7 +50,21 @@ seanb@sms1.rbt1:~ $ ls /chfs/pdu/redfish/v1/Chassis/APC/PowerState
 
 ### Using Docker Compose
 
-The easiest way to stand up this entire framework in simulator fashion along with all of the other necessary HMS software is to use Docker compose:
+The easiest way to stand up this entire framework in simulator fashion along with all of the other necessary HMS software is to use Docker compose.
+
+First generate the required HTTPS certificate:
+
+```bash
+$ openssl req -x509 -nodes -newkey rsa:4096 -keyout configs/rts.key -out configs/rts.crt -sha256 -days 1 \
+        -subj "/C=US/O=RTS/OU=TEST_CERTIFICATE/CN=localhost"
+```
+
+And set permissions so that rts.key can be referenced:
+```bash
+$ chmod go+r configs/rts.key
+```
+
+Then stand up the everything:
 
 ```text
 $ docker-compose -f docker-compose.simulator.yaml up -d

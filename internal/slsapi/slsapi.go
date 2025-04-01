@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2023] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2023,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -31,8 +31,9 @@ import (
 	"net/url"
 	"time"
 
-	base "github.com/Cray-HPE/hms-base"
-	sls_common "github.com/Cray-HPE/hms-sls/pkg/sls-common"
+	base "github.com/Cray-HPE/hms-base/v2"
+	sls_common "github.com/Cray-HPE/hms-sls/v2/pkg/sls-common"
+	"github.com/Cray-HPE/hms-xname/xnametypes"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/sirupsen/logrus"
 )
@@ -56,7 +57,7 @@ type ManagementSwitch struct {
 	Xname           string                        `json:"Xname"`
 	Type            sls_common.HMSStringType      `json:"Type"`
 	Class           sls_common.CabinetType        `json:"Class"`
-	TypeString      base.HMSType                  `json:"TypeString"`
+	TypeString      xnametypes.HMSType                  `json:"TypeString"`
 	LastUpdated     int64                         `json:"LastUpdated,omitempty"`
 	LastUpdatedTime string                        `json:"LastUpdatedTime,omitempty"`
 	ExtraProperties sls_common.ComptypeMgmtSwitch `json:"ExtraProperties,omitempty"`
