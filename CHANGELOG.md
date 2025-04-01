@@ -24,13 +24,20 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
-## [1.26.0] - 2025-03-19
+## [1.26.0] - 2025-04-01
 
 ### Security
 
 - Updated image and module dependencies for security updates
 - Various code changes to accomodate module updates
+- Upgraded Go to 1.24
 - Resolved build warnings in Dockerfiles and docker compose files
+- Added additional detail to test documentation
+- Added new logs to better illuminate what RTS is doing at certain points
+- Fixed a race condition at startup time between finishing up initialization
+  and serving incoming http requests
+- Fixed jq parsing error in runSnyk.sh
+- Disabled legacy builder and use BuildKit engine in unit tests
 - Internal tracking ticket: CASMHMS-6415
 
 ## [1.25.0] - 2024-12-04

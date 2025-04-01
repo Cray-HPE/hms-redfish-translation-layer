@@ -283,9 +283,9 @@ func doRest() {
 		}
 	}()
 
-	log.WithField("httpPort", httpPortStr).Info("Listing for incoming HTTP requests")
+	log.WithField("httpPort", httpPortStr).Info("Listening for incoming HTTP requests")
 	if httpsCertExists && httpsKeyExists {
-		log.WithField("httpsPort", httpsPortStr).Info("Listing for incoming HTTPS requests")
+		log.WithField("httpsPort", httpsPortStr).Info("Listening for incoming HTTPS requests")
 	}
 }
 
