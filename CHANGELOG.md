@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.27.0] - 2025-04-03
+
+### Added
+
+- Added pprof image support
+
 ## [1.26.0] - 2025-04-01
 
 ### Security
