@@ -28,8 +28,8 @@ Security - in case of vulnerabilities
 
 ### Added
 
-- Removed pprof support in production images
-- Added pprof support in pprof images
+- Removed pprof support in production image
+- Added pprof support in pprof image
 
 ## [1.26.0] - 2025-04-01
 
