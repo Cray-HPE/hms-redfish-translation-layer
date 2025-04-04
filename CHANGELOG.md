@@ -24,7 +24,7 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
-## [1.27.0] - 2025-04-03
+## [1.27.0] - 2025-04-04
 
 ### Added
 
