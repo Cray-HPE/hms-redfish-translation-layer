@@ -24,6 +24,13 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.27.0] - 2025-04-04
+
+### Added
+
+- Removed pprof support in production image
+- Added pprof support in pprof image
+
 ## [1.26.0] - 2025-04-01
 
 ### Security

@@ -56,9 +56,6 @@ import (
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/jsonschemas"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 
-	// Used for Profiling using the go pprof tool
-	_ "net/http/pprof"
-
 	"github.com/go-redis/redis"
 	log "github.com/sirupsen/logrus"
 )
