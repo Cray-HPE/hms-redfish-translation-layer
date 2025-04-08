@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.25.1] - 2025-04-09
+
+### Fixed
+
+- Fixed various concurrency issues
+
 ## [1.25.0] - 2024-12-04
 
 ### Changed

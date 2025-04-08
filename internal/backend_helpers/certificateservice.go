@@ -280,7 +280,10 @@ func (cs *CertificateService) InitForXName(xname string) (err error) {
 	}
 
 	// Keep track of devices that we are managing
+
+	cs.KnownDevicesMux.Lock()
 	cs.KnownDevices[xname] = true
+	cs.KnownDevicesMux.Unlock()
 
 	return nil
 }
