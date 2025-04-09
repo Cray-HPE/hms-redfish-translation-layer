@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright 2020-2023 Hewlett Packard Enterprise Development LP
+// (C) Copyright 2020-2023,2025 Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -275,7 +275,8 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 		helper.RedisHelper.addMemberToSet(rootKeyspace, "Systems")
 		helper.RedisHelper.addMemberToSet(rootKeyspace, "Managers")
 
-		// Create a new pipeline
+		// Create and protect a new active pipeline
+		helper.RedisHelper.RedisActivePipelineMux.Lock()
 		helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 
 		initFunctions := [...]func(string, *compute.Instance) error{
@@ -292,6 +293,8 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 				logFields["err"] = err
 				log.WithFields(logFields).Error("Initialization function failed")
 
+				helper.RedisHelper.RedisActivePipeline = nil
+				helper.RedisHelper.RedisActivePipelineMux.Unlock()
 				return
 			} else {
 				log.WithFields(logFields).Debug("Initialization function succeeded")
@@ -301,6 +304,7 @@ func (helper *GCloudHelper) initInstance(ctx context.Context, instance *compute.
 		// Dump this pipeline.
 		_, err = helper.RedisHelper.RedisActivePipeline.Exec()
 		helper.RedisHelper.RedisActivePipeline = nil
+		helper.RedisHelper.RedisActivePipelineMux.Unlock()
 		if err != nil {
 			log.WithFields(logFields).Error("Unable to Exec() initInstance pipeline")
 			return
