@@ -1035,11 +1035,12 @@ func (helper JAWSBackedHelper) initRackPDU(xname string, unit Unit) (err error) 
 	xnameKeyspace := xname + RackPDUsKeyspace
 
 	// Create and protect a new active pipeline
+	helper.RedisHelper.RedisActivePipelineMux.Lock()
+	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 	defer func() {
 		helper.RedisHelper.RedisActivePipeline = nil
 		helper.RedisHelper.RedisActivePipelineMux.Unlock()
 	}()
-	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 
 	helper.RedisHelper.setValueForPropertyInKeyspace(xnameKeyspace, "Name", "RackPDU Collection")
 
