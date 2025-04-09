@@ -24,11 +24,15 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
-## [1.25.1] - 2025-04-09
+## [1.25.1] - 2025-04-10
 
 ### Fixed
 
-- Fixed various concurrency issues
+Fixed various concurrency issues:
+
+- Added mutex to protect the KnownDevices map from concurrent writes
+- Extended use of the Redis active pipeline mutex into the gcloud, JAWS,
+  and simulator backend helpers
 
 ## [1.25.0] - 2024-12-04
 
