@@ -208,11 +208,8 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	helper.RedisHelper.addMemberToSet(rootKeyspace, "Chassis")
 	helper.RedisHelper.addMemberToSet(rootKeyspace, "Managers")
 
-	// Create a new pipeline
-
-	// The Redis pipeline is shared between Go threads so we need to protect this section of code with a mutex
-	helper.redisActivePipelineMux.Lock()
-
+	// Create and protect a new active pipeline
+	helper.RedisHelper.RedisActivePipelineMux.Lock()
 	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 
 	initFunctions := [...]func(string, snmp_utilities.EntityPhysicalTable) error{
@@ -228,7 +225,8 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 			logFields["err"] = err
 			log.WithFields(logFields).Error("Initialization function failed")
 
-			helper.redisActivePipelineMux.Unlock()
+			helper.RedisHelper.RedisActivePipeline = nil
+			helper.RedisHelper.RedisActivePipelineMux.Unlock()
 
 			return
 		} else {
@@ -240,7 +238,7 @@ func (helper *SNMPSwitchHelper) initDevice(ctx context.Context, xname string, de
 	// Dump this pipeline.
 	_, err = helper.RedisHelper.RedisActivePipeline.Exec()
 	helper.RedisHelper.RedisActivePipeline = nil
-	helper.redisActivePipelineMux.Unlock()
+	helper.RedisHelper.RedisActivePipelineMux.Unlock()
 	if err != nil {
 		logFields["err"] = err
 		log.WithFields(logFields).Error("Unable to Exec() initInstance pipeline")
@@ -361,9 +359,9 @@ func (helper *SNMPSwitchHelper) RunPeriodic(ctx context.Context, env map[string]
 			if initErr != nil {
 				err = fmt.Errorf("unable to initialize device: %s", initErr)
 			} else {
-				helper.deviceMux.Lock()
+				helper.KnownDevicesMux.Lock()
 				helper.KnownDevices[xname] = snmpDevice
-				helper.deviceMux.Unlock()
+				helper.KnownDevicesMux.Unlock()
 
 				elapsed := time.Since(start)
 				log.WithFields(log.Fields{
