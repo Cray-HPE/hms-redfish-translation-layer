@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2019-2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2019-2021,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -1034,8 +1034,13 @@ func (helper JAWSBackedHelper) initRackPDU(xname string, unit Unit) (err error) 
 	// The keyspace for this PDU
 	xnameKeyspace := xname + RackPDUsKeyspace
 
-	// Create a new pipeline
+	// Create and protect a new active pipeline
+	helper.RedisHelper.RedisActivePipelineMux.Lock()
 	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
+	defer func() {
+		helper.RedisHelper.RedisActivePipeline = nil
+		helper.RedisHelper.RedisActivePipelineMux.Unlock()
+	}()
 
 	helper.RedisHelper.setValueForPropertyInKeyspace(xnameKeyspace, "Name", "RackPDU Collection")
 
@@ -1122,7 +1127,6 @@ func (helper JAWSBackedHelper) initRackPDU(xname string, unit Unit) (err error) 
 
 	// Dump this pipeline.
 	_, err = helper.RedisHelper.RedisActivePipeline.Exec()
-	helper.RedisHelper.RedisActivePipeline = nil
 	if err != nil {
 		log.WithFields(logFields).Error("Unable to Exec() initRackPDU pipeline")
 		return
@@ -1503,7 +1507,9 @@ func (helper *JAWSBackedHelper) RunPeriodic(ctx context.Context, env map[string]
 			if initErr != nil {
 				err = fmt.Errorf("unable to initialize device: %s", initErr)
 			} else {
+				helper.KnownDevicesMux.Lock()
 				helper.KnownDevices[xname] = device
+				helper.KnownDevicesMux.Unlock()
 
 				elapsed := time.Since(start)
 				log.WithFields(log.Fields{
