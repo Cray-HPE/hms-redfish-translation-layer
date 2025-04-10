@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2020-2022] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2020-2022,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -81,8 +81,9 @@ func getSvcInstName() map[string]string {
 
 // Structure for making Redis stuff generic
 type RedisHelper struct {
-	Redis               *redis.Client
-	RedisActivePipeline redis.Pipeliner
+	Redis                  *redis.Client
+	RedisActivePipeline    redis.Pipeliner
+	RedisActivePipelineMux sync.Mutex
 }
 
 func (helper RedisHelper) startPipeline() redis.Pipeliner {
