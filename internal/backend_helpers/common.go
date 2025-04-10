@@ -81,8 +81,9 @@ func getSvcInstName() map[string]string {
 
 // Structure for making Redis stuff generic
 type RedisHelper struct {
-	Redis               *redis.Client
-	RedisActivePipeline redis.Pipeliner
+	Redis                  *redis.Client
+	RedisActivePipeline    redis.Pipeliner
+	RedisActivePipelineMux sync.Mutex
 }
 
 func (helper RedisHelper) startPipeline() redis.Pipeliner {
