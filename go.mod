@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	cloud.google.com/go/compute/metadata v0.6.0
-	github.com/Cray-HPE/hms-base/v2 v2.2.1-0.20250414152022-3ab999198b9c
+	github.com/Cray-HPE/hms-base/v2 v2.2.1-0.20250414203822-b0cb12a78f46
 	github.com/Cray-HPE/hms-compcredentials v1.14.0
 	github.com/Cray-HPE/hms-go-http-lib v1.6.2-0.20250414180941-9b55134a28b8
 	github.com/Cray-HPE/hms-securestorage v1.16.0

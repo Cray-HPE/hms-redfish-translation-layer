@@ -4,8 +4,8 @@ cloud.google.com/go/auth/oauth2adapt v0.2.8 h1:keo8NaayQZ6wimpNSmW5OPc283g65QNIi
 cloud.google.com/go/auth/oauth2adapt v0.2.8/go.mod h1:XQ9y31RkqZCcwJWNSx2Xvric3RrU88hAYYbjDWYDL+c=
 cloud.google.com/go/compute/metadata v0.6.0 h1:A6hENjEsCDtC1k8byVsgwvVcioamEHvZ4j01OwKxG9I=
 cloud.google.com/go/compute/metadata v0.6.0/go.mod h1:FjyFAW1MW0C203CEOMDTu3Dk1FlqW3Rga40jzHL4hfg=
-github.com/Cray-HPE/hms-base/v2 v2.2.1-0.20250414152022-3ab999198b9c h1:z/4etf7PvM5MIwKstKVRx1uV8SodFiivRlXUZYSgGT4=
-github.com/Cray-HPE/hms-base/v2 v2.2.1-0.20250414152022-3ab999198b9c/go.mod h1:vE93SJ+Dptk1Y5+C/DKJPt/tjCZs3HzZUbZaEnfgnug=
+github.com/Cray-HPE/hms-base/v2 v2.2.1-0.20250414203822-b0cb12a78f46 h1:8CtCRdNWGBVlieSls132RE26d/n9VkT4abbZBqRYi6Q=
+github.com/Cray-HPE/hms-base/v2 v2.2.1-0.20250414203822-b0cb12a78f46/go.mod h1:vE93SJ+Dptk1Y5+C/DKJPt/tjCZs3HzZUbZaEnfgnug=
 github.com/Cray-HPE/hms-certs v1.6.1-0.20250414161713-14b0a66d2c7f h1:GlBs/aanLLnd1q7aU8FboX7RX5abnTvJHohiWkds4tI=
 github.com/Cray-HPE/hms-certs v1.6.1-0.20250414161713-14b0a66d2c7f/go.mod h1:OJ1pVX7rnA7fwBcucbFLq00Cf/2k4V6lDyOuROh8Hs4=
 github.com/Cray-HPE/hms-compcredentials v1.14.0 h1:w/R1oDYN9FZrE2bJAKxyDWa8RehenFZQGir3ANU2E6s=
