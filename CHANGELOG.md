@@ -24,6 +24,13 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.28.0] - 2025-04-11
+
+### Fixed
+
+- Drained/closed request/response bodies appropriately
+- Updated module dependencies to latest versions
+
 ## [1.27.0] - 2025-04-04
 
 ### Added

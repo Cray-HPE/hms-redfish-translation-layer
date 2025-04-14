@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2018, 2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2018,2021,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -37,6 +37,7 @@ import (
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/hooks"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfschema"
 
+	base "github.com/Cray-HPE/hms-base/v2"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -152,6 +153,9 @@ func (js *JsonSchemaFileCollection) HandleResource(event hooks.Event, ctx, respo
 // ServeSchemaFile is a http handler that will return the contents of a schema file
 func (js *JsonSchemaFileCollection) ServeSchemaFile(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Servering schema file for: ", r.URL.Path)
+
+	defer base.DrainAndCloseRequestBody(r)
+
 	if !strings.HasPrefix(r.URL.Path, "/redfish/v1/JsonSchemas/Files/") {
 		log.Warn("Requested schema file does not start with the correct path prefix")
 		w.WriteHeader(http.StatusNotFound)

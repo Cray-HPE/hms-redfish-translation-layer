@@ -28,11 +28,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"time"
 
-	"github.com/hashicorp/go-retryablehttp"
+	base "github.com/Cray-HPE/hms-base/v2"
+
 	"github.com/Cray-HPE/hms-certs/pkg/hms_certs"
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 // Package to slightly abstract some of the most mundane of HTTP interactions. Primary intention is as a JSON
@@ -218,12 +219,7 @@ func (request *HTTPRequest) DoHTTPAction() (payloadBytes []byte, responseStatusC
 
 	//For backward compatibility, the caller can use use 'Client' as is, and
 	//not use the TLSClientPair.  If that is the case the retryablehttp client
-	//will use all defaults and will be cert-insecure.  If a TLSClientPair
-	//is used, we will first try the secure client, and if that is not present
-	//or fails, use the insecure one and log the incident.  Note that the
-	//caller can instantiate a TLSClientPair with no CA bundle data and it
-	//will create only an insecure client.  This insures backward compatibility
-	//all the way around.
+	//will use all defaults and will be cert-insecure.
 
 	if request.TLSClientPair != nil {
 		if request.TLSClientPair.SecureClient != nil {
@@ -233,20 +229,8 @@ func (request *HTTPRequest) DoHTTPAction() (payloadBytes []byte, responseStatusC
 		}
 	}
 	resp, doErr := request.Client.Do(req)
-	if doErr != nil {
-		//If we tried the secure client and it got an error, try the insecure one
-		if (request.TLSClientPair != nil) &&
-			(request.TLSClientPair.SecureClient != nil) &&
-			(request.TLSClientPair.SecureClient != request.TLSClientPair.InsecureClient) {
-			log.Printf("INFO: Cert-validating HTTP client request failed, trying non-validating client.")
-			request.Client = request.TLSClientPair.InsecureClient
-			resp, doErr = request.Client.Do(req)
-		}
-	}
+	defer base.DrainAndCloseResponseBody(resp)
 
-	if resp != nil {
-		defer resp.Body.Close()
-	}
 	if doErr != nil {
 		err = fmt.Errorf("unable to do request: %s", doErr)
 		return
