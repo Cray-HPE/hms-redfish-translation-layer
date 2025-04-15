@@ -49,6 +49,8 @@ import (
 	"syscall"
 	"time"
 
+	base "github.com/Cray-HPE/hms-base/v2"
+
 	_ "github.com/Cray-HPE/hms-redfish-translation-service/internal/logger"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/accountservice"
 	"github.com/Cray-HPE/hms-redfish-translation-service/internal/rfdispatcher/dispatcher"
@@ -197,6 +199,8 @@ func doRest() {
 
 	// Health function for Kubernetes liveness/readiness.
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		defer base.DrainAndCloseRequestBody(r)
+
 		// TODO: Beef up this health check.
 		w.WriteHeader(200)
 		w.Write([]byte("ok"))
@@ -525,7 +529,7 @@ func (rs *redfishServer) internalServerError(uri string, err error) ([]byte, int
 
 /* Top-level handler for all HTTP request */
 func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
-	defer func() {
+	defer func(r *http.Request) {
 		if err := recover(); err != nil {
 			log.Error("Error in handler:", err)
 			log.Error("Stack trace: ", string(debug.Stack()))
@@ -534,7 +538,8 @@ func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(msg))
 		}
-	}()
+		base.DrainAndCloseRequestBody(r)
+	}(r)
 
 	log.WithFields(log.Fields{
 		"header":     r.Header,

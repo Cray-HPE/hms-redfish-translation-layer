@@ -32,6 +32,7 @@ import (
 	"time"
 
 	base "github.com/Cray-HPE/hms-base/v2"
+
 	sls_common "github.com/Cray-HPE/hms-sls/v2/pkg/sls-common"
 	"github.com/Cray-HPE/hms-xname/xnametypes"
 	"github.com/hashicorp/go-retryablehttp"
@@ -200,12 +201,12 @@ func (sls *SLS) doRequest(req *http.Request) ([]byte, error) {
 	newRequest.Header.Set("Content-Type", "application/json")
 
 	rsp, err := sls.Client.Do(newRequest)
+	defer base.DrainAndCloseResponseBody(rsp)
 	if err != nil {
 		return nil, err
 	}
 
 	// Read the response
-	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
 		return nil, err
