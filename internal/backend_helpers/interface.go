@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright 2020-2024 Hewlett Packard Enterprise Development LP
+// (C) Copyright 2020-2025 Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -50,7 +50,8 @@ type CertificateService struct {
 	Certificates              map[string]*CertificateTuple
 	CertificatesLock          sync.Mutex
 
-	KnownDevices map[string]bool
+	KnownDevices    map[string]bool
+	KnownDevicesMux sync.Mutex
 }
 
 // This is just a generic no-op interface
@@ -68,7 +69,9 @@ type JAWSBackedHelper struct {
 	CertificateService *CertificateService
 
 	RedisHelper  RedisHelper
-	KnownDevices map[string]pdu_credential_store.Device
+
+	KnownDevices    map[string]pdu_credential_store.Device
+	KnownDevicesMux sync.Mutex
 
 	PollingEnabled  bool
 	PollingInterval time.Duration
@@ -132,10 +135,9 @@ type SNMPSwitchHelper struct {
 	SLS *slsapi.SLS
 
 	RedisHelper  RedisHelper
-	KnownDevices map[string]SNMPDevice
 
-	deviceMux sync.Mutex
-	redisActivePipelineMux sync.Mutex
+	KnownDevices    map[string]SNMPDevice
+	KnownDevicesMux sync.Mutex
 }
 
 type BackendHelper interface {

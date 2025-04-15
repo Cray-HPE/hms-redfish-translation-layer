@@ -1,6 +1,6 @@
 // MIT License
 //
-// (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+// (C) Copyright [2020-2021,2025] Hewlett Packard Enterprise Development LP
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -250,7 +250,8 @@ func (helper *RFSimulatorHelper) initSimulator(ctx context.Context, xname string
 	helper.RedisHelper.addMemberToSet(rootKeyspace, "Managers")
 	helper.RedisHelper.addMemberToSet(rootKeyspace, "UpdateService")
 
-	// Create a new pipeline
+	// Create and protect a new active pipeline
+	helper.RedisHelper.RedisActivePipelineMux.Lock()
 	helper.RedisHelper.RedisActivePipeline = helper.RedisHelper.Redis.Pipeline()
 
 	initFunctions := [...]func(string) error{
@@ -268,6 +269,8 @@ func (helper *RFSimulatorHelper) initSimulator(ctx context.Context, xname string
 			logFields["err"] = err
 			log.WithFields(logFields).Error("Initialization function failed")
 
+			helper.RedisHelper.RedisActivePipeline = nil
+			helper.RedisHelper.RedisActivePipelineMux.Unlock()
 			return
 		} else {
 			log.WithFields(logFields).Debug("Initialization function succeeded")
@@ -279,12 +282,15 @@ func (helper *RFSimulatorHelper) initSimulator(ctx context.Context, xname string
 	if err != nil {
 		logFields["err"] = err
 		log.WithFields(logFields).Error("Failed to initialize Certificate Service for device")
+		helper.RedisHelper.RedisActivePipeline = nil
+		helper.RedisHelper.RedisActivePipelineMux.Unlock()
 		return
 	}
 
 	// Dump this pipeline.
 	_, err = helper.RedisHelper.RedisActivePipeline.Exec()
 	helper.RedisHelper.RedisActivePipeline = nil
+	helper.RedisHelper.RedisActivePipelineMux.Unlock()
 	if err != nil {
 		log.WithFields(logFields).Error("Unable to Exec() initInstance pipeline")
 		return
