@@ -183,6 +183,7 @@ func (rs *redfishServer) runAfterHookIns(method string, event hooks.Event, ctx, 
 }
 
 func doRest() {
+	log.Infof("TRACE: doRest start")
 	httpPortStr := fmt.Sprintf("%d", server.httpPort)
 	restSrvHTTP = &http.Server{Addr: ":" + httpPortStr}
 	httpsPortStr := fmt.Sprintf("%d", server.httpsPort)
@@ -200,6 +201,7 @@ func doRest() {
 	// Health function for Kubernetes liveness/readiness.
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		defer base.DrainAndCloseRequestBody(r)
+		log.Infof("TRACE: /healthz %s", r.RequestURI)
 
 		// TODO: Beef up this health check.
 		w.WriteHeader(200)
@@ -212,6 +214,7 @@ func doRest() {
 	}
 
 	go func() {
+		log.Infof("TRACE: doRest func start")
 		var err error
 
 		if httpsCertExists && httpsKeyExists {
@@ -263,6 +266,7 @@ func doRest() {
 				}
 			}
 		}
+		log.Infof("TRACE: doRest func done")
 	}()
 	go func() {
 		defer waitGroup.Done()
@@ -288,10 +292,12 @@ func doRest() {
 	if httpsCertExists && httpsKeyExists {
 		log.WithField("httpsPort", httpsPortStr).Info("Listening for incoming HTTPS requests")
 	}
+	log.Infof("TRACE: doRest done")
 }
 
 func main() {
 	var cancel context.CancelFunc
+	log.Infof("TRACE: main start")
 	ctx, cancel = context.WithCancel(context.Background())
 
 	server = newRedfishServer(ctx)
@@ -364,6 +370,7 @@ func main() {
 		}()
 	}
 
+	log.Infof("TRACE: main before wait")
 	waitGroup.Wait()
 
 	log.Info("Redfish Translation Service shutting down")
