@@ -201,15 +201,17 @@ func doRest() {
 	// Health function for Kubernetes liveness/readiness.
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		defer base.DrainAndCloseRequestBody(r)
-		log.Infof("TRACE: /healthz %s", r.RequestURI)
+		log.Infof("TRACE: /healthz %s request", r.RequestURI)
 
 		// TODO: Beef up this health check.
 		w.WriteHeader(200)
 		w.Write([]byte("ok"))
+		log.Infof("TRACE: /healthz %s done", r.RequestURI)
 	})
 
 	if httpsCertExists && httpsKeyExists {
 		// If we're going to serve HTTPs we need to add to the wait group.
+		log.Info("TRACE: waitGroup.Add(1) certs and key exists")
 		waitGroup.Add(1)
 	}
 
@@ -218,6 +220,7 @@ func doRest() {
 		var err error
 
 		if httpsCertExists && httpsKeyExists {
+			log.Infof("TRACE: if start")
 			defer waitGroup.Done()
 
 			// Only if we're given a certificate should we enable HTTPS
@@ -265,12 +268,14 @@ func doRest() {
 					log.WithField("err", err).Panic("Unable to start REST HTTPS server")
 				}
 			}
+			log.Infof("TRACE: if done")
 		}
 		log.Infof("TRACE: doRest func done")
 	}()
 	go func() {
 		defer waitGroup.Done()
 
+		log.Infof("TRACE: doRest func2")
 		var err error
 
 		// Wait until everything is initialized before processing requests
@@ -286,6 +291,7 @@ func doRest() {
 				log.WithField("err", err).Panic("Unable to start REST HTTP server")
 			}
 		}
+		log.Infof("TRACE: doRest func2 done")
 	}()
 
 	log.WithField("httpPort", httpPortStr).Info("Listening for incoming HTTP requests")
@@ -331,6 +337,7 @@ func main() {
 
 	log.Info("Redfish Translation Service starting...")
 
+	log.Info("TRACE: waitGroup.Add(1)")
 	waitGroup.Add(1)
 
 	if len(server.rfd.BackendHelpers) > 0 {
@@ -368,6 +375,7 @@ func main() {
 				server.rfd.RunPeriodic()
 			}
 		}()
+		log.Infof("TRACE: if len done")
 	}
 
 	log.Infof("TRACE: main before wait")
