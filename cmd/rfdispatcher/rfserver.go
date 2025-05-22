@@ -302,6 +302,15 @@ func doRest() {
 }
 
 func main() {
+	defer func() {
+		log.Infof("TRACE: main defer func")
+		if r := recover(); r != nil {
+			log.Infof("TRACE: Panic: %v", r)
+			log.Infof("TRACE: stack: %v", r)
+			debug.PrintStack()
+		}
+		log.Infof("TRACE: main defer func")
+	}()
 	var cancel context.CancelFunc
 	log.Infof("TRACE: main start")
 	ctx, cancel = context.WithCancel(context.Background())
