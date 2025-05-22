@@ -200,13 +200,13 @@ func doRest() {
 
 	// Health function for Kubernetes liveness/readiness.
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
-		defer base.DrainAndCloseRequestBody(r)
-		log.Infof("TRACE: /healthz %s request", r.RequestURI)
+		// defer base.DrainAndCloseRequestBody(r)
+		log.Infof("TRACE: /healthz %s request no defer", r.RequestURI)
 
 		// TODO: Beef up this health check.
 		w.WriteHeader(200)
 		w.Write([]byte("ok"))
-		log.Infof("TRACE: /healthz %s done", r.RequestURI)
+		log.Infof("TRACE: /healthz %s no defer done", r.RequestURI)
 	})
 
 	if httpsCertExists && httpsKeyExists {
@@ -545,6 +545,7 @@ func (rs *redfishServer) internalServerError(uri string, err error) ([]byte, int
 /* Top-level handler for all HTTP request */
 func (rs *redfishServer) handleRequest(w http.ResponseWriter, r *http.Request) {
 	defer func(r *http.Request) {
+		log.Infof("TRACE: handleRequest %s", r.RequestURI)
 		if err := recover(); err != nil {
 			log.Error("Error in handler:", err)
 			log.Error("Stack trace: ", string(debug.Stack()))
