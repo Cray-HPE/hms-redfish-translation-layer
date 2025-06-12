@@ -76,6 +76,8 @@ ENV JAWS_POLLING_ENABLED=true
 ENV JAWS_POLLING_INTERVAL=10
 ENV JAWS_POLLING_WORKERS=30
 
+ENV GODEBUG=tlsrsakex=1
+
 RUN set -ex \
     && apk -U upgrade \
     && apk add redis curl \
