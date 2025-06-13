@@ -62,6 +62,8 @@ ENV JAWS_POLLING_ENABLED=true
 ENV JAWS_POLLING_INTERVAL=10
 ENV JAWS_POLLING_WORKERS=30
 
+ENV GODEBUG=tlsrsakex=1
+
 # Copy support files into the image.
 COPY scripts/wait-for.sh /
 COPY docker-entrypoint.sh /

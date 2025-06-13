@@ -24,6 +24,12 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.30.0] - 2025-06-12
+
+## Changed
+
+- Added environment variable to Dockerfile which allows backward compatibility with older TLS Protocols
+
 ## [1.29.0] - 2025-04-15
 
 ### Fixed
