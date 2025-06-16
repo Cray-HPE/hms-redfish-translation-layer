@@ -24,6 +24,14 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
+## [1.31.0] - 2025-06-18
+
+### Fixed
+
+- Fix issue where HTTP requests should be handled immediately on startup
+- Updated module and image dependencies
+- Internal tracking ticket: CASMHMS-6557
+
 ## [1.30.0] - 2025-06-12
 
 ## Changed
