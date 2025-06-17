@@ -24,7 +24,7 @@ Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
 
-## [1.31.0] - 2025-06-18
+## [1.31.0] - 2025-06-17
 
 ### Fixed
 
