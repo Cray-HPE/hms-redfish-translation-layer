@@ -327,19 +327,14 @@ func main() {
 
 	waitGroup.Add(1)
 
+	// Start the REST server to start handling requests
+	go doRest()
+
 	if len(server.rfd.BackendHelpers) > 0 {
 
 		// Manually run the backend helpers for the first time so that we
 		// pull in all the initial data
 		server.rfd.RunPeriodic()
-
-		// Now that the backend helpers have fully initialized, initialize
-		// the account service so that accounts based on this initial data
-		// get created
-		server.initAccountService()
-
-		// Start the REST server to start handling requests
-		go doRest()
 
 		// Create the ticker to run the backend helpers periodically
 		var periodSeconds int
@@ -380,6 +375,7 @@ func newRedfishServer(ctx context.Context) *redfishServer {
 
 	// Note: See dispatcher.NewDispatcher() for other hard coded options
 	server.rfd = dispatcher.NewDispatcher(ctx)
+	server.initAccountService()
 	server.initJSONSchemaService()
 
 	return server

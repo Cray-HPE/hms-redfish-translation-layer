@@ -139,10 +139,6 @@ func (as *AccountService) isAccountLockoutEnabled() bool {
 func (as *AccountService) RunPeriodic() {
 	log.Info("Starting account service periodic task")
 
-	// Manually run the first updates so we can immediately handle requests
-	as.updatePeriodic()
-	as.updateAccountsPeriodic()
-
 	ticker := time.NewTicker(1 * time.Second)
 	accountTicker := time.NewTicker(30 * time.Second)
 	for {
