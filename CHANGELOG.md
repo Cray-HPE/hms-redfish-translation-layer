@@ -23,6 +23,12 @@ Removed - for now removed features
 Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
+## [1.32.0] - 2025-11-20
+
+### Changed
+
+- Updated the Alpine Linux base image from version 3.21 to 3.22
+- Internal tracking ticket: CASMHMS-6612
 
 ## [1.31.0] - 2025-06-17
 
