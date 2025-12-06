@@ -23,6 +23,14 @@ Removed - for now removed features
 Fixed - for any bug fixes
 Security - in case of vulnerabilities
 -->
+## [1.33.0] - 2025-12-06
+
+### Changed
+
+- Updated hms-sls dependency to v2.12.0
+- Updated hms-smd dependency to v2.45.0
+- Internal tracking ticket: CASMHMS-6615
+
 ## [1.32.0] - 2025-11-20
 
 ### Changed
