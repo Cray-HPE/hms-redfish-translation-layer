@@ -14,10 +14,10 @@ github.com/Cray-HPE/hms-go-http-lib v1.7.1 h1:cAHztSOZ497w1HqvsE1O5+WjhsZcNw78Um
 github.com/Cray-HPE/hms-go-http-lib v1.7.1/go.mod h1:G3uSDPdXwPRuV08iWM99FUgpjzfDiSk4+Qz5CccYl2Y=
 github.com/Cray-HPE/hms-securestorage v1.17.0 h1:9Dr96LITvt9hqs+/CIDFNOauUPSTobU8TC3jEfd8I/A=
 github.com/Cray-HPE/hms-securestorage v1.17.0/go.mod h1:XYnykBCkkdWCLsMNjoMNmYfFn9UDFc02UN16k8ZHktE=
-github.com/Cray-HPE/hms-sls/v2 v2.10.0 h1:3qRlSlCU69Rd6NymUp00gFg89pov8h6iGa5dj8Ajy6s=
-github.com/Cray-HPE/hms-sls/v2 v2.10.0/go.mod h1:HM73R+hGmMz00RW954VWhLVTGpBof6ABjBdWTB83P9k=
-github.com/Cray-HPE/hms-smd/v2 v2.38.0 h1:+p0G6J/Xmllc6wW8thCC89ncNmP1gyfPyWqRmQsQ9Jo=
-github.com/Cray-HPE/hms-smd/v2 v2.38.0/go.mod h1:Ycj7uV/QQJX1MFlBFLkrHoQrVlL25n2Ol5IBclXz2QY=
+github.com/Cray-HPE/hms-sls/v2 v2.12.0 h1:lMNTF9knrcc81+Uppd2hz0gibZOV5IRQZQao7rveRNQ=
+github.com/Cray-HPE/hms-sls/v2 v2.12.0/go.mod h1:HM73R+hGmMz00RW954VWhLVTGpBof6ABjBdWTB83P9k=
+github.com/Cray-HPE/hms-smd/v2 v2.45.0 h1:LM1QkP7D9FYacNAt8FvhQlvIFCjT+OwjahAqsIbeiGQ=
+github.com/Cray-HPE/hms-smd/v2 v2.45.0/go.mod h1:z9iC/pyxXzDlAPMTW3H+KN4zRhuiiu+p/eGJb4t8+as=
 github.com/Cray-HPE/hms-xname v1.4.0 h1:i47YmE8rbSfJ64simKCCC6ZVcGid3rDIX6/jfVbISAM=
 github.com/Cray-HPE/hms-xname v1.4.0/go.mod h1:wH7t1UXYck0VdHSWjrMsxZmaCK5W1lmwgNnsYAFPTus=
 github.com/cenkalti/backoff/v4 v4.3.0 h1:MyRJ/UdXutAwSAT+s3wNd7MfTIcy71VQueUuFK343L8=
