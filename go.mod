@@ -10,8 +10,8 @@ require (
 	github.com/Cray-HPE/hms-compcredentials v1.15.0
 	github.com/Cray-HPE/hms-go-http-lib v1.7.1
 	github.com/Cray-HPE/hms-securestorage v1.17.0
-	github.com/Cray-HPE/hms-sls/v2 v2.10.0
-	github.com/Cray-HPE/hms-smd/v2 v2.38.0
+	github.com/Cray-HPE/hms-sls/v2 v2.12.0
+	github.com/Cray-HPE/hms-smd/v2 v2.45.0
 	github.com/Cray-HPE/hms-xname v1.4.0
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/go-redis/redis v6.15.9+incompatible
